@@ -167,6 +167,9 @@ spells = {
     },
     Regenerate: function() {
         player.statuses.push(new HpRegen(10));
+    },
+    Matchstick: function() {
+        player.statuses.push(new Burning(5));
     }
 };
 
