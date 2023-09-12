@@ -40,6 +40,33 @@
     shakeX = 0;
     shakeY = 0;
 
+    // touch controls
+    let touchstartX = 0
+    let touchendX = 0
+        
+    function checkDirection() {
+        if (touchendX < touchstartX) {
+            if (gameState == "title") {
+                startGame();
+            }
+        }
+        if (touchendX > touchstartX) {
+            if (gameState == "title") {
+                startGame();
+            }
+        }
+    }
+
+    document.addEventListener('touchstart', e => {
+        touchstartX = e.changedTouches[0].screenX;
+    })
+
+    document.addEventListener('touchend', e => {
+        touchendX = e.changedTouches[0].screenX;
+        checkDirection()
+    })
+
+
     document.querySelector("html").onkeypress = function(e) {
         if (gameState == "title") {
             startGame();
