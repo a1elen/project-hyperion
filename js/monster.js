@@ -236,6 +236,7 @@ class Player extends Monster {
 
             this.hp = this.constitution * 5;
         }
+        numSpells = this.arcane;
         this.maxHealth = this.hp;
         this.isPlayer = true;
         this.teleportCounter = 0;
@@ -247,7 +248,6 @@ class Player extends Monster {
         this.level = 1;
         this.weaponDamage = 1;
         this.evasion = this.agility;
-        numSpells = this.arcane;
     }
 
     levelUp() {
