@@ -58,12 +58,15 @@ class Burning extends StatusEffect {
 function addStatus(name, duration, target) {
 
     if (name == "Stunned") {
+        let count = 0;
         for (let i = 0; i < target.statuses.length; i++) {
             if (target.statuses[i].consctructor.name == "Stunned") {
-                target.statuses[i].duration + duration;
-            } else {
-                target.statuses.push(new Stunned(duration));
+                target.statuses[i].duration += duration;
+                count++;
             }
+        }
+        if (count < 1) {
+            target.statuses.push(new Stunned(duration));
         }
     }
 }
