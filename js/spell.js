@@ -164,6 +164,9 @@ spells = {
             case 5:
                 break;
         }
+    },
+    Regenerate: function() {
+        player.statuses.push(new HpRegen(10));
     }
 };
 
