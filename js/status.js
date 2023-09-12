@@ -55,6 +55,17 @@ class Burning extends StatusEffect {
     }
 }
 
+class Bleeding extends StatusEffect {
+    constructor(duration) {
+        super(duration);
+    }
+
+    update(target) {
+        target.hp--;
+        super.update(target);
+    }
+}
+
 function addStatus(name, duration, target) {
 
     if (name == "Stunned") {
@@ -67,6 +78,19 @@ function addStatus(name, duration, target) {
         }
         if (count < 1) {
             target.statuses.push(new Stunned(duration));
+        }
+    }
+
+    if (name == "Bleeding") {
+        let count = 0;
+        for (let i = 0; i < target.statuses.length; i++) {
+            if (target.statuses[i].constructor.name == "Bleeding") {
+                target.statuses[i].duration += duration;
+                count++;
+            }
+        }
+        if (count < 1) {
+            target.statuses.push(new Bleeding(duration));
         }
     }
 }

@@ -53,13 +53,20 @@ function randomPassableTile() {
 function generateMonsters() {
     monsters = [];
     let numMonsters = level+1;
+    let numberOfRare = Math.floor(level / 2);
     for (let i = 0; i < numMonsters; i++) {
-        spawnMonster();
+        if (i < numberOfRare) {
+            spawnMonster(true);
+        }
+        spawnMonster(false);
     }
 }
 
-function spawnMonster() {
+function spawnMonster(rare) {
     let monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton])[0];
     let monster = new monsterType(randomPassableTile());
+    if (rare) {
+        monster.upgrade(level);
+    }
     monsters.push(monster);
 }

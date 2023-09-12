@@ -20,6 +20,15 @@ class Monster {
         this.xpPoints = 1;
         this.isPlayer = false;
         this.statuses = [];
+        this.bleedingChance = 0;
+
+        // main stats
+        this.strength = 2;
+        this.constitution = 2;
+        this.perception = 2;
+        this.agiity = 2;
+        this.arcane = 2;
+        this.will = 2;
     }
 
     heal(damage) {
@@ -149,6 +158,12 @@ class Monster {
                         addStatus("Stunned", randomRange(2, 2 + this.strength), newTile.monster);
                     }
 
+                    if (this.bleedingChance != 0) {
+                        if (randomRange(1, 100) < this.bleedingChance) {
+                            addStatus("Bleeding", randomRange(2, 5), newTile.monster);
+                        }
+                    }
+
                     let damage = Math.max((this.attack + this.bonusAttack) - newTile.monster.defense, 1)
 
                     if (randomRange(1, 100) < this.perception) {
@@ -209,6 +224,16 @@ class Monster {
         tile.monster = this;
         tile.stepOn(this);
     }
+
+    upgrade(amount) {
+        let upgradeHp = randomRange(1, 2) * amount;
+        this.maxHealth = this.maxHealth + upgradeHp;
+        this.hp = this.hp + upgradeHp;
+
+        this.attack = this.attack + randomRange(1, 2) * amount;
+        this.defense = this.defense + randomRange(1, 2) * Math.floor(amount / 2)
+        
+    }
 }
 
 class Player extends Monster {
@@ -248,6 +273,7 @@ class Player extends Monster {
         this.level = 1;
         this.weaponDamage = 1;
         this.evasion = this.agility;
+        this.attack = this.strength * this.weaponDamage;
     }
 
     levelUp() {
@@ -348,6 +374,7 @@ class Snake extends Monster {
         this.defense = 0;
         this.moveSpeed = 50;
         this.xpPoints = 2;
+        this.bleedingChance = 10;
     }
 
     /*doStuff() {
