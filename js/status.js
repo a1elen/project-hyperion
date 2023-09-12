@@ -60,7 +60,7 @@ function addStatus(name, duration, target) {
     if (name == "Stunned") {
         let count = 0;
         for (let i = 0; i < target.statuses.length; i++) {
-            if (target.statuses[i].consctructor.name == "Stunned") {
+            if (target.statuses[i].constructor.name == "Stunned") {
                 target.statuses[i].duration += duration;
                 count++;
             }
