@@ -41,5 +41,6 @@ class Stunned extends StatusEffect {
 
     update(target) {
         target.stunned = true;
+        super.update(target);
     }
 }
