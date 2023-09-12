@@ -28,14 +28,15 @@ class Monster {
     }
 
     update() {
-
-        for (let i = 0; i < this.statuses.length; i++) {
-            if (this.statuses[i].duration < 1) {
-                this.statuses.splice(i, 1);
+        if (this.statuses.length > 0) {
+            for (let i = 0; i < this.statuses.length; i++) {
+                if (this.statuses[i].duration < 1) {
+                    this.statuses.splice(i, 1);
+                }
+                this.statuses[i].update(this);
             }
-            this.statuses[i].update(this);
         }
-
+        
         this.teleportCounter--;
         if (this.stunned) {
             this.stunCounter--;
