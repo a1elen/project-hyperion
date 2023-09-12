@@ -19,6 +19,7 @@ class Monster {
         this.stunned = false;
         this.xpPoints = 1;
         this.isPlayer = false;
+        this.statuses = [];
     }
 
     heal(damage) {
@@ -27,6 +28,14 @@ class Monster {
     }
 
     update() {
+
+        for (i = 0; i < this.statuses.length; i++) {
+            if (this.statuses[i].duration < 1) {
+                this.statuses.splice(i, 1);
+            }
+            this.statuses[i].update(this);
+        }
+
         this.teleportCounter--;
         if (this.stunned) {
             this.stunCounter--;
@@ -144,6 +153,9 @@ class Monster {
     }
 
     hit(damage) {
+
+        let status = new Quick(10);
+        this.statuses.push(status);
 
         if (randomRange(1, 100 ) < 10) {
             return;
