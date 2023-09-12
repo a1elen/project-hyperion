@@ -162,6 +162,17 @@ function startLevel(playerHp, playerSpells) {
         playerXpToLevel = player.xpToLevel;
         playerAttack = player.attack;
         playerDefense = player.defense;
+
+        // main stats
+        playerStrength = player.strength;
+        playerConstitution = player.constitution;
+        playerPerception = player.perception;
+        playerAgility = player.agiity;
+        playerArcane = player.arcane;
+        playerWill = player.will;
+
+        playerWeaponDamage = player.weaponDamage;
+        playerEvasion = player.evasion;
     }
 
     generateLevel();
@@ -177,6 +188,17 @@ function startLevel(playerHp, playerSpells) {
         player.xpToLevel = playerXpToLevel;
         player.attack = playerAttack;
         player.defense = playerDefense;
+
+        // main stats
+        player.strength = playerStrength;
+        player.constitution = playerConstitution;
+        player.perception = playerPerception;
+        player.agiity = playerAgility;
+        player.arcane = playerArcane;
+        player.will = playerWill;
+    
+        player.weaponDamage = playerWeaponDamage;
+        player.evasion = playerEvasion;
     }
 
     if (playerSpells) {

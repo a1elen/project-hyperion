@@ -145,7 +145,17 @@ class Monster {
                 if (this.isPlayer != newTile.monster.isPlayer) {
                     //this.attackedThisTurn = true;
                     //newTile.monster.stunned = true;
-                    newTile.monster.hit(Math.max((this.attack + this.bonusAttack) - newTile.monster.defense, 1));
+                    if (randomRange(1, 100) < this.strength) {
+                        addStatus("Stunned", randomRange(2, 2 + this.strength), newTile.monster);
+                    }
+
+                    let damage = Math.max((this.attack + this.bonusAttack) - newTile.monster.defense, 1)
+
+                    if (randomRange(1, 100) < this.perception) {
+                        damage = damage * 2;
+                    }
+
+                    newTile.monster.hit();
                     this.bonusAttack = 0;
 
                     shakeAmount = 5;
@@ -160,7 +170,7 @@ class Monster {
 
     hit(damage) {
 
-        if (randomRange(1, 100 ) < 10) {
+        if (randomRange(1, 100 ) < this.evasion) {
             return;
         }
 
@@ -168,17 +178,10 @@ class Monster {
             return;
         }
 
-        if (randomRange(1, 100) > 90) {
-            damage = damage * 2;
-        }
-
         this.hp -= damage;
         if(this.hp <= 0) {
             this.hp = 0;
             this.die();
-        } else if (randomRange(1, 100) < 10) {
-            addStatus("Stunned", randomRange(2,4), this);
-            //this.statuses.push(new Stunned(randomRange(2, 4)));
         }
 
         // Sound
@@ -212,11 +215,26 @@ class Player extends Monster {
     constructor (tile) {
         if (playerClass == 1) {
             super(tile, 0, 10);
-            this.hp = 20;
+
+            this.strength = 5;
+            this.constitution = 4;
+            this.perception = 2;
+            this.agiity = 2;
+            this.arcane = 1;
+            this.will = 1;
+
+            this.hp = this.constitution * 5;
         } else {
             super(tile, 1, 10);
-            this.hp = 10;
-            numSpells = numSpells + 2;
+
+            this.strength = 1;
+            this.constitution = 2;
+            this.perception = 2;
+            this.agiity = 3;
+            this.arcane = 4;
+            this.will = 4;
+
+            this.hp = this.constitution * 5;
         }
         this.maxHealth = this.hp;
         this.isPlayer = true;
@@ -227,18 +245,33 @@ class Player extends Monster {
         this.xpToLevel = 10;
         this.xp = 0;
         this.level = 1;
+        this.weaponDamage = 1;
+        this.evasion = this.agility;
+        numSpells = this.arcane;
     }
 
     levelUp() {
         this.level++;
-        if(randomRange(1, 2) == 1) {
-            this.attack++;
+        if(playerClass == 1) {
+            if (randomRange(1, 2) > 1) {
+                this.strength++;
+            } else {
+                this.constitution++;
+            }
         } else {
-            this.defense++;
+            if (randomRange(1, 2) > 1) {
+                this.agiity++;
+            } else {
+                this.arcane++;
+            }
         }
 
-        let levelHealth = randomRange(1, 5);
-        this.maxHealth += levelHealth;
+        this.attack = this.strength * this.weaponDamage;
+        this.maxHealth = this.constitution * 5;
+        this.evasion = this.agiity;
+        numSpells = this.arcane;
+
+        let levelHealth = randomRange(this.constitution, this.maxHealth-this.hp);
         this.hp += levelHealth;
     }
 
