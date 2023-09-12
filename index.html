@@ -35,6 +35,7 @@
 
     gameState = "loading";
 
+    playerClass = 0;
     startingHp = 10;
     numLevels = 6;
 
@@ -112,7 +113,14 @@
 
     document.querySelector("html").onkeypress = function(e) {
         if (gameState == "title") {
-            startGame();
+            if (e.key == "1") {
+                playerClass = 1;
+                startGame();
+            }
+            if (e.key == "2") {
+                playerClass = 2;
+                startGame();
+            }
         } else if (gameState == "dead") {
             showTitle();
         } else if (gameState == "running") {

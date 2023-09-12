@@ -210,7 +210,14 @@ class Monster {
 
 class Player extends Monster {
     constructor (tile) {
-        super(tile, 0, 10);
+        if (playerClass == 1) {
+            super(tile, 0, 10);
+            this.hp = 20;
+        } else {
+            super(tile, 1, 10);
+            this.hp = 10;
+            numSpells = numSpells + 2;
+        }
         this.maxHealth = this.hp;
         this.isPlayer = true;
         this.teleportCounter = 0;

@@ -131,6 +131,7 @@ function showTitle() {
 
     gameState = "title";
 
+    drawText("Press 1 for Warrior, or 2 for Mage", 30, true, canvas.height / 2 - 200, "white");
     drawText("PROJECT", 40, true, canvas.height / 2 - 110, "white");
     drawText("HYPERION", 70, true, canvas.height / 2 - 50, "white");
 
@@ -165,7 +166,7 @@ function startLevel(playerHp, playerSpells) {
 
     generateLevel();
 
-    player = new Player(randomPassableTile());
+    player = new Player(randomPassableTile(), playerClass);
     
     if (gameStarted) {
         // Restore player stats

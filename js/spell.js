@@ -170,6 +170,8 @@ spells = {
     },
     Matchstick: function() {
         player.statuses.push(new Burning(5));
+        player.bonusAttack = 5;
+        player.attack++;
     }
 };
 
