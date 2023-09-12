@@ -63,19 +63,19 @@
         xDist = Math.abs(touchstartX - touchendX);
         yDist = Math.abs(touchstartY - touchendY);
 
-        if (touchendX < touchstartX || yDist < 100) {
+        if (touchendX < touchstartX || xDist > 200 || yDist < 200) {
             // left
             touchMove(-1, 0);
         }
-        if (touchendX > touchstartX || yDist < 100) {
+        if (touchendX > touchstartX || xDist > 200 || yDist < 200) {
             // right
             touchMove(1, 0);
         }
-        if (touchendY < touchstartY || xDist < 100) {
+        if (touchendY < touchstartY || yDist > 200 || xDist < 200) {
             // up
             touchMove(0, -1);
         }
-        if (touchendY > touchstartY || xDist < 100) {
+        if (touchendY > touchstartY || yDist > 200 || xDist < 200) {
             // down
             touchMove(0, 1);
         }
