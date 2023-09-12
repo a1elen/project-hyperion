@@ -39,8 +39,9 @@ class Monster {
 
                 if (this.statuses[i].duration < 1) {
                     this.statuses.splice(i, 1);
+                } else {
+                    this.statuses[i].update(this);
                 }
-                this.statuses[i].update(this);
 
             }
         }
