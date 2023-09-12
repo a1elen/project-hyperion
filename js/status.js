@@ -44,6 +44,17 @@ class Stunned extends StatusEffect {
     }
 }
 
+class Burning extends StatusEffect {
+    constructor(duration) {
+        super(duration);
+    }
+
+    update(target) {
+        target.hp--;
+        super.update(target);
+    }
+}
+
 function addStatus(name, duration, target) {
 
     if (name == "Stunned") {
