@@ -10,6 +10,7 @@
         background-color: rgb(43, 43, 43);
         text-align: center;
         margin-top: 50px;
+        overscroll-behavior: contain;
     }
 </style>
 
@@ -64,32 +65,32 @@
         yDist = Math.floor(Math.abs(touchstartY - touchendY));
 
         if (xDist < 200 && yDist < 200) {
-            alert(xDist + " \ " + yDist + " is less than 200");
+            //alert(xDist + " \ " + yDist + " is less than 200");
             return;
         }
 
         if (touchendX < touchstartX && xDist > 200 && yDist < 200) {
             // left
             touchMove(-1, 0);
-            alert(xDist + " \ " + yDist);
+            //alert(xDist + " \ " + yDist);
             return;
         }
         if (touchendX > touchstartX && xDist > 200 && yDist < 200) {
             // right
             touchMove(1, 0);
-            alert(xDist + " \ " + yDist);
+            //alert(xDist + " \ " + yDist);
             return;
         }
         if (touchendY < touchstartY && yDist > 200 && xDist < 200) {
             // up
             touchMove(0, -1);
-            alert(xDist + " \ " + yDist);
+            //alert(xDist + " \ " + yDist);
             return;
         }
         if (touchendY > touchstartY && yDist > 200 && xDist < 200) {
             // down
             touchMove(0, 1);
-            alert(xDist + " \ " + yDist);
+            //alert(xDist + " \ " + yDist);
             return;
         }
     }
