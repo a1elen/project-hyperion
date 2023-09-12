@@ -29,7 +29,7 @@ class Monster {
 
     update() {
 
-        for (i = 0; i < this.statuses.length; i++) {
+        for (let i = 0; i < this.statuses.length; i++) {
             if (this.statuses[i].duration < 1) {
                 this.statuses.splice(i, 1);
             }
