@@ -60,8 +60,13 @@
     }
 
     function checkDirection() {
-        xDist = Math.abs(touchstartX - touchendX);
-        yDist = Math.abs(touchstartY - touchendY);
+        xDist = Math.floor(Math.abs(touchstartX - touchendX));
+        yDist = Math.floor(Math.abs(touchstartY - touchendY));
+
+        if (xDist < 200 && yDist < 200) {
+            alert(xDist + " \ " + yDist + " is less than 200");
+            return;
+        }
 
         if (touchendX < touchstartX && xDist > 200 && yDist < 200) {
             // left
