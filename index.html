@@ -48,20 +48,30 @@
         if (touchendX < touchstartX) {
             if (gameState == "title") {
                 startGame();
+            } else if (gameState == "dead") {
+                showTitle();
+            } else if (gameState == "running") {
+                player.tryMove(-1, 0);
             }
         }
         if (touchendX > touchstartX) {
             if (gameState == "title") {
                 startGame();
+            } else if (gameState == "dead") {
+                showTitle();
+            } else if (gameState == "running") {
+                player.tryMove(1, 0);
             }
         }
     }
 
     document.addEventListener('touchstart', e => {
+        e.preventDefault();
         touchstartX = e.changedTouches[0].screenX;
     })
 
     document.addEventListener('touchend', e => {
+        e.preventDefault();
         touchendX = e.changedTouches[0].screenX;
         checkDirection()
     })
