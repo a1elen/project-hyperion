@@ -4,8 +4,8 @@ class StatusEffect {
     }
 
     update(target) {
-        if (duration >= 1) {
-            duration--;
+        if (this.duration >= 1) {
+            this.duration--;
             target.hp++;
         }
     }
