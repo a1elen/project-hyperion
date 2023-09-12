@@ -159,9 +159,6 @@ class Monster {
 
     hit(damage) {
 
-        let status = new Regen(10);
-        this.statuses.push(status);
-
         if (randomRange(1, 100 ) < 10) {
             return;
         }
