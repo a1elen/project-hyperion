@@ -11,6 +11,14 @@ function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function roll(count, sides) {
+    rolls = [];
+    for (let i = 0; i < count; i++) {
+        rolls.push(randomRange(1, sides));
+    }
+    return;
+}
+
 function shuffle(arr) {
     let temp, r;
     for (let i = 1; i < arr.length; i++) {
