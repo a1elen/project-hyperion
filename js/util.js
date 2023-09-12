@@ -30,6 +30,10 @@ function shuffle(arr) {
     return arr;
 }
 
+function clamp(num, min, max) {
+    return Math.min(Math.max(num, min), max);
+}
+
 function rightPad(textArray) {
     let finalText = "";
     textArray.forEach(text => {
