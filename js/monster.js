@@ -155,7 +155,7 @@ class Monster {
                         damage = damage * 2;
                     }
 
-                    newTile.monster.hit();
+                    newTile.monster.hit(damage);
                     this.bonusAttack = 0;
 
                     shakeAmount = 5;
