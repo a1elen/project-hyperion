@@ -29,10 +29,10 @@ class Monster {
 
     update() {
         if (this.statuses.length > 0) {
-            console.log(i);
             console.log(this.statuses.length);
             console.log(this.statuses[0]);
             for (let i = 0; i < this.statuses.length; i++) {
+                console.log(i);
                 console.log("success");
                 if (this.statuses[i].duration < 1) {
                     this.statuses.splice(i, 1);
