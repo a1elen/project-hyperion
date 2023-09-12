@@ -19,6 +19,7 @@ class Monster {
         this.stunned = false;
         this.xpPoints = 1;
         this.isPlayer = false;
+        this.statuses = [];
     }
 
     heal(damage) {
@@ -27,19 +28,33 @@ class Monster {
     }
 
     update() {
-        this.teleportCounter--;
-        if (this.stunned) {
-            this.stunCounter--;
-            if (this.stunCounter < 0) {
-                this.stunCounter = 0;
-                this.stunned = false;
+        if (this.statuses.length > 0) {
+            for (let i = 0; i < this.statuses.length; i++) {
+
+                if (this.statuses[i].constructor.name == "Stunned") {
+                    if (this.statuses[i].duration < 1) {
+                        this.stunned = false;
+                    }
+                }
+
+                if (this.statuses[i].duration < 1) {
+                    this.statuses.splice(i, 1);
+                } else {
+                    this.statuses[i].update(this);
+                }
+
             }
+        }
+
+        this.teleportCounter--;
+        if (this.teleportCounter > 0) {
             return
         }
-        if (this.stunned || this.teleportCounter > 0) {
-            this.stunned = false;
-            return
+
+        if (this.stunned == true) {
+            return;
         }
+
         while (this.moveCounter < 100) {
             if (!this.isPlayer) this.doStuff();
             this.moveCounter += this.moveSpeed;
@@ -162,8 +177,8 @@ class Monster {
             this.hp = 0;
             this.die();
         } else if (randomRange(1, 100) < 10) {
-                this.stunned = true;
-                this.stunCounter += randomRange(2, 4);
+            addStatus("Stunned", randomRange(2,4), this);
+            //this.statuses.push(new Stunned(randomRange(2, 4)));
         }
 
         // Sound
