@@ -10,7 +10,6 @@ class StatusEffect {
     }
 
     countDown() {
-        
 
     }
 }
@@ -42,5 +41,18 @@ class Stunned extends StatusEffect {
     update(target) {
         target.stunned = true;
         super.update(target);
+    }
+}
+
+function addStatus(name, duration, target) {
+
+    if (name == "Stunned") {
+        for (let i = 0; i < target.statuses.length; i++) {
+            if (target.statuses[i].consctructor.name == "Stunned") {
+                target.statuses[i].duration + duration;
+            } else {
+                target.statuses.push(new Stunned(duration));
+            }
+        }
     }
 }

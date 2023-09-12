@@ -177,7 +177,8 @@ class Monster {
             this.hp = 0;
             this.die();
         } else if (randomRange(1, 100) < 10) {
-                this.statuses.push(new Stunned(randomRange(2, 4)));
+            addStatus("Stunned", randomRange(2,4), this);
+            //this.statuses.push(new Stunned(randomRange(2, 4)));
         }
 
         // Sound
