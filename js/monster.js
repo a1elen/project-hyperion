@@ -259,10 +259,17 @@ class Monster {
 
         //this.attack = this.attack + randomRange(1, 2) * amount;
         //this.defense = this.defense + randomRange(1, 2) * Math.floor(amount / 2)
-        
-        this.strength += randomRange(1, 2) * amount;
-        this.constitution += randomRange(1, 2) * amount;
-        this.agiity += randomRange(1, 2) * amount;
+        for (let i = 0; i < amount; i++) {
+            let chosenStat = randomRange(1, 3);
+            
+            if (chosenStat == 1) {
+                this.strength += randomRange(1, 2) * amount;
+            } else if (chosenStat == 2) {
+                this.constitution += randomRange(1, 2) * amount;
+            } else {
+                this.agiity += randomRange(1, 2) * amount;
+            }
+        }
         this.updateStats();
 
         this.hp = this.maxHealth;

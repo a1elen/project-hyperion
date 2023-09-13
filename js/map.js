@@ -65,7 +65,7 @@ function randomPassableTile() {
 
 function generateMonsters() {
     monsters = [];
-    let numMonsters = level+1;
+    let numMonsters = Math.floor(level / 2) + 1;
     let numberOfRare = Math.floor(level / 2);
     for (let i = 0; i < numMonsters; i++) {
         if (i < numberOfRare) {
