@@ -71,7 +71,7 @@ function draw() {
         if (gameState == "spells") {
             drawText("Spells:", 30, false, 130, "violet");
 
-            for (let i = 0; i < player.spells.length; i++) {
+            for (let i = 0; i < /*player.spells.length*/numSpells; i++) {
                 let spellText = (i + 1) + ") " + (player.spells[i] || "--- ");
                 drawText(spellText, 20, false, 170 + i * 40, "aqua");
             }

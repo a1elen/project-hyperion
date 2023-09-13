@@ -104,6 +104,7 @@ class Floor extends Tile {
             //    numSpells++;
             //}
             if (player.spells.length < numSpells) {
+                console
                 player.addSpell();
                 this.scroll = false;
             }
