@@ -64,7 +64,7 @@ class Tile {
             drawSprite(18, this.x, this.y);
         }
 
-        if (this.trap && visible) {
+        if (this.trap && this.visible) {
             drawSprite(19, this.x, this.y);
         }
 
