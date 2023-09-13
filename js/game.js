@@ -299,7 +299,12 @@ function initSounds() {
         hit2: new Audio('sounds/hit2.wav'),
         treasure: new Audio('sounds/treasure.wav'),
         newLevel: new Audio('sounds/newLevel.wav'),
-        spell: new Audio('sounds/spell.wav')
+        spell: new Audio('sounds/spell.wav'),
+        trap: new Audio('sounds/trap.wav'),
+        trapdoor: new Audio('sounds/trapdoor.wav'),
+        healthUp: new Audio('sounds/healthUp.wav'),
+        move: new Audio('sounds/move.wav'),
+        firebolt: new Audio('sounds/firebolt.wav'),
     }
     sounds.hit1.volume = 0.1;
     sounds.hit2.volume = 0.1;
