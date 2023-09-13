@@ -51,6 +51,7 @@ class Burning extends StatusEffect {
 
     update(target) {
         target.hp--;
+        check_dead();
         super.update(target);
     }
 }
