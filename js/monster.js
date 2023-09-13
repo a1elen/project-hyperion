@@ -172,7 +172,7 @@ class Monster {
 
                     if (newTile.monster.defense > damage) {
                         if (randomRange(1, 2) > 1) {
-                            damage = Math.min(damage / 2, 1);
+                            damage = Math.floor(clamp(damage / 2, 1, damage));
                         }
                     } else {
                         damage = Math.floor(clamp(damage - newTile.monster.defense / 4, 1, damage));
@@ -250,6 +250,8 @@ class Monster {
         this.constitution += randomRange(1, 2) * amount;
         this.agiity += randomRange(1, 2) * amount;
         this.updateStats();
+
+        this.hp = this.maxHealth;
 
         this.rare = true;
     }
