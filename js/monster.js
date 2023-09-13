@@ -143,8 +143,8 @@ class Monster {
         let width = (this.hp / this.maxHealth) * maxWidth;
         let height;
 
-        let x = ((this.getDisplayX() * 64) - healthBarWidth / 2) + 32;
-        let y = ((this.getDisplayY() * 64) - healthBarHeight / 2) + 64;
+        let x = ((this.getDisplayX() * tileSize) - healthBarWidth / 2) + (tileSize / 2);
+        let y = ((this.getDisplayY() * tileSize) - healthBarHeight / 2) + tileSize;
 
         ctx.fillStyle = 'rgba(255, 74, 83, 0.75)';
         ctx.fillRect(x, y, width, healthBarHeight);
