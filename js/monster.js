@@ -21,6 +21,7 @@ class Monster {
         this.isPlayer = false;
         this.statuses = [];
         this.bleedingChance = 0;
+        this.weaponDamage = 1;
 
         // main stats
         this.initMainStats(2, 2, 2, 2, 2, 2);
@@ -111,7 +112,7 @@ class Monster {
         }
 
         if (this.rare == true) {
-            ctx.fillStyle = rgba(200, 0, 0, 0.2);
+            ctx.fillStyle = 'rgba(200, 0, 0, 0.2)';
             ctx.fillRect(this.getDisplayX, this.getDisplayY, 16*tileSize);
         }
 
