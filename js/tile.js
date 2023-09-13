@@ -66,7 +66,11 @@ class Tile {
         }
 
         if (this.trap && this.visible) {
-            drawSprite(19, this.x, this.y);
+            if (this.trapWorks) {
+                drawSprite(28, this.x, this.y);
+            } else {
+                drawSprite(29, this.x, this.y);
+            }
         }
 
         if (this.effectCounter) {
@@ -117,13 +121,15 @@ class Floor extends Tile {
                 return;
             }
 
-            let statusName;
+            /*let statusName;
             if (randomRange(1, 2) > 1) {
                 statusName = "Bleeding";
             } else {
                 statusName = "Stunned";
-            }
-            addStatus(statusName, randomRange(2, 5), monster);
+            }*/
+            playSound("trap");
+            addStatus("Bleeding", randomRange(2, 5), monster);
+            addStatus("Stunned", randomRange(2, 5), monster);
             this.visible = true;
             this.trapWorks = false;
             shakeAmount = 10;
@@ -139,7 +145,7 @@ class Wall extends Tile {
 
 class Exit extends Tile {
     constructor(x, y) {
-        super(x, y, 11, true);
+        super(x, y, 23, true);
     }
 
     stepOn(monster) {

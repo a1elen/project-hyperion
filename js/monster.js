@@ -38,6 +38,7 @@ class Monster {
     }
 
     heal(damage) {
+        playSound("healthUp");
         this.hp = Math.min(this.maxHealth, this.hp+damage);
     }
 
@@ -370,8 +371,8 @@ class Spider extends Monster {
         this.initMainStats(1, 1, 1, 1, 1, 1);
         this.updateStats();
         this.hp = this.maxHealth;
-        this.attack = 1;
-        this.defense = 0;
+        //this.attack = 1;
+        //this.defense = 0;
         this.xpPoints = 1;
     }
 }
@@ -382,8 +383,8 @@ class Worm extends Monster {
         this.initMainStats(1, 2, 1, 2, 1, 1);
         this.updateStats();
         this.hp = this.maxHealth;
-        this.attack = 1;
-        this.defense = 0;
+        //this.attack = 1;
+        //this.defense = 0;
         this.xpPoints = 2;
 
     }
@@ -405,8 +406,8 @@ class Snake extends Monster {
         this.initMainStats(1, 1, 2, 2, 1, 1);
         this.updateStats();
         this.hp = this.maxHealth;
-        this.attack = 1;
-        this.defense = 0;
+        //this.attack = 1;
+        //this.defense = 0;
         this.moveSpeed = 75;
         this.xpPoints = 2;
         this.bleedingChance = 10;
@@ -420,8 +421,8 @@ class Zombie extends Monster {
         this.initMainStats(2, 3, 1, 1, 1, 1);
         this.updateStats();
         this.hp = this.maxHealth;
-        this.attack = 1;
-        this.defense = 1;
+        //this.attack = 1;
+        //this.defense = 1;
         this.moveSpeed = 150;
         this.xpPoints = 3;
     }
@@ -433,8 +434,8 @@ class Skeleton extends Monster {
         this.initMainStats(2, 2, 1, 1, 1, 1);
         this.updateStats();
         this.hp = this.maxHealth;
-        this.attack = 2;
-        this.defense = 0;
+        //this.attack = 2;
+        //this.defense = 0;
         this.xpPoints = 1;
     }
 
@@ -443,5 +444,30 @@ class Skeleton extends Monster {
         if (neighbours.length) {
             this.tryMove(neighbours[0].x - this.tile.x, neighbours[0].y - this.tile.y);
         }
+    }
+}
+
+class RedDrake extends Monster {
+    constructor (tile) {
+        super(tile, 21, 2);
+        this.initMainStats(4, 5, 4, 4, 2, 2);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 2;
+        //this.defense = 0;
+        this.xpPoints = 1;
+    }
+}
+
+class GreenSlime extends Monster {
+    constructor (tile) {
+        super(tile, 22, 2);
+        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 2;
+        //this.defense = 0;
+        this.xpPoints = 1;
+        this.moveSpeed = 200;
     }
 }

@@ -76,7 +76,7 @@ function generateMonsters() {
 }
 
 function spawnMonster(rare) {
-    let monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton])[0];
+    let monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton, RedDrake, GreenSlime])[0];
     let monster = new monsterType(randomPassableTile());
     if (rare) {
         monster.upgrade(Math.floor(level / 3));

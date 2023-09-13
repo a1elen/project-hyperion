@@ -311,6 +311,11 @@ function initSounds() {
     sounds.treasure.volume = 0.1;
     sounds.newLevel.volume = 0.1;
     sounds.spell.volume = 0.1;
+    sounds.trap.volume = 0.1;
+    sounds.trapdoor.volume = 0.1;
+    sounds.healthUp.volume = 0.1;
+    sounds.move.volume = 0.1;
+    sounds.firebolt.volume = 0.1;
 }
 
 function playSound(soundName) {

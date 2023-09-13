@@ -63,6 +63,7 @@ class Bleeding extends StatusEffect {
 
     update(target) {
         target.hp--;
+        playSound("move");
         check_dead();
         super.update(target);
     }
