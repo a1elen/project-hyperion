@@ -127,9 +127,25 @@ class Floor extends Tile {
             } else {
                 statusName = "Stunned";
             }*/
-            playSound("trap");
-            addStatus("Bleeding", randomRange(2, 5), monster);
-            addStatus("Stunned", randomRange(2, 5), monster);
+            if (monster.isPlayer) {
+                let isTrapdoor = randomRange(1, 2);
+                if (isTrapdoor == 1) {
+                    playSound("trap");
+                    addStatus("Bleeding", randomRange(2, 5), monster);
+                    addStatus("Stunned", randomRange(2, 5), monster);
+                } else {
+                    playSound("trapdoor");
+                    level++;
+                    startLevel(Math.min(maxHp, player.hp+1), player.spells);
+                    shakeAmount = 20;
+
+                }
+            } else {
+                playSound("trap");
+                addStatus("Bleeding", randomRange(2, 5), monster);
+                addStatus("Stunned", randomRange(2, 5), monster);
+            }
+
             this.visible = true;
             this.trapWorks = false;
             shakeAmount = 10;
