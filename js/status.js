@@ -90,7 +90,7 @@ class AllSeeingEye extends StatusEffect {
 
 function addStatus(name, duration, target) {
 
-    if (!target) {
+    if (!target.statuses) {
         return;
     }
 
