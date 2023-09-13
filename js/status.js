@@ -68,6 +68,10 @@ class Bleeding extends StatusEffect {
 
 function addStatus(name, duration, target) {
 
+    if (!target) {
+        return;
+    }
+
     if (name == "Stunned") {
         let count = 0;
         for (let i = 0; i < target.statuses.length; i++) {
