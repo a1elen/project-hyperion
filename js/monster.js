@@ -175,7 +175,7 @@ class Monster {
                             damage = Math.min(damage / 2, 1);
                         }
                     } else {
-                        damage = clamp(damage - newTile.monster.defense / 4, 1, damage);
+                        damage = Math.floor(clamp(damage - newTile.monster.defense / 4, 1, damage));
                     }
 
                     if (randomRange(1, 100) < this.perception) {
