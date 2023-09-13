@@ -83,7 +83,11 @@ function check_dead() {
     for (let k = monsters.length - 1; k >= 0; k--) {
         if (monsters[k].dead) {
             // Xp gain
-            player.xp = player.xp + monsters[k].xpPoints + randomRange(0, 3);
+            if (monsters[k].rare) {
+                player.xp = player.xp + monsters[k].xpPoints;
+            } else {
+                player.xp = player.xp + monsters[k].xpPoints + randomRange(0, 3);
+            }
             if (player.xp >= player.xpToLevel) {
                 player.levelUp();
                 player.xp = 0;

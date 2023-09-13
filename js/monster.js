@@ -273,7 +273,7 @@ class Monster {
         this.updateStats();
 
         this.hp = this.maxHealth;
-
+        this.xpPoints = (this.xpPoints + randomRange(0, 3)) * level;
         this.rare = true;
     }
 }
