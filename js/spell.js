@@ -128,8 +128,7 @@ spells = {
     Fear: function() {
         for (let i = 0; i < monsters.length; i++) {
             if (!monsters[i].isPlayer) {
-                monsters[i].stunned = true;
-                monsters[i].stunCounter += randomRange(2, 8);
+                addStatus("Stunned", randomRange(2, 8), monsters[i])
             }
         }
     },
