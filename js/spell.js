@@ -48,8 +48,7 @@ spells = {
             newTile.getAdjacentNeighbours().forEach(t => {
                 if (t.monster) {
                     t.setEffect(14);
-                    t.monster.stunned = true;
-                    t.monster.stunCounter = 5;
+                    addStatus("Stunned", randomRange(2, 5), t.monster);
                     t.monster.hit(1);
                 }
             });
@@ -87,8 +86,7 @@ spells = {
         player.tile.setEffect(13);
         player.heal(2);
 
-        player.stunned = false;
-        player.stunCounter = 0;
+        addStatus("Stunned", randomRange(1, 2), player);
 
         player.bonusAttack = 5;
     },
@@ -148,11 +146,10 @@ spells = {
                 player.heal(randomRange(1, 6));
                 break;
             case 2:
-                player.stunned = true;
-                player.stunCounter += randomRange(1, 5);
+                addStatus("Stunned", randomRange(2, 4), player);
                 break;
             case 3:
-                player.shield += randomRange(2, 10);
+                addStatus("Shielded", randomRange(2, 10), player);
                 break;
             case 4:
                 if (randomRange(1, 2) == 1) {
