@@ -430,19 +430,26 @@ class Zombie extends Monster {
 
 class Skeleton extends Monster {
     constructor (tile) {
-        super(tile, 8, 2);
+        super(tile, 30, 2);
         this.initMainStats(2, 2, 1, 1, 1, 1);
         this.updateStats();
         this.hp = this.maxHealth;
         //this.attack = 2;
         //this.defense = 0;
         this.xpPoints = 1;
+        this.angry = false;
     }
 
     doStuff() {
         let neighbours = this.tile.getAdjacentPassableNeighbours();
-        if (neighbours.length) {
+        if (this.tile.dist(player.tile) < 4) {
+            this.angry = true;
+            this.sprite = 8;
+        }
+        if (neighbours.length && !this.angry) {
             this.tryMove(neighbours[0].x - this.tile.x, neighbours[0].y - this.tile.y);
+        } else {
+            super.doStuff();
         }
     }
 }

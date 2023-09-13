@@ -143,7 +143,7 @@ class Wall extends Tile {
     }
 }
 
-class Exit extends Tile {
+class StairsDown extends Tile {
     constructor(x, y) {
         super(x, y, 23, true);
     }
@@ -158,6 +158,17 @@ class Exit extends Tile {
                 level++;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }
+        }
+    }
+}
+
+class StairsUp extends Tile {
+    constructor(x, y) {
+        super(x, y, 24, true);
+    }
+
+    stepOn(monster) {
+        if (monster.isPlayer) {
         }
     }
 }

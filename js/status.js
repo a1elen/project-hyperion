@@ -27,7 +27,7 @@ class HpRegen extends StatusEffect {
 
     update(target) {
         if (target.hp < target.maxHealth) { 
-            target.hp++;
+            target.heal(1 * this.will);
         }
         super.update(target);
     }
@@ -63,7 +63,7 @@ class Bleeding extends StatusEffect {
 
     update(target) {
         target.hp--;
-        playSound("move");
+        //playSound("move");
         check_dead();
         super.update(target);
     }

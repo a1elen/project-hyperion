@@ -8,7 +8,7 @@ spells = {
                 let tile = getTile(i, j);
                 if (tile.monster) {
                     let numWalls = 8 - tile.getAdjacentPassableNeighbours().length;
-                    tile.monster.hit(numWalls * 2);
+                    tile.monster.hit(numWalls * 3);
                 }
             }
         }
@@ -27,7 +27,7 @@ spells = {
         player.tile.getAdjacentNeighbours().forEach(function(t) {
             t.setEffect(13);
             if (t.monster) {
-                t.monster.heal(1);
+                t.monster.heal(5);
             }
         });
         player.tile.setEffect(13);
@@ -84,7 +84,7 @@ spells = {
     },
     Berserk: function() {
         player.tile.setEffect(13);
-        player.heal(2);
+        player.heal(5);
 
         addStatus("Stunned", randomRange(1, 2), player);
 
@@ -98,10 +98,10 @@ spells = {
         }
     },
     Shield: function() {
-        addStatus("Shielded", randomRange(2, 10), player);
+        addStatus("Shielded", randomRange(5, 10), player);
     },
     Bolt: function() {
-        boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 4);
+        boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 5 * player.arcane);
     },
     Cross: function() {
         let directions = [
@@ -111,7 +111,7 @@ spells = {
             [1, 0]
         ];
         for (let k = 0; k < directions.length; k++) {
-            boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 2);
+            boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 4 * player.arcane);
         }
     },
     Explosion: function() {
@@ -122,7 +122,7 @@ spells = {
             [1, 1]
         ];
         for (let k = 0; k < directions.length; k++) {
-            boltTravel(directions[k], 14, 3);
+            boltTravel(directions[k], 14, 3 * player.arcane);
         }
     },
     Fear: function() {
@@ -134,7 +134,7 @@ spells = {
     },
     Heal: function() {
         player.tile.setEffect(13);
-        player.heal(3);
+        player.heal(10);
     },
     Pray: function() {
         let outcome = randomRange(1, 5);
@@ -142,7 +142,7 @@ spells = {
         switch(outcome) {
             case 1:
                 player.tile.setEffect(13);
-                player.heal(randomRange(1, 6));
+                player.heal(randomRange(1, 20));
                 break;
             case 2:
                 addStatus("Stunned", randomRange(2, 4), player);

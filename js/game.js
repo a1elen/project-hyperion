@@ -184,7 +184,8 @@ function startLevel(playerHp, playerSpells) {
 
     generateLevel();
 
-    player = new Player(randomPassableTile(), playerClass);
+    let playerRandomTile = randomPassableTile();
+    player = new Player(playerRandomTile, playerClass);
     
     if (gameStarted) {
         // Restore player stats
@@ -211,7 +212,8 @@ function startLevel(playerHp, playerSpells) {
     if (playerSpells) {
         player.spells = playerSpells;
     }
-    randomPassableTile().replace(Exit);
+    playerRandomTile.replace(StairsUp);
+    randomPassableTile().replace(StairsDown);
 }
 
 function drawText(text, size, centered, textY, color, textX) {
