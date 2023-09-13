@@ -64,7 +64,7 @@ function draw() {
 
             for (let i = 0; i < player.statuses.length; i++) {
                 let statusText = (player.statuses[i].constructor.name + " (" + player.statuses[i].duration + ")");
-                drawText(statusText, 20, false, 390 + i * 30, "aqua");
+                drawText(statusText, 20, false, 540 + i * 30, "aqua");
             }
         }
 
