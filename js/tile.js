@@ -110,7 +110,13 @@ class Floor extends Tile {
             this.scroll = false;
         }
         if (this.trap) {
-            addStatus("Bleeding", 5, monster);
+            let statusName;
+            if (randomRange(1, 2) > 1) {
+                statusName = "Bleeding";
+            } else {
+                statusName = "Stunned";
+            }
+            addStatus(statusName, randomRange(1, 5), monster);
             this.visible = true;
             shakeAmount = 10;
         }
