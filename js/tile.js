@@ -103,7 +103,7 @@ class Floor extends Tile {
             //if (numSpells < 9) {
             //    numSpells++;
             //}
-            if (player.spells.length <= numSpells) {
+            if (player.spells.length < numSpells) {
                 player.addSpell();
             }
             // TO DO
