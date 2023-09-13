@@ -145,7 +145,7 @@ function startGame() {
     gameStarted = false;
     level = 1;
     score = 0;
-    numSpells = 9;
+    numSpells = 1;
     startLevel(startingHp);
     gameStarted = true;
 
