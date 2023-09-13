@@ -5,6 +5,7 @@ class Tile {
         this.sprite = sprite;
         this.passable = passable;
         this.visible = false;
+        this.trapWorks = true;
     }
 
     replace(newTileType) {
@@ -110,6 +111,11 @@ class Floor extends Tile {
             this.scroll = false;
         }
         if (this.trap) {
+
+            if (!this.trapWorks) {
+                return;
+            }
+
             let statusName;
             if (randomRange(1, 2) > 1) {
                 statusName = "Bleeding";
@@ -118,6 +124,7 @@ class Floor extends Tile {
             }
             addStatus(statusName, randomRange(2, 5), monster);
             this.visible = true;
+            this.trapWorks = false;
             shakeAmount = 10;
         }
     }

@@ -88,6 +88,8 @@ function initKeyControls() {
             if (e.key == "1") player.tryMove(-1, 1);
             if (e.key == "7") player.tryMove(-1, -1);
 
+            if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
+
             if (e.key == "5") tick();
 
             if (e.key == "0") gameState = "spells";

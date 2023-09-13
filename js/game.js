@@ -117,11 +117,14 @@ function tick() {
         gameState = "dead";
     }
 
-    spawnCounter--;
-    if (spawnCounter <= 0) {
-        spawnMonster();
-        spawnCounter = spawnRate;
-        spawnRate--;
+
+    if (player.cursed) {
+        spawnCounter--;
+        if (spawnCounter <= 0) {
+            spawnMonster();
+            spawnCounter = spawnRate;
+            spawnRate--;
+        }
     }
 }
 
@@ -150,7 +153,7 @@ function startGame() {
 }
 
 function startLevel(playerHp, playerSpells) {
-    spawnRate = 15;
+    spawnRate = 10;
     spawnCounter = spawnRate;
 
     if (gameStarted) {

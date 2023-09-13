@@ -57,6 +57,13 @@ class Monster {
                     }
                 }
 
+                if (this.statuses[i].constructor.name == "AllSeeingEye") {
+                    player.cursed = true;
+                    if (this.statuses[i].duration < 1) {
+                        player.cursed = false;
+                    }
+                }
+
                 if (this.statuses[i].duration < 1) {
                     this.statuses.splice(i, 1);
                 } else {
@@ -288,6 +295,7 @@ class Player extends Monster {
         this.weaponDamage = 1;
         this.evasion = this.agility;
         this.attack = this.strength * this.weaponDamage;
+        this.cursed = false;
     }
 
     levelUp() {

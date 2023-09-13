@@ -77,6 +77,16 @@ class Shielded extends StatusEffect {
     }
 }
 
+class AllSeeingEye extends StatusEffect {
+    constructor(duration) {
+        super(duration);
+    }
+
+    update(target) {
+        super.update(target);
+    }
+}
+
 function addStatus(name, duration, target) {
 
     if (!target) {
@@ -119,6 +129,19 @@ function addStatus(name, duration, target) {
         }
         if (count < 1) {
             target.statuses.push(new Shielded(duration));
+        }
+    }
+
+    if (name == "AllSeeingEye") {
+        let count = 0;
+        for (let i = 0; i < target.statuses.length; i++) {
+            if (target.statuses[i].constructor.name == "AllSeeingEye") {
+                target.statuses[i].duration += duration;
+                count++;
+            }
+        }
+        if (count < 1) {
+            target.statuses.push(new AllSeeingEye(duration));
         }
     }
 }
