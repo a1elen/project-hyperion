@@ -60,9 +60,6 @@ function draw() {
                 let statusText = (player.statuses[i].constructor.name + " (" + player.statuses[i].duration + ")");
                 drawText(statusText, 20, false, 390 + i * 30, "aqua");
             }
-            /*if (player.stunned) {
-                drawText("Stunned! (" + (player.stunCounter + 1) + ")", 20, false, 390, "aqua")
-            }*/
         }
 
         if (gameState == "spells") {
@@ -95,10 +92,7 @@ function check_dead() {
 }
 
 function check_for_tick() {
-    //if (player.moveCounter >= 100) {
-    //    player.moveCounter = 0;
         tick();
-    //}
 }
 
 function tick() {

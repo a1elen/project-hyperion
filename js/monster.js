@@ -23,17 +23,20 @@ class Monster {
         this.bleedingChance = 0;
 
         // main stats
-        this.strength = 2;
-        this.constitution = 2;
-        this.perception = 2;
-        this.agiity = 2;
-        this.arcane = 2;
-        this.will = 2;
+        this.initMainStats(2, 2, 2, 2, 2, 2);
+    }
+
+    initMainStats(strength, constitution, perception, agiity, arcane, will) {
+        this.strength = strength;
+        this.constitution = constitution;
+        this.perception = perception;
+        this.agiity = agiity;
+        this.arcane = arcane;
+        this.will = will;
     }
 
     heal(damage) {
         this.hp = Math.min(this.maxHealth, this.hp+damage);
-        //if (this.maxHealth < this.hp) this.maxHealth = this.hp;
     }
 
     update() {
@@ -115,7 +118,6 @@ class Monster {
         let x = ((this.getDisplayX() * 64) - healthBarWidth / 2) + 32;
         let y = ((this.getDisplayY() * 64) - healthBarHeight / 2) + 64;
 
-        //ctx.fillStyle = "red";
         ctx.fillStyle = 'rgba(255, 74, 83, 0.75)';
         ctx.fillRect(x, y, width, healthBarHeight);
 
@@ -124,16 +126,6 @@ class Monster {
         + " !" + this.attack
         + " #" + this.defense,
         10, false, y + 5, "white", x)
-
-        /*
-        for (let i = 0; i < this.hp; i++) {
-            drawSprite(
-                9,
-                this.getDisplayX() + (i % 3) * (5 / 16),
-                this.getDisplayY() - Math.floor(i / 3) * (5 / 16)
-            );
-        }
-        */
     }
 
     drawStun() {
@@ -152,8 +144,6 @@ class Monster {
                 this.move(newTile);
             } else {
                 if (this.isPlayer != newTile.monster.isPlayer) {
-                    //this.attackedThisTurn = true;
-                    //newTile.monster.stunned = true;
                     if (randomRange(1, 100) < this.strength) {
                         addStatus("Stunned", randomRange(2, 2 + this.strength), newTile.monster);
                     }
@@ -241,26 +231,13 @@ class Player extends Monster {
         if (playerClass == 1) {
             super(tile, 0, 10);
 
-            this.strength = 5;
-            this.constitution = 4;
-            this.perception = 2;
-            this.agiity = 2;
-            this.arcane = 1;
-            this.will = 1;
-
-            this.hp = this.constitution * 5;
+            this.initMainStats(5, 4, 2, 2, 1, 1)      
         } else {
-            super(tile, 1, 10);
+            super(tile, 20, 10);
 
-            this.strength = 1;
-            this.constitution = 2;
-            this.perception = 2;
-            this.agiity = 3;
-            this.arcane = 4;
-            this.will = 4;
-
-            this.hp = this.constitution * 5;
+            this.initMainStats(1, 2, 2, 3, 4, 4);
         }
+        this.hp = this.constitution * 5;
         numSpells = this.arcane;
         this.maxHealth = this.hp;
         this.isPlayer = true;
@@ -376,15 +353,6 @@ class Snake extends Monster {
         this.xpPoints = 2;
         this.bleedingChance = 10;
     }
-
-    /*doStuff() {
-        this.attackedThisTurn = false;
-        super.doStuff();
-
-        if (!this.attackedThisTurn) {
-            super.doStuff();
-        }
-    }*/
 }
 
 class Zombie extends Monster {
@@ -396,14 +364,6 @@ class Zombie extends Monster {
         this.moveSpeed = 200;
         this.xpPoints = 3;
     }
-
-    /*update() {
-        let startedStunned = this.stunned;
-        super.update();
-        if(!startedStunned) {
-            this.stunned = true;
-        }
-    }*/
 }
 
 class Skeleton extends Monster {
