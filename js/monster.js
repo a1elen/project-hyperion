@@ -290,7 +290,6 @@ class Player extends Monster {
             this.initMainStats(1, 2, 2, 3, 4, 4);
         }
         this.hp = this.constitution * 5;
-        numSpells = this.arcane;
         this.maxHealth = this.hp;
         this.isPlayer = true;
         this.teleportCounter = 0;
