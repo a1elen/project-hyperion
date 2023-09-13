@@ -112,6 +112,7 @@ class Floor extends Tile {
         if (this.trap) {
             addStatus("Bleeding", 5, monster);
             this.visible = true;
+            shakeAmount = 10;
         }
     }
 }
