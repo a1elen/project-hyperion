@@ -142,7 +142,7 @@ class Exit extends Tile {
                 showTitle();
             } else {
                 level++;
-                startLevel(Math.min(maxHp, player.hp+1));
+                startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }
         }
     }

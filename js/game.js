@@ -51,9 +51,15 @@ function draw() {
             drawText("Health: " + player.hp, 20, false, 200, "red")
             drawText("Attack: " + player.attack + " + " + player.bonusAttack, 20, false, 230, "white")
             drawText("Defense: " + player.defense, 20, false, 260, "white")
-            drawText("Shield: " + player.shield, 20, false, 290, "aqua")
 
-            drawText("Status:", 30, false, 350, "violet");
+            drawText("Strength: " + player.strength, 20, false, 290, "white")
+            drawText("Constitution: " + player.constitution, 20, false, 320, "white")
+            drawText("Perception: " + player.perception, 20, false, 350, "white")
+            drawText("Agility: " + player.agiity, 20, false, 380, "white")
+            drawText("Arcane: " + player.arcane, 20, false, 410, "white")
+            drawText("Will: " + player.will, 20, false, 440, "white")
+
+            drawText("Status:", 30, false, 500, "violet");
 
 
             for (let i = 0; i < player.statuses.length; i++) {

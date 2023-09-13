@@ -100,7 +100,7 @@ spells = {
         }
     },
     Shield: function() {
-        player.shield = 5;
+        addStatus("Shielded", randomRange(2, 10), player);
     },
     Bolt: function() {
         boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 4);

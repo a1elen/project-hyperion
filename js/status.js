@@ -66,6 +66,17 @@ class Bleeding extends StatusEffect {
     }
 }
 
+class Shielded extends StatusEffect {
+    constructor(duration) {
+        super(duration);
+    }
+
+    update(target) {
+        target.shielded = true;
+        super.update(target);
+    }
+}
+
 function addStatus(name, duration, target) {
 
     if (!target) {
@@ -95,6 +106,19 @@ function addStatus(name, duration, target) {
         }
         if (count < 1) {
             target.statuses.push(new Bleeding(duration));
+        }
+    }
+
+    if (name == "Shielded") {
+        let count = 0;
+        for (let i = 0; i < target.statuses.length; i++) {
+            if (target.statuses[i].constructor.name == "Shielded") {
+                target.statuses[i].duration += duration;
+                count++;
+            }
+        }
+        if (count < 1) {
+            target.statuses.push(new Shielded(duration));
         }
     }
 }

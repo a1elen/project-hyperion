@@ -17,6 +17,7 @@ class Monster {
         this.defense = 0;
         this.stunCounter = 0;
         this.stunned = false;
+        this.shielded = false;
         this.xpPoints = 1;
         this.isPlayer = false;
         this.statuses = [];
@@ -47,6 +48,12 @@ class Monster {
                 if (this.statuses[i].constructor.name == "Stunned") {
                     if (this.statuses[i].duration < 1) {
                         this.stunned = false;
+                    }
+                }
+
+                if (this.statuses[i].constructor.name == "Shielded") {
+                    if (this.statuses[i].duration < 1) {
+                        this.shielded = false;
                     }
                 }
 
@@ -202,7 +209,7 @@ class Monster {
             return;
         }
 
-        if (this.shield > 0 || this.teleportCounter > 1) {
+        if (this.shielded || this.teleportCounter > 1) {
             return;
         }
 
@@ -275,7 +282,6 @@ class Player extends Monster {
         this.teleportCounter = 0;
         this.spells = shuffle(Object.keys(spells)).splice(0, numSpells);
         this.moveSpeed = 100;
-        this.shield = 0;
         this.xpToLevel = 10;
         this.xp = 0;
         this.level = 1;
@@ -307,9 +313,9 @@ class Player extends Monster {
     }
 
     update() {
-        this.shield--;
-        super.update();
-        if (this.shield < 0) this.shield = 0;
+        //this.shield--;
+        //super.update();
+        //if (this.shield < 0) this.shield = 0;
     }
 
     tryMove(dx, dy) {
