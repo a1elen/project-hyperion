@@ -79,7 +79,7 @@ class Monster {
         this.attack = this.strength * this.weaponDamage;
         this.maxHealth = this.constitution * 5;
         this.evasion = this.agiity;
-        this.defense = (this.constitution + this.agiity) / 2
+        this.defense = Math.floor((this.constitution + this.agiity) / 2);
     }
 
     doStuff() {
@@ -113,7 +113,7 @@ class Monster {
 
         if (this.rare == true) {
             ctx.fillStyle = 'rgba(200, 0, 0, 0.2)';
-            ctx.fillRect(this.getDisplayX, this.getDisplayY, 16*tileSize);
+            ctx.fillRect(this.getDisplayX, this.getDisplayY, 16*tileSize, 16*tileSize);
         }
 
         this.offsetX -= Math.sign(this.offsetX) * (1 / 8);
@@ -341,24 +341,25 @@ class Player extends Monster {
 class Spider extends Monster {
     constructor (tile) {
         super(tile, 4, 2);
-        this.maxHealth = this.hp;
+        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
         this.attack = 1;
         this.defense = 0;
         this.xpPoints = 1;
-        this.initMainStats(1, 1, 1, 1, 1, 1);
-        this.updateStats();
     }
 }
 
 class Worm extends Monster {
     constructor (tile) {
         super(tile, 5, 1);
-        this.maxHealth = 10;
+        this.initMainStats(1, 2, 1, 2, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
         this.attack = 1;
         this.defense = 0;
         this.xpPoints = 2;
-        this.initMainStats(1, 2, 1, 2, 1, 1);
-        this.updateStats();
+
     }
 
     doStuff() {
@@ -375,39 +376,40 @@ class Worm extends Monster {
 class Snake extends Monster {
     constructor (tile) {
         super(tile, 6, 1);
-        this.maxHealth = this.hp;
+        this.initMainStats(1, 1, 2, 2, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
         this.attack = 1;
         this.defense = 0;
         this.moveSpeed = 50;
         this.xpPoints = 2;
         this.bleedingChance = 10;
-        this.initMainStats(1, 1, 2, 2, 1, 1);
-        this.updateStats();
+
     }
 }
 
 class Zombie extends Monster {
     constructor (tile) {
         super(tile, 7, 3);
-        this.maxHealth = this.hp;
+        this.initMainStats(2, 3, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
         this.attack = 1;
         this.defense = 1;
         this.moveSpeed = 200;
         this.xpPoints = 3;
-        this.initMainStats(2, 3, 1, 1, 1, 1);
-        this.updateStats();
     }
 }
 
 class Skeleton extends Monster {
     constructor (tile) {
         super(tile, 8, 2);
-        this.maxHealth = this.hp;
+        this.initMainStats(2, 2, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
         this.attack = 2;
         this.defense = 0;
         this.xpPoints = 1;
-        this.initMainStats(2, 2, 1, 1, 1, 1);
-        this.updateStats();
     }
 
     doStuff() {
