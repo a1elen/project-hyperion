@@ -112,8 +112,9 @@ class Monster {
         }
 
         if (this.rare == true) {
-            ctx.fillStyle = 'rgba(200, 0, 0, 0.2)';
-            ctx.fillRect(this.getDisplayX, this.getDisplayY, 16*tileSize, 16*tileSize);
+            ctx.fillStyle = 'rgba(200, 0, 0, 0.25)';
+            ctx.fillRect(this.getDisplayX() * tileSize, this.getDisplayY() * tilesize,
+            16 * tileSize, 16 * tileSize);
         }
 
         this.offsetX -= Math.sign(this.offsetX) * (1 / 8);
