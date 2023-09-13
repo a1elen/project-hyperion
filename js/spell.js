@@ -102,6 +102,7 @@ spells = {
     },
     Bolt: function() {
         boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 5 * player.arcane);
+        playSound("firebolt");
     },
     Cross: function() {
         let directions = [
@@ -113,6 +114,7 @@ spells = {
         for (let k = 0; k < directions.length; k++) {
             boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 4 * player.arcane);
         }
+        playSound("firebolt");
     },
     Explosion: function() {
         let directions = [
@@ -124,6 +126,7 @@ spells = {
         for (let k = 0; k < directions.length; k++) {
             boltTravel(directions[k], 14, 3 * player.arcane);
         }
+        playSound("firebolt");
     },
     Fear: function() {
         for (let i = 0; i < monsters.length; i++) {
@@ -152,9 +155,9 @@ spells = {
                 break;
             case 4:
                 if (randomRange(1, 2) == 1) {
-                    player.attack += randomRange(1, 2);
+                    player.strength += randomRange(1, 2);
                 } else {
-                    player.defense += randomRange(1, 2);
+                    player.constitution += randomRange(1, 2);
                 }
                 break;
             case 5:
