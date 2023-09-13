@@ -116,7 +116,7 @@ class Floor extends Tile {
             } else {
                 statusName = "Stunned";
             }
-            addStatus(statusName, randomRange(1, 5), monster);
+            addStatus(statusName, randomRange(2, 5), monster);
             this.visible = true;
             shakeAmount = 10;
         }
