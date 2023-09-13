@@ -284,10 +284,12 @@ class Player extends Monster {
             super(tile, 0, 10);
 
             this.initMainStats(5, 4, 2, 2, 1, 1)      
+            numSpells = 3;
         } else {
             super(tile, 20, 10);
 
             this.initMainStats(1, 2, 2, 3, 4, 4);
+            numSpells = 9;
         }
         this.hp = this.constitution * 5;
         this.maxHealth = this.hp;
@@ -405,7 +407,7 @@ class Snake extends Monster {
         this.hp = this.maxHealth;
         this.attack = 1;
         this.defense = 0;
-        this.moveSpeed = 50;
+        this.moveSpeed = 75;
         this.xpPoints = 2;
         this.bleedingChance = 10;
 
