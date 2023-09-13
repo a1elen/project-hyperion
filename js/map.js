@@ -7,6 +7,7 @@ function generateLevel() {
 
     let treasureNumber = clamp(Math.floor(level / 2) + 1, 1, 4);
     let scrollNumber = clamp(Math.floor(level / 2) + 1, 0, 3);
+    let trapNumber = clamp(Math.floor(level / 2) + 1, 0, 3);
     
 
     for (let i = 0; i < treasureNumber; i++) {
@@ -15,6 +16,10 @@ function generateLevel() {
 
     for (let i = 0; i < scrollNumber; i++) {
         randomPassableTile().scroll = true;
+    }
+
+    for (let i = 0; i < scrollNumber; i++) {
+        randomPassableTile().trap = true;
     }
 }
 

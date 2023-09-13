@@ -4,6 +4,7 @@ class Tile {
         this.y = y;
         this.sprite = sprite;
         this.passable = passable;
+        this.visible = false;
     }
 
     replace(newTileType) {
@@ -63,6 +64,10 @@ class Tile {
             drawSprite(18, this.x, this.y);
         }
 
+        if (this.trap && visible) {
+            drawSprite(19, this.x, this.y);
+        }
+
         if (this.effectCounter) {
             this.effectCounter--;
             ctx.globalAlpha = this.effectCounter / 30;
@@ -103,6 +108,10 @@ class Floor extends Tile {
             // TO DO
             //playSound("scroll");
             this.scroll = false;
+        }
+        if (this.trap) {
+            addStatus("Bleeding", 5, monster);
+            this.visible = true;
         }
     }
 }
