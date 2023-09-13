@@ -321,8 +321,8 @@ class Player extends Monster {
     }
 
     update() {
+        super.update()
         //this.shield--;
-        //super.update();
         //if (this.shield < 0) this.shield = 0;
     }
 
