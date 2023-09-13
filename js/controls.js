@@ -37,32 +37,27 @@ function checkDirection() {
     yDist = Math.floor(Math.abs(touchstartY - touchendY));
 
     if (xDist < 100 && yDist < 100) {
-        //alert(xDist + " \ " + yDist + " is less than 200");
         return;
     }
 
     if (touchendX < touchstartX && xDist > 100 && yDist < 100) {
         // left
         touchMove(-1, 0);
-        //alert(xDist + " \ " + yDist);
         return;
     }
     if (touchendX > touchstartX && xDist > 100 && yDist < 100) {
         // right
         touchMove(1, 0);
-        //alert(xDist + " \ " + yDist);
         return;
     }
     if (touchendY < touchstartY && yDist > 100 && xDist < 100) {
         // up
         touchMove(0, -1);
-        //alert(xDist + " \ " + yDist);
         return;
     }
     if (touchendY > touchstartY && yDist > 100 && xDist < 100) {
         // down
         touchMove(0, 1);
-        //alert(xDist + " \ " + yDist);
         return;
     }
 }

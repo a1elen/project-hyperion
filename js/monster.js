@@ -74,6 +74,13 @@ class Monster {
         this.moveCounter -= 100;
     }
 
+    updateStats() {
+        this.attack = this.strength * this.weaponDamage;
+        this.maxHealth = this.constitution * 5;
+        this.evasion = this.agiity;
+        this.defense = (this.constitution + this.agiity) / 2
+    }
+
     doStuff() {
         let neighbours = this.tile.getAdjacentPassableNeighbours();
 
@@ -101,6 +108,11 @@ class Monster {
             drawSprite(this.sprite, this.getDisplayX(), this.getDisplayY());
             this.drawHp();
             if (this.stunned) this.drawStun();
+        }
+
+        if (this.rare == true) {
+            ctx.fillStyle = rgba(200, 0, 0, 0.2);
+            ctx.fillRect(this.getDisplayX, this.getDisplayY, 16*tileSize);
         }
 
         this.offsetX -= Math.sign(this.offsetX) * (1 / 8);
@@ -154,13 +166,22 @@ class Monster {
                         }
                     }
 
-                    let damage = Math.max((this.attack + this.bonusAttack) - newTile.monster.defense, 1)
+                    let damage = Math.max((this.attack + this.bonusAttack), 1)
+
+                    if (newTile.monster.defense > damage) {
+                        if (randomRange(1, 2) > 1) {
+                            damage = Math.min(damage / 2, 1);
+                        }
+                    } else {
+                        damage = Math.min(damage - newTile.monster.defense / 4, 1);
+                    }
 
                     if (randomRange(1, 100) < this.perception) {
                         damage = damage * 2;
                     }
 
                     newTile.monster.hit(damage);
+
                     this.bonusAttack = 0;
 
                     shakeAmount = 5;
@@ -216,13 +237,19 @@ class Monster {
     }
 
     upgrade(amount) {
-        let upgradeHp = randomRange(1, 2) * amount;
-        this.maxHealth = this.maxHealth + upgradeHp;
-        this.hp = this.hp + upgradeHp;
+        //let upgradeHp = randomRange(1, 2) * amount;
+        //this.maxHealth = this.maxHealth + upgradeHp;
+        //this.hp = this.hp + upgradeHp;
 
-        this.attack = this.attack + randomRange(1, 2) * amount;
-        this.defense = this.defense + randomRange(1, 2) * Math.floor(amount / 2)
+        //this.attack = this.attack + randomRange(1, 2) * amount;
+        //this.defense = this.defense + randomRange(1, 2) * Math.floor(amount / 2)
         
+        this.strength += randomRange(1, 2) * amount;
+        this.constitution += randomRange(1, 2) * amount;
+        this.agiity += randomRange(1, 2) * amount;
+        this.updateStats();
+
+        this.rare = true;
     }
 }
 
@@ -269,12 +296,9 @@ class Player extends Monster {
             }
         }
 
-        this.attack = this.strength * this.weaponDamage;
-        this.maxHealth = this.constitution * 5;
-        this.evasion = this.agiity;
-        numSpells = this.arcane;
+        this.updateStats();
 
-        let levelHealth = randomRange(this.constitution, this.maxHealth-this.hp);
+        let levelHealth = clamp(randomRange(this.constitution, this.maxHealth-this.hp), 1, this.maxHealth);
         this.hp += levelHealth;
     }
 
@@ -320,6 +344,8 @@ class Spider extends Monster {
         this.attack = 1;
         this.defense = 0;
         this.xpPoints = 1;
+        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.updateStats();
     }
 }
 
@@ -330,6 +356,8 @@ class Worm extends Monster {
         this.attack = 1;
         this.defense = 0;
         this.xpPoints = 2;
+        this.initMainStats(1, 2, 1, 2, 1, 1);
+        this.updateStats();
     }
 
     doStuff() {
@@ -352,6 +380,8 @@ class Snake extends Monster {
         this.moveSpeed = 50;
         this.xpPoints = 2;
         this.bleedingChance = 10;
+        this.initMainStats(1, 1, 2, 2, 1, 1);
+        this.updateStats();
     }
 }
 
@@ -363,6 +393,8 @@ class Zombie extends Monster {
         this.defense = 1;
         this.moveSpeed = 200;
         this.xpPoints = 3;
+        this.initMainStats(2, 3, 1, 1, 1, 1);
+        this.updateStats();
     }
 }
 
@@ -373,6 +405,8 @@ class Skeleton extends Monster {
         this.attack = 2;
         this.defense = 0;
         this.xpPoints = 1;
+        this.initMainStats(2, 2, 1, 1, 1, 1);
+        this.updateStats();
     }
 
     doStuff() {
