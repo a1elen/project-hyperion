@@ -422,7 +422,7 @@ class Zombie extends Monster {
         this.hp = this.maxHealth;
         this.attack = 1;
         this.defense = 1;
-        this.moveSpeed = 200;
+        this.moveSpeed = 150;
         this.xpPoints = 3;
     }
 }
