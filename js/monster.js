@@ -296,7 +296,7 @@ class Player extends Monster {
         this.maxHealth = this.hp;
         this.isPlayer = true;
         this.teleportCounter = 0;
-        this.spells = shuffle(Object.keys(spells)).splice(0, numSpells);
+        //this.spells = shuffle(Object.keys(spells)).splice(0, numSpells);
         this.moveSpeed = 100;
         this.xpToLevel = 10;
         this.xp = 0;

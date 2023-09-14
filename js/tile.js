@@ -6,6 +6,8 @@ class Tile {
         this.passable = passable;
         this.visible = false;
         this.trapWorks = true;
+        this.blood = false;
+        this.wallBlood = false;
     }
 
     replace(newTileType) {
@@ -73,6 +75,15 @@ class Tile {
             }
         }
 
+        if (this.blood) {
+            drawSprite(25, this.x, this.y);
+        }
+
+        if (this.wallBlood) {
+            drawSprite(26, this.x, this.y);
+        }
+
+
         if (this.effectCounter) {
             this.effectCounter--;
             ctx.globalAlpha = this.effectCounter / 30;
@@ -133,6 +144,15 @@ class Floor extends Tile {
                     playSound("trap");
                     addStatus("Bleeding", randomRange(2, 5), monster);
                     addStatus("Stunned", randomRange(2, 5), monster);
+                    this.blood = true;
+                    let neighbours = this.getAdjacentNeighbours();
+                    for (let i = 0; i < neighbours.length; i++) {
+                        if (!neighbours[i].passable) {
+                            if (randomRange(1, 2) > 1) {
+                                this.wallBlood = true;
+                            }
+                        }
+                    }
                 } else {
                     playSound("trapdoor");
                     level++;
@@ -144,6 +164,15 @@ class Floor extends Tile {
                 playSound("trap");
                 addStatus("Bleeding", randomRange(2, 5), monster);
                 addStatus("Stunned", randomRange(2, 5), monster);
+                this.blood = true;
+                let neighbours = this.getAdjacentNeighbours();
+                for (let i = 0; i < neighbours.length; i++) {
+                    if (!neighbours[i].passable) {
+                        if (randomRange(1, 2) > 1) {
+                            this.wallBlood = true;
+                        }
+                    }
+                }
             }
 
             this.visible = true;
