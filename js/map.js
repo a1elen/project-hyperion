@@ -65,7 +65,7 @@ function iterateCellular(count) {
                 if (tiles[i][j].passable) {
                     let neighbours = tiles[i][j].getAdjacentPassableNeighbours();
                     if(neighbours >= 5); {
-                        [i][j] = null;
+                        tiles[i][j] = null;
                         tiles[i][j] = new Wall(i, j);
                     }
                 } else {
