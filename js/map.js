@@ -64,7 +64,8 @@ function iterateCellular(count) {
             for (let j = 0; j < numTiles; j++) {
                 if (tiles[i][j].passable) {
                     if(tiles[i][j].getAdjacentPassableNeighbours() >- 5); {
-                        tiles[i][j] = new StairsDown(i, j);
+                        tiles[i][j] = null;
+                        tiles[i][j] = new Wall(i, j);
                     }
                 }
             }
