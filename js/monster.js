@@ -454,7 +454,7 @@ class Skeleton extends Monster {
     }
 }
 
-class RedDrake extends Monster {
+class RedDragonBaby extends Monster {
     constructor (tile) {
         super(tile, 21, 2);
         this.initMainStats(4, 5, 4, 4, 2, 2);
@@ -462,7 +462,7 @@ class RedDrake extends Monster {
         this.hp = this.maxHealth;
         //this.attack = 2;
         //this.defense = 0;
-        this.xpPoints = 1;
+        this.xpPoints = 10;
     }
 }
 
