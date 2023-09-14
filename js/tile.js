@@ -147,8 +147,8 @@ class Floor extends Tile {
                     let neighbours = this.getAdjacentNeighbours();
                     for (let i = 0; i < neighbours.length; i++) {
                         if (!neighbours[i].passable) {
-                            if (randomRange(1, 2) > 1) {
-                                this.wallBlood = true;
+                            if (randomRange(0, 2) > 1) {
+                                neighbours[i].wallBlood = true;
                             }
                         }
                     }
