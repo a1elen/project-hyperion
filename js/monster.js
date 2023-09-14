@@ -197,7 +197,7 @@ class Monster {
                         damage = damage * 2;
                     }
 
-                    newTile.monster.hit(damage);
+                    newTile.monster.hit(damage, this);
 
                     this.bonusAttack = 0;
 
@@ -211,7 +211,7 @@ class Monster {
         }
     }
 
-    hit(damage) {
+    hit(damage, attacker) {
 
         if (randomRange(1, 100 ) < this.evasion) {
             return;
@@ -219,6 +219,12 @@ class Monster {
 
         if (this.shielded || this.teleportCounter > 1) {
             return;
+        }
+
+        if (attacker.strength > this.constitution) {
+            if (randomRange(1, 100) < attacker.strength) {
+                
+            }
         }
 
         this.hp -= damage;
