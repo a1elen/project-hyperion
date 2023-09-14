@@ -63,12 +63,13 @@ function iterateCellular(count) {
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
                 if (tiles[i][j].passable) {
-                    if(tiles[i][j].getAdjacentPassableNeighbours() >= 5); {
-                        tiles[i][j] = null;
+                    let neighbours = tiles[i][j].getAdjacentPassableNeighbours();
+                    if(neighbours >= 5); {
+                        [i][j] = null;
                         tiles[i][j] = new Wall(i, j);
                     }
                 } else {
-                    if(tiles[i][j].getAdjacentPassableNeighbours() < 5); {
+                    if(neighbours < 5); {
                         tiles[i][j] = null;
                         tiles[i][j] = new Floor(i, j);
                     }
