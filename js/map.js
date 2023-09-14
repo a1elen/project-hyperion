@@ -25,9 +25,16 @@ function generateLevel() {
 
 function generateTiles() {
     let passableTiles=0;
+    
+    // clean level
     tiles = [];
     for (let i = 0; i < numTiles; i++) {
         tiles[i] = [];
+    }
+
+    //tiles = [];
+    for (let i = 0; i < numTiles; i++) {
+        //tiles[i] = [];
         for (let j = 0; j < numTiles; j++) {
             if (Math.random() < 0.3 || !inBounds(i, j)) {
                 tiles[i][j] = new Wall(i, j);
