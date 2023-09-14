@@ -65,7 +65,11 @@ function draw() {
             for (let i = 0; i < player.statuses.length; i++) {
                 let statusText = (player.statuses[i].constructor.name + " (" + player.statuses[i].duration + ")");
                 drawText(statusText, 20, false, 540 + i * 30, "aqua");
+              
             }
+            /*if (player.stunned) {
+                drawText("Stunned! (" + (player.stunCounter + 1) + ")", 20, false, 390, "aqua")
+            }*/
         }
 
         if (gameState == "spells") {
