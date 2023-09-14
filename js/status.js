@@ -27,7 +27,7 @@ class HpRegen extends StatusEffect {
 
     update(target) {
         if (target.hp < target.maxHealth) { 
-            target.heal(1 * this.will);
+            target.heal(1 * target.will);
         }
         super.update(target);
     }
