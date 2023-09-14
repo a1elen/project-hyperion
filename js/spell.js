@@ -8,7 +8,7 @@ spells = {
                 let tile = getTile(i, j);
                 if (tile.monster) {
                     let numWalls = 8 - tile.getAdjacentPassableNeighbours().length;
-                    tile.monster.hit(numWalls * 2);
+                    tile.monster.hit(numWalls * 3);
                 }
             }
         }
@@ -27,7 +27,7 @@ spells = {
         player.tile.getAdjacentNeighbours().forEach(function(t) {
             t.setEffect(13);
             if (t.monster) {
-                t.monster.heal(1);
+                t.monster.heal(5);
             }
         });
         player.tile.setEffect(13);
@@ -48,8 +48,7 @@ spells = {
             newTile.getAdjacentNeighbours().forEach(t => {
                 if (t.monster) {
                     t.setEffect(14);
-                    t.monster.stunned = true;
-                    t.monster.stunCounter = 5;
+                    addStatus("Stunned", randomRange(2, 5), t.monster);
                     t.monster.hit(1);
                 }
             });
@@ -85,10 +84,9 @@ spells = {
     },
     Berserk: function() {
         player.tile.setEffect(13);
-        player.heal(2);
+        player.heal(5);
 
-        player.stunned = false;
-        player.stunCounter = 0;
+        addStatus("Stunned", randomRange(1, 2), player);
 
         player.bonusAttack = 5;
     },
@@ -100,10 +98,11 @@ spells = {
         }
     },
     Shield: function() {
-        player.shield = 5;
+        addStatus("Shielded", randomRange(5, 10), player);
     },
     Bolt: function() {
-        boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 4);
+        boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 5 * player.arcane);
+        playSound("firebolt");
     },
     Cross: function() {
         let directions = [
@@ -113,8 +112,9 @@ spells = {
             [1, 0]
         ];
         for (let k = 0; k < directions.length; k++) {
-            boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 2);
+            boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 4 * player.arcane);
         }
+        playSound("firebolt");
     },
     Explosion: function() {
         let directions = [
@@ -124,20 +124,20 @@ spells = {
             [1, 1]
         ];
         for (let k = 0; k < directions.length; k++) {
-            boltTravel(directions[k], 14, 3);
+            boltTravel(directions[k], 14, 3 * player.arcane);
         }
+        playSound("firebolt");
     },
     Fear: function() {
         for (let i = 0; i < monsters.length; i++) {
             if (!monsters[i].isPlayer) {
-                monsters[i].stunned = true;
-                monsters[i].stunCounter += randomRange(2, 8);
+                addStatus("Stunned", randomRange(2, 8), monsters[i])
             }
         }
     },
     Heal: function() {
         player.tile.setEffect(13);
-        player.heal(3);
+        player.heal(10);
     },
     Pray: function() {
         let outcome = randomRange(1, 5);
@@ -145,20 +145,19 @@ spells = {
         switch(outcome) {
             case 1:
                 player.tile.setEffect(13);
-                player.heal(randomRange(1, 6));
+                player.heal(randomRange(1, 20));
                 break;
             case 2:
-                player.stunned = true;
-                player.stunCounter += randomRange(1, 5);
+                addStatus("Stunned", randomRange(2, 4), player);
                 break;
             case 3:
-                player.shield += randomRange(2, 10);
+                addStatus("Shielded", randomRange(2, 10), player);
                 break;
             case 4:
                 if (randomRange(1, 2) == 1) {
-                    player.attack += randomRange(1, 2);
+                    player.strength += randomRange(1, 2);
                 } else {
-                    player.defense += randomRange(1, 2);
+                    player.constitution += randomRange(1, 2);
                 }
                 break;
             case 5:
@@ -170,6 +169,8 @@ spells = {
     },
     Matchstick: function() {
         player.statuses.push(new Burning(5));
+        player.bonusAttack = 5;
+        player.attack++;
     }
 };
 

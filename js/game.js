@@ -51,14 +51,21 @@ function draw() {
             drawText("Health: " + player.hp, 20, false, 200, "red")
             drawText("Attack: " + player.attack + " + " + player.bonusAttack, 20, false, 230, "white")
             drawText("Defense: " + player.defense, 20, false, 260, "white")
-            drawText("Shield: " + player.shield, 20, false, 290, "aqua")
 
-            drawText("Status:", 30, false, 350, "violet");
+            drawText("Strength: " + player.strength, 20, false, 290, "white")
+            drawText("Constitution: " + player.constitution, 20, false, 320, "white")
+            drawText("Perception: " + player.perception, 20, false, 350, "white")
+            drawText("Agility: " + player.agiity, 20, false, 380, "white")
+            drawText("Arcane: " + player.arcane, 20, false, 410, "white")
+            drawText("Will: " + player.will, 20, false, 440, "white")
+
+            drawText("Status:", 30, false, 500, "violet");
 
 
             for (let i = 0; i < player.statuses.length; i++) {
                 let statusText = (player.statuses[i].constructor.name + " (" + player.statuses[i].duration + ")");
-                drawText(statusText, 20, false, 390 + i * 30, "aqua");
+                drawText(statusText, 20, false, 540 + i * 30, "aqua");
+              
             }
             /*if (player.stunned) {
                 drawText("Stunned! (" + (player.stunCounter + 1) + ")", 20, false, 390, "aqua")
@@ -68,7 +75,7 @@ function draw() {
         if (gameState == "spells") {
             drawText("Spells:", 30, false, 130, "violet");
 
-            for (let i = 0; i < player.spells.length; i++) {
+            for (let i = 0; i < /*player.spells.length*/numSpells; i++) {
                 let spellText = (i + 1) + ") " + (player.spells[i] || "--- ");
                 drawText(spellText, 20, false, 170 + i * 40, "aqua");
             }
@@ -80,7 +87,11 @@ function check_dead() {
     for (let k = monsters.length - 1; k >= 0; k--) {
         if (monsters[k].dead) {
             // Xp gain
-            player.xp = player.xp + monsters[k].xpPoints + randomRange(0, 3);
+            if (monsters[k].rare) {
+                player.xp = player.xp + monsters[k].xpPoints;
+            } else {
+                player.xp = player.xp + monsters[k].xpPoints + randomRange(0, 3);
+            }
             if (player.xp >= player.xpToLevel) {
                 player.levelUp();
                 player.xp = 0;
@@ -95,10 +106,7 @@ function check_dead() {
 }
 
 function check_for_tick() {
-    //if (player.moveCounter >= 100) {
-    //    player.moveCounter = 0;
         tick();
-    //}
 }
 
 function tick() {
@@ -117,20 +125,24 @@ function tick() {
         gameState = "dead";
     }
 
-    spawnCounter--;
-    if (spawnCounter <= 0) {
-        spawnMonster();
-        spawnCounter = spawnRate;
-        spawnRate--;
+
+    if (player.cursed) {
+        spawnCounter--;
+        if (spawnCounter <= 0) {
+            spawnMonster();
+            spawnCounter = spawnRate;
+            spawnRate--;
+        }
     }
 }
 
 function showTitle() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.75';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     gameState = "title";
 
+    drawText("Press 1 for Warrior, or 2 for Mage", 30, true, canvas.height / 2 - 200, "white");
     drawText("PROJECT", 40, true, canvas.height / 2 - 110, "white");
     drawText("HYPERION", 70, true, canvas.height / 2 - 50, "white");
 
@@ -149,7 +161,7 @@ function startGame() {
 }
 
 function startLevel(playerHp, playerSpells) {
-    spawnRate = 15;
+    spawnRate = 10;
     spawnCounter = spawnRate;
 
     if (gameStarted) {
@@ -161,11 +173,23 @@ function startLevel(playerHp, playerSpells) {
         playerXpToLevel = player.xpToLevel;
         playerAttack = player.attack;
         playerDefense = player.defense;
+
+        // main stats
+        playerStrength = player.strength;
+        playerConstitution = player.constitution;
+        playerPerception = player.perception;
+        playerAgility = player.agiity;
+        playerArcane = player.arcane;
+        playerWill = player.will;
+
+        playerWeaponDamage = player.weaponDamage;
+        playerEvasion = player.evasion;
     }
 
     generateLevel();
 
-    player = new Player(randomPassableTile());
+    let playerRandomTile = randomPassableTile();
+    player = new Player(playerRandomTile, playerClass);
     
     if (gameStarted) {
         // Restore player stats
@@ -176,12 +200,24 @@ function startLevel(playerHp, playerSpells) {
         player.xpToLevel = playerXpToLevel;
         player.attack = playerAttack;
         player.defense = playerDefense;
+
+        // main stats
+        player.strength = playerStrength;
+        player.constitution = playerConstitution;
+        player.perception = playerPerception;
+        player.agiity = playerAgility;
+        player.arcane = playerArcane;
+        player.will = playerWill;
+    
+        player.weaponDamage = playerWeaponDamage;
+        player.evasion = playerEvasion;
     }
 
     if (playerSpells) {
         player.spells = playerSpells;
     }
-    randomPassableTile().replace(Exit);
+    playerRandomTile.replace(StairsUp);
+    randomPassableTile().replace(StairsDown);
 }
 
 function drawText(text, size, centered, textY, color, textX) {
@@ -269,13 +305,23 @@ function initSounds() {
         hit2: new Audio('sounds/hit2.wav'),
         treasure: new Audio('sounds/treasure.wav'),
         newLevel: new Audio('sounds/newLevel.wav'),
-        spell: new Audio('sounds/spell.wav')
+        spell: new Audio('sounds/spell.wav'),
+        trap: new Audio('sounds/trap.wav'),
+        trapdoor: new Audio('sounds/trapdoor.wav'),
+        healthUp: new Audio('sounds/healthUp.wav'),
+        move: new Audio('sounds/move.wav'),
+        firebolt: new Audio('sounds/firebolt.wav'),
     }
     sounds.hit1.volume = 0.1;
     sounds.hit2.volume = 0.1;
     sounds.treasure.volume = 0.1;
     sounds.newLevel.volume = 0.1;
     sounds.spell.volume = 0.1;
+    sounds.trap.volume = 0.1;
+    sounds.trapdoor.volume = 0.1;
+    sounds.healthUp.volume = 0.1;
+    sounds.move.volume = 0.1;
+    sounds.firebolt.volume = 0.1;
 }
 
 function playSound(soundName) {

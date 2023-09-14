@@ -17,14 +17,29 @@ class Monster {
         this.defense = 0;
         this.stunCounter = 0;
         this.stunned = false;
+        this.shielded = false;
         this.xpPoints = 1;
         this.isPlayer = false;
         this.statuses = [];
+        this.bleedingChance = 0;
+        this.weaponDamage = 1;
+
+        // main stats
+        this.initMainStats(2, 2, 2, 2, 2, 2);
+    }
+
+    initMainStats(strength, constitution, perception, agiity, arcane, will) {
+        this.strength = strength;
+        this.constitution = constitution;
+        this.perception = perception;
+        this.agiity = agiity;
+        this.arcane = arcane;
+        this.will = will;
     }
 
     heal(damage) {
+        playSound("healthUp");
         this.hp = Math.min(this.maxHealth, this.hp+damage);
-        //if (this.maxHealth < this.hp) this.maxHealth = this.hp;
     }
 
     update() {
@@ -34,6 +49,19 @@ class Monster {
                 if (this.statuses[i].constructor.name == "Stunned") {
                     if (this.statuses[i].duration < 1) {
                         this.stunned = false;
+                    }
+                }
+
+                if (this.statuses[i].constructor.name == "Shielded") {
+                    if (this.statuses[i].duration < 1) {
+                        this.shielded = false;
+                    }
+                }
+
+                if (this.statuses[i].constructor.name == "AllSeeingEye") {
+                    player.cursed = true;
+                    if (this.statuses[i].duration < 1) {
+                        player.cursed = false;
                     }
                 }
 
@@ -60,6 +88,13 @@ class Monster {
             this.moveCounter += this.moveSpeed;
         }
         this.moveCounter -= 100;
+    }
+
+    updateStats() {
+        this.attack = this.strength * this.weaponDamage;
+        this.maxHealth = this.constitution * 5;
+        this.evasion = this.agiity;
+        this.defense = Math.floor((this.constitution + this.agiity) / 2);
     }
 
     doStuff() {
@@ -91,6 +126,12 @@ class Monster {
             if (this.stunned) this.drawStun();
         }
 
+        if (this.rare == true) {
+            ctx.fillStyle = 'rgba(200, 0, 0, 0.25)';
+            ctx.fillRect(this.getDisplayX() * tileSize, this.getDisplayY() * tileSize,
+            tileSize, tileSize);
+        }
+
         this.offsetX -= Math.sign(this.offsetX) * (1 / 8);
         this.offsetY -= Math.sign(this.offsetY) * (1 / 8);
     }
@@ -103,10 +144,9 @@ class Monster {
         let width = (this.hp / this.maxHealth) * maxWidth;
         let height;
 
-        let x = ((this.getDisplayX() * 64) - healthBarWidth / 2) + 32;
-        let y = ((this.getDisplayY() * 64) - healthBarHeight / 2) + 64;
+        let x = ((this.getDisplayX() * tileSize) - healthBarWidth / 2) + (tileSize / 2);
+        let y = ((this.getDisplayY() * tileSize) - healthBarHeight / 2) + tileSize;
 
-        //ctx.fillStyle = "red";
         ctx.fillStyle = 'rgba(255, 74, 83, 0.75)';
         ctx.fillRect(x, y, width, healthBarHeight);
 
@@ -115,16 +155,6 @@ class Monster {
         + " !" + this.attack
         + " #" + this.defense,
         10, false, y + 5, "white", x)
-
-        /*
-        for (let i = 0; i < this.hp; i++) {
-            drawSprite(
-                9,
-                this.getDisplayX() + (i % 3) * (5 / 16),
-                this.getDisplayY() - Math.floor(i / 3) * (5 / 16)
-            );
-        }
-        */
     }
 
     drawStun() {
@@ -143,9 +173,32 @@ class Monster {
                 this.move(newTile);
             } else {
                 if (this.isPlayer != newTile.monster.isPlayer) {
-                    //this.attackedThisTurn = true;
-                    //newTile.monster.stunned = true;
-                    newTile.monster.hit(Math.max((this.attack + this.bonusAttack) - newTile.monster.defense, 1));
+                    if (randomRange(1, 100) < this.strength) {
+                        addStatus("Stunned", randomRange(2, 2 + this.strength), newTile.monster);
+                    }
+
+                    if (this.bleedingChance != 0) {
+                        if (randomRange(1, 100) < this.bleedingChance) {
+                            addStatus("Bleeding", randomRange(2, 5), newTile.monster);
+                        }
+                    }
+
+                    let damage = Math.max((this.attack + this.bonusAttack), 1)
+
+                    if (newTile.monster.defense > damage) {
+                        if (randomRange(1, 2) > 1) {
+                            damage = Math.floor(clamp(damage / 2, 1, damage));
+                        }
+                    } else {
+                        damage = Math.floor(clamp(damage - newTile.monster.defense / 4, 1, damage));
+                    }
+
+                    if (randomRange(1, 100) < this.perception) {
+                        damage = damage * 2;
+                    }
+
+                    newTile.monster.hit(damage);
+
                     this.bonusAttack = 0;
 
                     shakeAmount = 5;
@@ -160,25 +213,18 @@ class Monster {
 
     hit(damage) {
 
-        if (randomRange(1, 100 ) < 10) {
+        if (randomRange(1, 100 ) < this.evasion) {
             return;
         }
 
-        if (this.shield > 0 || this.teleportCounter > 1) {
+        if (this.shielded || this.teleportCounter > 1) {
             return;
-        }
-
-        if (randomRange(1, 100) > 90) {
-            damage = damage * 2;
         }
 
         this.hp -= damage;
         if(this.hp <= 0) {
             this.hp = 0;
             this.die();
-        } else if (randomRange(1, 100) < 10) {
-            addStatus("Stunned", randomRange(2,4), this);
-            //this.statuses.push(new Stunned(randomRange(2, 4)));
         }
 
         // Sound
@@ -206,39 +252,87 @@ class Monster {
         tile.monster = this;
         tile.stepOn(this);
     }
+
+    upgrade(amount) {
+        //let upgradeHp = randomRange(1, 2) * amount;
+        //this.maxHealth = this.maxHealth + upgradeHp;
+        //this.hp = this.hp + upgradeHp;
+
+        //this.attack = this.attack + randomRange(1, 2) * amount;
+        //this.defense = this.defense + randomRange(1, 2) * Math.floor(amount / 2)
+        for (let i = 0; i < amount; i++) {
+            let chosenStat = randomRange(1, 3);
+            
+            if (chosenStat == 1) {
+                this.strength += randomRange(1, 2) * amount;
+            } else if (chosenStat == 2) {
+                this.constitution += randomRange(1, 2) * amount;
+            } else {
+                this.agiity += randomRange(1, 2) * amount;
+            }
+        }
+        this.updateStats();
+
+        this.hp = this.maxHealth;
+        this.xpPoints = (this.xpPoints + randomRange(0, 3)) * level;
+        this.rare = true;
+    }
 }
 
 class Player extends Monster {
     constructor (tile) {
-        super(tile, 0, 10);
+        if (playerClass == 1) {
+            super(tile, 0, 10);
+
+            this.initMainStats(5, 4, 2, 2, 1, 1)      
+            numSpells = 3;
+        } else {
+            super(tile, 20, 10);
+
+            this.initMainStats(1, 2, 2, 3, 4, 4);
+            numSpells = 9;
+        }
+        this.hp = this.constitution * 5;
         this.maxHealth = this.hp;
         this.isPlayer = true;
         this.teleportCounter = 0;
         this.spells = shuffle(Object.keys(spells)).splice(0, numSpells);
         this.moveSpeed = 100;
-        this.shield = 0;
         this.xpToLevel = 10;
         this.xp = 0;
         this.level = 1;
+        this.weaponDamage = 1;
+        this.evasion = this.agility;
+        this.attack = this.strength * this.weaponDamage;
+        this.cursed = false;
     }
 
     levelUp() {
         this.level++;
-        if(randomRange(1, 2) == 1) {
-            this.attack++;
+        if(playerClass == 1) {
+            if (randomRange(1, 2) > 1) {
+                this.strength++;
+            } else {
+                this.constitution++;
+            }
         } else {
-            this.defense++;
+            if (randomRange(1, 2) > 1) {
+                this.agiity++;
+            } else {
+                this.arcane++;
+            }
         }
 
-        let levelHealth = randomRange(1, 5);
-        this.maxHealth += levelHealth;
+        this.updateStats();
+
+        let levelHealth = clamp(randomRange(this.constitution, this.maxHealth-this.hp), 1, this.maxHealth);
         this.hp += levelHealth;
     }
 
     update() {
-        this.shield--;
-        super.update();
-        if (this.shield < 0) this.shield = 0;
+        super.update()
+        //this.shield--;
+        //if (this.shield < 0) this.shield = 0;
     }
 
     tryMove(dx, dy) {
@@ -262,7 +356,8 @@ class Player extends Monster {
     castSpell(index) {
         let spellName = this.spells[index];
         if (spellName) {
-            delete this.spells[index];
+            //delete this.spells[index];
+            this.spells.splice(index, 1);
             spells[spellName]();
             playSound("spell");
             gameState = "running";
@@ -273,9 +368,11 @@ class Player extends Monster {
 class Spider extends Monster {
     constructor (tile) {
         super(tile, 4, 2);
-        this.maxHealth = this.hp;
-        this.attack = 1;
-        this.defense = 0;
+        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 1;
+        //this.defense = 0;
         this.xpPoints = 1;
     }
 }
@@ -283,10 +380,13 @@ class Spider extends Monster {
 class Worm extends Monster {
     constructor (tile) {
         super(tile, 5, 1);
-        this.maxHealth = 10;
-        this.attack = 1;
-        this.defense = 0;
+        this.initMainStats(1, 2, 1, 2, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 1;
+        //this.defense = 0;
         this.xpPoints = 2;
+
     }
 
     doStuff() {
@@ -303,55 +403,78 @@ class Worm extends Monster {
 class Snake extends Monster {
     constructor (tile) {
         super(tile, 6, 1);
-        this.maxHealth = this.hp;
-        this.attack = 1;
-        this.defense = 0;
-        this.moveSpeed = 50;
+        this.initMainStats(1, 1, 2, 2, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 1;
+        //this.defense = 0;
+        this.moveSpeed = 75;
         this.xpPoints = 2;
+        this.bleedingChance = 10;
+
     }
-
-    /*doStuff() {
-        this.attackedThisTurn = false;
-        super.doStuff();
-
-        if (!this.attackedThisTurn) {
-            super.doStuff();
-        }
-    }*/
 }
 
 class Zombie extends Monster {
     constructor (tile) {
         super(tile, 7, 3);
-        this.maxHealth = this.hp;
-        this.attack = 1;
-        this.defense = 1;
-        this.moveSpeed = 200;
+        this.initMainStats(2, 3, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 1;
+        //this.defense = 1;
+        this.moveSpeed = 150;
         this.xpPoints = 3;
     }
-
-    /*update() {
-        let startedStunned = this.stunned;
-        super.update();
-        if(!startedStunned) {
-            this.stunned = true;
-        }
-    }*/
 }
 
 class Skeleton extends Monster {
     constructor (tile) {
-        super(tile, 8, 2);
-        this.maxHealth = this.hp;
-        this.attack = 2;
-        this.defense = 0;
+        super(tile, 30, 2);
+        this.initMainStats(2, 2, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 2;
+        //this.defense = 0;
         this.xpPoints = 1;
+        this.angry = false;
     }
 
     doStuff() {
         let neighbours = this.tile.getAdjacentPassableNeighbours();
-        if (neighbours.length) {
-            this.tryMove(neighbours[0].x - this.tile.x, neighbours[0].y - this.tile.y);
+        if (this.tile.dist(player.tile) < 4) {
+            this.angry = true;
+            this.sprite = 8;
         }
+        if (neighbours.length && !this.angry) {
+            this.tryMove(neighbours[0].x - this.tile.x, neighbours[0].y - this.tile.y);
+        } else {
+            super.doStuff();
+        }
+    }
+}
+
+class RedDrake extends Monster {
+    constructor (tile) {
+        super(tile, 21, 2);
+        this.initMainStats(4, 5, 4, 4, 2, 2);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 2;
+        //this.defense = 0;
+        this.xpPoints = 1;
+    }
+}
+
+class GreenSlime extends Monster {
+    constructor (tile) {
+        super(tile, 22, 2);
+        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.updateStats();
+        this.hp = this.maxHealth;
+        //this.attack = 2;
+        //this.defense = 0;
+        this.xpPoints = 1;
+        this.moveSpeed = 200;
     }
 }

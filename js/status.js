@@ -27,7 +27,7 @@ class HpRegen extends StatusEffect {
 
     update(target) {
         if (target.hp < target.maxHealth) { 
-            target.hp++;
+            target.heal(1 * this.will);
         }
         super.update(target);
     }
@@ -51,11 +51,50 @@ class Burning extends StatusEffect {
 
     update(target) {
         target.hp--;
+        check_dead();
+        super.update(target);
+    }
+}
+
+class Bleeding extends StatusEffect {
+    constructor(duration) {
+        super(duration);
+    }
+
+    update(target) {
+        target.hp--;
+        //playSound("move");
+        check_dead();
+        super.update(target);
+    }
+}
+
+class Shielded extends StatusEffect {
+    constructor(duration) {
+        super(duration);
+    }
+
+    update(target) {
+        target.shielded = true;
+        super.update(target);
+    }
+}
+
+class AllSeeingEye extends StatusEffect {
+    constructor(duration) {
+        super(duration);
+    }
+
+    update(target) {
         super.update(target);
     }
 }
 
 function addStatus(name, duration, target) {
+
+    if (!target.statuses) {
+        return;
+    }
 
     if (name == "Stunned") {
         let count = 0;
@@ -67,6 +106,45 @@ function addStatus(name, duration, target) {
         }
         if (count < 1) {
             target.statuses.push(new Stunned(duration));
+        }
+    }
+
+    if (name == "Bleeding") {
+        let count = 0;
+        for (let i = 0; i < target.statuses.length; i++) {
+            if (target.statuses[i].constructor.name == "Bleeding") {
+                target.statuses[i].duration += duration;
+                count++;
+            }
+        }
+        if (count < 1) {
+            target.statuses.push(new Bleeding(duration));
+        }
+    }
+
+    if (name == "Shielded") {
+        let count = 0;
+        for (let i = 0; i < target.statuses.length; i++) {
+            if (target.statuses[i].constructor.name == "Shielded") {
+                target.statuses[i].duration += duration;
+                count++;
+            }
+        }
+        if (count < 1) {
+            target.statuses.push(new Shielded(duration));
+        }
+    }
+
+    if (name == "AllSeeingEye") {
+        let count = 0;
+        for (let i = 0; i < target.statuses.length; i++) {
+            if (target.statuses[i].constructor.name == "AllSeeingEye") {
+                target.statuses[i].duration += duration;
+                count++;
+            }
+        }
+        if (count < 1) {
+            target.statuses.push(new AllSeeingEye(duration));
         }
     }
 }

@@ -4,6 +4,8 @@ class Tile {
         this.y = y;
         this.sprite = sprite;
         this.passable = passable;
+        this.visible = false;
+        this.trapWorks = true;
     }
 
     replace(newTileType) {
@@ -59,6 +61,18 @@ class Tile {
             drawSprite(12, this.x, this.y);
         }
 
+        if (this.scroll) {
+            drawSprite(18, this.x, this.y);
+        }
+
+        if (this.trap && this.visible) {
+            if (this.trapWorks) {
+                drawSprite(28, this.x, this.y);
+            } else {
+                drawSprite(29, this.x, this.y);
+            }
+        }
+
         if (this.effectCounter) {
             this.effectCounter--;
             ctx.globalAlpha = this.effectCounter / 30;
@@ -81,13 +95,60 @@ class Floor extends Tile {
     stepOn(monster) {
         if (monster.isPlayer && this.treasure) {
             score += randomRange(9, 21);
-            if (score % 3 == 0 && numSpells < 9) {
-                numSpells++;
-                player.addSpell();
-            }
+            //if (score % 3 == 0 && numSpells < 9) {
+                //numSpells++;
+                //player.addSpell();
+            //}
             playSound("treasure");
             this.treasure = false;
             spawnMonster();
+        }
+        if (monster.isPlayer && this.scroll) {
+            //if (numSpells < 9) {
+            //    numSpells++;
+            //}
+            if (player.spells.length < numSpells) {
+                console
+                player.addSpell();
+                this.scroll = false;
+            }
+            // TO DO
+            //playSound("scroll");
+        }
+        if (this.trap) {
+
+            if (!this.trapWorks) {
+                return;
+            }
+
+            /*let statusName;
+            if (randomRange(1, 2) > 1) {
+                statusName = "Bleeding";
+            } else {
+                statusName = "Stunned";
+            }*/
+            if (monster.isPlayer) {
+                let isTrapdoor = randomRange(1, 2);
+                if (isTrapdoor == 1) {
+                    playSound("trap");
+                    addStatus("Bleeding", randomRange(2, 5), monster);
+                    addStatus("Stunned", randomRange(2, 5), monster);
+                } else {
+                    playSound("trapdoor");
+                    level++;
+                    startLevel(Math.min(maxHp, player.hp-5), player.spells);
+                    shakeAmount = 50;
+
+                }
+            } else {
+                playSound("trap");
+                addStatus("Bleeding", randomRange(2, 5), monster);
+                addStatus("Stunned", randomRange(2, 5), monster);
+            }
+
+            this.visible = true;
+            this.trapWorks = false;
+            shakeAmount = 10;
         }
     }
 }
@@ -98,9 +159,9 @@ class Wall extends Tile {
     }
 }
 
-class Exit extends Tile {
+class StairsDown extends Tile {
     constructor(x, y) {
-        super(x, y, 11, true);
+        super(x, y, 23, true);
     }
 
     stepOn(monster) {
@@ -111,8 +172,19 @@ class Exit extends Tile {
                 showTitle();
             } else {
                 level++;
-                startLevel(Math.min(maxHp, player.hp+1));
+                startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }
+        }
+    }
+}
+
+class StairsUp extends Tile {
+    constructor(x, y) {
+        super(x, y, 24, true);
+    }
+
+    stepOn(monster) {
+        if (monster.isPlayer) {
         }
     }
 }

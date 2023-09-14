@@ -5,8 +5,21 @@ function generateLevel() {
 
     generateMonsters();
 
-    for (let i = 0; i < 3; i++) {
+    let treasureNumber = clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4));
+    let scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 3));
+    let trapNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 5));
+    
+
+    for (let i = 0; i < treasureNumber; i++) {
         randomPassableTile().treasure = true;
+    }
+
+    for (let i = 0; i < scrollNumber; i++) {
+        randomPassableTile().scroll = true;
+    }
+
+    for (let i = 0; i < scrollNumber; i++) {
+        randomPassableTile().trap = true;
     }
 }
 
@@ -52,14 +65,21 @@ function randomPassableTile() {
 
 function generateMonsters() {
     monsters = [];
-    let numMonsters = level+1;
+    let numMonsters = Math.floor(level / 3) + 1;
+    let numberOfRare = Math.floor(level / 3);
     for (let i = 0; i < numMonsters; i++) {
-        spawnMonster();
+        if (i < numberOfRare) {
+            spawnMonster(true);
+        }
+        spawnMonster(false);
     }
 }
 
-function spawnMonster() {
-    let monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton])[0];
+function spawnMonster(rare) {
+    let monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton, RedDrake, GreenSlime])[0];
     let monster = new monsterType(randomPassableTile());
+    if (rare) {
+        monster.upgrade(Math.floor(level / 3));
+    }
     monsters.push(monster);
 }
