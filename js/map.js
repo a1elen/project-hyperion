@@ -10,7 +10,7 @@ function generateLevel(levelGen) {
         wallChance = 0.45
         tryTo('generate map', function() {
             passableTilesCount = generateCellular(wallChance);
-            passableTilesCount = iterateCellular(5, passableTilesCount);
+            iterateCellular(5);
             return passableTilesCount == randomPassableTile().getConnectedTiles().length;
         })
     }
@@ -68,19 +68,16 @@ function iterateCellular(count) {
                     if(neighbours >= 5); {
                         tiles[i][j] = null;
                         tiles[i][j] = new Wall(i, j);
-                        passableTilesCount--;
                     }
                 } else {
                     if(neighbours < 5); {
                         tiles[i][j] = null;
                         tiles[i][j] = new Floor(i, j);
-                        passableTilesCount++;
                     }
                 }
             }
         }
     }
-    return passableTilesCount;
 }
 
 function inBounds(x, y) {
