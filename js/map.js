@@ -1,7 +1,18 @@
 function generateLevel() {
-    tryTo('generate map', function() {
-        return generateTiles() == randomPassableTile().getConnectedTiles().length;
-    })
+    let levelType = 1;
+    let wallChance = 0.3;
+    if (levelType == 0) {
+        wallChance = 0.3;
+        tryTo('generate map', function() {
+            return generateCellular(wallChance) == randomPassableTile().getConnectedTiles().length;
+        })
+    } else {
+        wallChance = 0.45
+        tryTo('generate map', function() {
+            return generateCellular(wallChance) == randomPassableTile().getConnectedTiles().length;
+        })
+        iterateCellular(5);
+    }
 
     generateMonsters();
 
@@ -23,7 +34,7 @@ function generateLevel() {
     }
 }
 
-function generateTiles() {
+function generateCellular(wallChance) {
     let passableTiles=0;
     
     // clean level
@@ -36,7 +47,7 @@ function generateTiles() {
     for (let i = 0; i < numTiles; i++) {
         //tiles[i] = [];
         for (let j = 0; j < numTiles; j++) {
-            if (Math.random() < 0.3 || !inBounds(i, j)) {
+            if (Math.random() < wallChance || !inBounds(i, j)) {
                 tiles[i][j] = new Wall(i, j);
             } else {
                 tiles[i][j] = new Floor(i, j);
@@ -45,6 +56,20 @@ function generateTiles() {
         }
     }
     return passableTiles;
+}
+
+function iterateCellular(count) {
+    for(let c = 0; c < count; c++) {
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                if (tiles[i][j].passable) {
+                    if(tiles[i][j].getAdjacentPassableNeighbours() >- 5); {
+                        tiles[i][j] = new StairsDown(i, j);
+                    }
+                }
+            }
+        }
+    }
 }
 
 function inBounds(x, y) {
