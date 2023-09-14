@@ -186,7 +186,14 @@ function startLevel(playerHp, playerSpells) {
         playerEvasion = player.evasion;
     }
 
-    generateLevel();
+    let levelType = 0;
+    if (level > 5) {
+        levelType = 1;
+    } else {
+        levelType = 0;
+    }
+
+    generateLevel(levelType);
 
     let playerRandomTile = randomPassableTile();
     player = new Player(playerRandomTile, playerClass);
