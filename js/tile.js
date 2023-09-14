@@ -59,6 +59,14 @@ class Tile {
     draw() {
         drawSprite(this.sprite, this.x, this.y);
 
+        if (this.blood) {
+            drawSprite(25, this.x, this.y);
+        }
+
+        if (this.wallBlood) {
+            drawSprite(26, this.x, this.y);
+        }
+
         if (this.treasure) {
             drawSprite(12, this.x, this.y);
         }
@@ -74,15 +82,6 @@ class Tile {
                 drawSprite(29, this.x, this.y);
             }
         }
-
-        if (this.blood) {
-            drawSprite(25, this.x, this.y);
-        }
-
-        if (this.wallBlood) {
-            drawSprite(26, this.x, this.y);
-        }
-
 
         if (this.effectCounter) {
             this.effectCounter--;
