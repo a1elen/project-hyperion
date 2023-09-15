@@ -414,7 +414,7 @@ class Worm extends Monster {
             neighbours[0].replace(Floor);
  
             if (this.hp == 20) {
-                let spawnTile = shuffle(getAdjacentPassableNeighbours())[0];
+                let spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours())[0];
                 let monster = new Worm(spawnTile);
                 this.updateStats();
                 this.hp = this.maxHealth;
