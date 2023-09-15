@@ -182,14 +182,21 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         saveLevel();
     }
 
-    if(levelTiles[level-1] && gameStarted) {
-        loadLevel();
-        placePlayer();
-    } else {
+    if(!gameStarted) {
         generateLevel(levelType);
         placePlayer();
         placeStairs();
+    } else {
+        if(levelTiles[level-1].length > 0) {
+            loadLevel();
+            placePlayer();
+        } else {
+            generateLevel(levelType);
+            placePlayer();
+            placeStairs();
+        }
     }
+ 
 
     function placePlayer() {
         let playerRandomTile = randomPassableTile();
