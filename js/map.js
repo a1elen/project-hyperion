@@ -57,9 +57,9 @@ function generateCellular(wallChance) {
         //tiles[i] = [];
         for (let j = 0; j < numTiles; j++) {
             if (Math.random() < wallChance || !inBounds(i, j)) {
-                tiles[i][j] = new Wall(i, j);
+                tiles[i][j].replace(Wall);
             } else {
-                tiles[i][j] = new Floor(i, j);
+                tiles[i][j].replace(Floor);
                 passableTiles++;
             }
         }

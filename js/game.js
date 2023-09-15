@@ -179,7 +179,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
     }
 
     if (gameStarted) {
-        saveLevel();
+        //saveLevel();
     }
 
     if(!gameStarted) {
@@ -188,7 +188,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         placeStairs();
         console.log("generated");
     } else {
-        if(levelTiles[level-1].length > 0) {
+        if(levelTiles[level-1]) {
             loadLevel();
             placePlayer();
             console.log("loaded");
