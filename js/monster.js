@@ -412,8 +412,16 @@ class Worm extends Monster {
         let neighbours = this.tile.getAdjacentNeighbours().filter(t => !t.passable && inBounds(t.x, t.y));
         if (neighbours.length) {
             neighbours[0].replace(Floor);
-            this.maxHealth += 1;
-            this.heal(1);
+ 
+            if (this.hp == 20) {
+                let spawnTile = shuffle(getAdjacentPassableNeighbours())[0];
+                let monster = new Worm(spawnTile);
+                this.updateStats();
+                this.hp = this.maxHealth;
+            } else {
+                this.maxHealth += 1;
+                this.heal(1);
+            }
         } else {
             super.doStuff();
         }
