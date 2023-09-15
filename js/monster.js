@@ -221,7 +221,7 @@ class Monster {
             return;
         }
 
-        if (attacker.strength > this.constitution) {
+        /*if (attacker.strength > this.constitution)*/ {
             if (randomRange(1, 100) < attacker.strength) {
                 
             }
@@ -377,7 +377,7 @@ class Player extends Monster {
     moveUp() {
         this.tile.use(player);
     }
-    
+
     moveDown() {
         this.tile.use(player);
     }
