@@ -200,11 +200,11 @@ class Monster {
                     this.offsetX = (newTile.x - this.tile.x) / 2;
                     this.offsetY = (newTile.y - this.tile.y) / 2;
 
-                    if (randomRange(1, 100 ) < this.evasion) {
+                    if (randomRange(1, 100 ) < newTile.monster.evasion) {
                         return;
                     }
 
-                    if (this.shielded || this.teleportCounter > 1) {
+                    if (newTile.monster.shielded || newTile.monster.teleportCounter > 1) {
                         return;
                     }
 
