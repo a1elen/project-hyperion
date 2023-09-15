@@ -156,7 +156,7 @@ function startGame() {
     numSpells = 1;
 
     levelTiles = [];
-
+    tiles = [];
     startLevel(startingHp);
     gameStarted = true;
 
