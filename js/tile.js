@@ -240,7 +240,7 @@ class StairsUp extends Tile {
     use(monster) {
         if(monster.isPlayer) {
             playSound("newLevel");
-            if (level == numLevels) {
+            if (level == 1) {
                 addScore(score, true);
                 showTitle();
             } else {
