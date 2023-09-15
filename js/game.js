@@ -186,14 +186,18 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         generateLevel(levelType);
         placePlayer();
         placeStairs();
+        console.log("generated");
     } else {
         if(levelTiles[level-1].length > 0) {
             loadLevel();
             placePlayer();
+            console.log("loaded");
+            console.log(levelTiles[level-1].length);
         } else {
             generateLevel(levelType);
             placePlayer();
             placeStairs();
+            console.log("generated after checks");
         }
     }
  
