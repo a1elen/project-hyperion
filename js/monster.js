@@ -202,10 +202,12 @@ class Monster {
                     this.offsetY = (newTile.y - this.tile.y) / 2;
 
                     if (randomRange(1, 100 ) < newTile.monster.evasion) {
+                        check_for_tick();
                         return;
                     }
 
                     if (newTile.monster.shielded || newTile.monster.teleportCounter > 1) {
+                        check_for_tick();
                         return;
                     }
 
@@ -413,15 +415,15 @@ class Worm extends Monster {
         if (neighbours.length) {
             neighbours[0].replace(Floor);
  
-            if (this.constitution * 5 > this.constitution * 5 * 2) {
+            if (this.maxHealth >= this.constitution * 5 * 2) {
                 let spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
                 let monster = new Worm(spawnTile);
                 monsters.push(monster);
                 this.updateStats();
-                this.hp = this.maxHealth;
+                this.hp = Math.floor(this.hp / 2);
+                this.maxHealth = hp;
             } else {
-                this.constitution++;
-                this.updateStats();
+                this.maxHealth++;
                 this.heal(1);
             }
         } else {
