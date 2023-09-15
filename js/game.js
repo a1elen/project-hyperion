@@ -194,6 +194,9 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
     }
 
     // place stairs
+    if (levelTiles[level-1]) {
+        return;
+    }
     if (randomUpStairs) {
         randomPassableTile().replace(StairsUp);
     } else {
