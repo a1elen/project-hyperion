@@ -126,6 +126,7 @@ class Floor extends Tile {
                     }
                 } else {
                     playSound("trapdoor");
+                    saveLevel();
                     level++;
                     startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
                     shakeAmount = 50;
