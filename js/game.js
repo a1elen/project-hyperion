@@ -179,7 +179,9 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         levelType = 0;
     }
 
-    saveLevel();
+    if (tiles) {
+        saveLevel();
+    }
 
     if(levelTiles[level-1]) {
         loadLevel();
