@@ -30,8 +30,8 @@ spells = {
                 t.monster.heal(5 * t.arcane);
             }
         });
-        //player.tile.setEffect(13);
-        //player.heal(1);
+        player.tile.setEffect(13);
+        player.heal(5 * player.arcane);
     },
     Dash: function() {
         let newTile = player.tile;
