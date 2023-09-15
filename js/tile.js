@@ -213,6 +213,7 @@ class StairsDown extends Tile {
                 addScore(score, true);
                 showTitle();
             } else {
+                this.replace(StairsDown);
                 saveLevel();
                 level++;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
@@ -242,6 +243,7 @@ class StairsUp extends Tile {
                 addScore(score, true);
                 showTitle();
             } else {
+                this.replace(StairsUp);
                 saveLevel();
                 level--;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
