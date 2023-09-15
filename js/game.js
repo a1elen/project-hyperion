@@ -179,6 +179,12 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         levelType = 0;
     }
 
+    saveLevel();
+
+    if(levelTiles[level-1]) {
+        loadLevel();
+    }
+
     generateLevel(levelType);
 
     let playerRandomTile = randomPassableTile();

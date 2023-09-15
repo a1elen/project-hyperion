@@ -39,6 +39,10 @@ function saveLevel() {
     levelTiles[level-1] = tiles;
 }
 
+function loadLevel() {
+    tiles = levelTiles[level-1];
+}
+
 function generateCellular(wallChance) {
     let passableTiles=0;
 
@@ -46,11 +50,6 @@ function generateCellular(wallChance) {
     tiles = [];
     for (let i = 0; i < numTiles; i++) {
         tiles[i] = [];
-    }
-
-    if (levelTiles[level-1]) {
-            tiles = levelTiles[level-1];
-    return passableTiles;
     }
 
     //tiles = [];
