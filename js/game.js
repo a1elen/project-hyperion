@@ -163,7 +163,7 @@ function startGame() {
 }
 
 function startLevel(playerHp, playerSpells, randomUpStairs) {
-    spawnRate = 10;
+    spawnRate = 5;
     spawnCounter = spawnRate;
 
     if (gameStarted) {
@@ -205,7 +205,8 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
     function placePlayer() {
         let playerRandomTile = randomPassableTile();
         player = new Player(playerRandomTile, playerClass);
-        
+        playerRandomTile.monster = player;
+
         if (gameStarted) {
             // Restore player stats
             restorePlayer();

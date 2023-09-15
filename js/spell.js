@@ -8,7 +8,7 @@ spells = {
                 let tile = getTile(i, j);
                 if (tile.monster) {
                     let numWalls = 8 - tile.getAdjacentPassableNeighbours().length;
-                    tile.monster.hit(numWalls * 3);
+                    tile.monster.hit(numWalls * 5);
                 }
             }
         }
@@ -27,11 +27,11 @@ spells = {
         player.tile.getAdjacentNeighbours().forEach(function(t) {
             t.setEffect(13);
             if (t.monster) {
-                t.monster.heal(5);
+                t.monster.heal(5 * t.arcane);
             }
         });
-        player.tile.setEffect(13);
-        player.heal(1);
+        //player.tile.setEffect(13);
+        //player.heal(1);
     },
     Dash: function() {
         let newTile = player.tile;
@@ -86,7 +86,7 @@ spells = {
         player.tile.setEffect(13);
         player.heal(5);
 
-        addStatus("Stunned", randomRange(1, 2), player);
+        //addStatus("Stunned", randomRange(1, 2), player);
 
         player.bonusAttack = 5;
     },
@@ -112,7 +112,7 @@ spells = {
             [1, 0]
         ];
         for (let k = 0; k < directions.length; k++) {
-            boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 4 * player.arcane);
+            boltTravel(directions[k], 15 + Math.abs(directions[k][1]), 5 * player.arcane);
         }
         playSound("firebolt");
     },
@@ -124,7 +124,7 @@ spells = {
             [1, 1]
         ];
         for (let k = 0; k < directions.length; k++) {
-            boltTravel(directions[k], 14, 3 * player.arcane);
+            boltTravel(directions[k], 14, 5 * player.arcane);
         }
         playSound("firebolt");
     },
@@ -141,26 +141,27 @@ spells = {
     },
     Pray: function() {
         let outcome = randomRange(1, 5);
-        console.log(outcome);
         switch(outcome) {
             case 1:
                 player.tile.setEffect(13);
-                player.heal(randomRange(1, 20));
+                player.heal(randomRange(5, player.maxHealth));
                 break;
             case 2:
-                addStatus("Stunned", randomRange(2, 4), player);
+                addStatus("Stunned", randomRange(5, 10), player);
                 break;
             case 3:
-                addStatus("Shielded", randomRange(2, 10), player);
+                addStatus("Shielded", randomRange(5, 10), player);
                 break;
             case 4:
                 if (randomRange(1, 2) == 1) {
-                    player.strength += randomRange(1, 2);
+                    player.strength++;
+                    break;
                 } else {
-                    player.constitution += randomRange(1, 2);
+                    player.constitution++;
+                    break;
                 }
-                break;
             case 5:
+                addStatus("AllSeeingEye", randomRange(10, 50), player)
                 break;
         }
     },
@@ -170,7 +171,6 @@ spells = {
     Matchstick: function() {
         player.statuses.push(new Burning(5));
         player.bonusAttack = 5;
-        player.attack++;
     }
 };
 

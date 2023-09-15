@@ -196,15 +196,23 @@ class Monster {
                     if (randomRange(1, 100) < this.perception) {
                         damage = damage * 2;
                     }
+                    
+                    this.offsetX = (newTile.x - this.tile.x) / 2;
+                    this.offsetY = (newTile.y - this.tile.y) / 2;
+
+                    if (randomRange(1, 100 ) < this.evasion) {
+                        return;
+                    }
+
+                    if (this.shielded || this.teleportCounter > 1) {
+                        return;
+                    }
 
                     newTile.monster.hit(damage, this);
 
                     this.bonusAttack = 0;
 
                     shakeAmount = 5;
-
-                    this.offsetX = (newTile.x - this.tile.x) / 2;
-                    this.offsetY = (newTile.y - this.tile.y) / 2;
                 }
             }
             return true;
@@ -213,19 +221,11 @@ class Monster {
 
     hit(damage, attacker) {
 
-        if (randomRange(1, 100 ) < this.evasion) {
-            return;
-        }
-
-        if (this.shielded || this.teleportCounter > 1) {
-            return;
-        }
-
-        /*if (attacker.strength > this.constitution)*/ {
+        /*if (attacker.strength > this.constitution) {
             if (randomRange(1, 100) < attacker.strength) {
                 
             }
-        }
+        }*/
 
         this.hp -= damage;
         if(this.hp <= 0) {
