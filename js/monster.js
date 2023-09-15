@@ -195,6 +195,7 @@ class Monster {
 
                     if (randomRange(1, 100) < this.perception) {
                         damage = damage * 2;
+                        newTile.monster.tile.blood = true;
                     }
                     
                     this.offsetX = (newTile.x - this.tile.x) / 2;
