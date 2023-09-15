@@ -153,7 +153,7 @@ class Floor extends Tile {
     }
 
     use() {
-        
+
     }
 
     get() {
@@ -219,6 +219,10 @@ class StairsDown extends Tile {
             }
         }
     }
+
+    get() {
+
+    }
 }
 
 class StairsUp extends Tile {
@@ -243,5 +247,9 @@ class StairsUp extends Tile {
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }
         }
+    }
+
+    get() {
+        
     }
 }
