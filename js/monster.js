@@ -399,7 +399,7 @@ class Spider extends Monster {
 class Worm extends Monster {
     constructor (tile) {
         super(tile, 5, 1);
-        this.initMainStats(1, 2, 1, 2, 1, 1);
+        this.initMainStats(1, 1, 1, 2, 1, 1);
         this.updateStats();
         this.hp = this.maxHealth;
         //this.attack = 1;
@@ -413,14 +413,15 @@ class Worm extends Monster {
         if (neighbours.length) {
             neighbours[0].replace(Floor);
  
-            if (this.hp == 20) {
-                let spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours())[0];
+            if (this.constitution * 5 > this.constitution * 5 * 2) {
+                let spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
                 let monster = new Worm(spawnTile);
                 monsters.push(monster);
                 this.updateStats();
                 this.hp = this.maxHealth;
             } else {
-                this.maxHealth += 1;
+                this.constitution++;
+                this.updateStats();
                 this.heal(1);
             }
         } else {
