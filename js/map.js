@@ -57,9 +57,9 @@ function generateCellular(wallChance) {
         //tiles[i] = [];
         for (let j = 0; j < numTiles; j++) {
             if (Math.random() < wallChance || !inBounds(i, j)) {
-                tiles[i][j].replace(Wall);
+                tiles[i][j] = new Wall(i, j);
             } else {
-                tiles[i][j].replace(Floor);
+                tiles[i][j] = new Floor(i, j);
                 passableTiles++;
             }
         }
@@ -74,13 +74,13 @@ function iterateCellular(count) {
                 let neighbours = tiles[i][j].getAdjacentPassableNeighbours();
                 if (tiles[i][j].passable) {
                     if(neighbours >= 5); {
-                        tiles[i][j] = null;
-                        tiles[i][j] = new Wall(i, j);
+                        //tiles[i][j] = null;
+                        tiles[i][j] = tiles[i][j].replace(Wall)
                     }
                 } else {
                     if(neighbours < 5); {
-                        tiles[i][j] = null;
-                        tiles[i][j] = new Floor(i, j);
+                        //tiles[i][j] = null;
+                        tiles[i][j] = tiles[i][j].replace(Floor);
                     }
                 }
             }
