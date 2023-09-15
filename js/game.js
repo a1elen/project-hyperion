@@ -156,7 +156,6 @@ function startGame() {
     numSpells = 1;
 
     levelTiles = [];
-    tiles = [];
     startLevel(startingHp);
     gameStarted = true;
 
@@ -179,39 +178,43 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         levelType = 0;
     }
 
-    if (tiles) {
+    if (gameStarted) {
         saveLevel();
     }
 
-    if(levelTiles[level-1]) {
+    if(levelTiles[level-1] && gameStarted) {
         loadLevel();
-    }
-
-    generateLevel(levelType);
-
-    let playerRandomTile = randomPassableTile();
-    player = new Player(playerRandomTile, playerClass);
-    
-    if (gameStarted) {
-        // Restore player stats
-        restorePlayer();
-    }
-
-    if (playerSpells) {
-        player.spells = playerSpells;
-    }
-
-    // place stairs
-    if (levelTiles[level-1]) {
-        return;
-    }
-    if (randomUpStairs) {
-        randomPassableTile().replace(StairsUp);
+        placePlayer();
     } else {
-        playerRandomTile.replace(StairsUp);
+        generateLevel(levelType);
+        placePlayer();
+        placeStairs();
     }
 
-    randomPassableTile().replace(StairsDown);
+    function placePlayer() {
+        let playerRandomTile = randomPassableTile();
+        player = new Player(playerRandomTile, playerClass);
+        
+        if (gameStarted) {
+            // Restore player stats
+            restorePlayer();
+        }
+    
+        if (playerSpells) {
+            player.spells = playerSpells;
+        }    
+    }
+
+    function placeStairs() {
+        // place stairs
+        if (randomUpStairs) {
+            randomPassableTile().replace(StairsUp);
+        } else {
+            playerRandomTile.replace(StairsUp);
+        }
+
+        randomPassableTile().replace(StairsDown);
+    }
 }
 
 function savePlayer() {
