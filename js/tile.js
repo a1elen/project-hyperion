@@ -127,7 +127,7 @@ class Floor extends Tile {
                 } else {
                     playSound("trapdoor");
                     level++;
-                    startLevel(Math.min(maxHp, player.hp-5), player.spells);
+                    startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
                     shakeAmount = 50;
 
                 }
@@ -209,6 +209,7 @@ class StairsDown extends Tile {
                 addScore(score, true);
                 showTitle();
             } else {
+                saveLevel();
                 level++;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }
@@ -233,6 +234,7 @@ class StairsUp extends Tile {
                 addScore(score, true);
                 showTitle();
             } else {
+                saveLevel();
                 level--;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }

@@ -154,6 +154,9 @@ function startGame() {
     level = 1;
     score = 0;
     numSpells = 1;
+
+    levelTiles = [];
+
     startLevel(startingHp);
     gameStarted = true;
 
@@ -196,7 +199,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
     } else {
         playerRandomTile.replace(StairsUp);
     }
-    
+
     randomPassableTile().replace(StairsDown);
 }
 
