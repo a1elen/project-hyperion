@@ -103,40 +103,12 @@ class Floor extends Tile {
     }
 
     stepOn(monster) {
-        if (monster.isPlayer && this.treasure) {
-            score += randomRange(9, 21);
-            //if (score % 3 == 0 && numSpells < 9) {
-                //numSpells++;
-                //player.addSpell();
-            //}
-            playSound("treasure");
-            this.treasure = false;
-            spawnMonster();
-        }
-        if (monster.isPlayer && this.scroll) {
-            //if (numSpells < 9) {
-            //    numSpells++;
-            //}
-            if (player.spells.length < numSpells) {
-                console
-                player.addSpell();
-                this.scroll = false;
-            }
-            // TO DO
-            //playSound("scroll");
-        }
         if (this.trap) {
 
             if (!this.trapWorks) {
                 return;
             }
 
-            /*let statusName;
-            if (randomRange(1, 2) > 1) {
-                statusName = "Bleeding";
-            } else {
-                statusName = "Stunned";
-            }*/
             if (monster.isPlayer) {
                 let isTrapdoor = randomRange(1, 2);
                 if (isTrapdoor == 1) {
@@ -179,6 +151,31 @@ class Floor extends Tile {
             shakeAmount = 10;
         }
     }
+
+    get() {
+        if (this.treasure) {
+            score += randomRange(9, 21);
+            //if (score % 3 == 0 && numSpells < 9) {
+                //numSpells++;
+                //player.addSpell();
+            //}
+            playSound("treasure");
+            this.treasure = false;
+            if (randomRange(0, 2) < 1) {
+                spawnMonster();
+            }
+        }
+
+        if (this.scroll) {
+            if (player.spells.length < numSpells) {
+                console
+                player.addSpell();
+                this.scroll = false;
+            }
+            // TO DO
+            //playSound("scroll");
+        }
+    }
 }
 
 class Wall extends Tile {
@@ -193,6 +190,19 @@ class StairsDown extends Tile {
     }
 
     stepOn(monster) {
+        /*if(monster.isPlayer) {
+            playSound("newLevel");
+            if (level == numLevels) {
+                addScore(score, true);
+                showTitle();
+            } else {
+                level++;
+                startLevel(Math.min(maxHp, player.hp+1), player.spells);
+            }
+        }*/
+    }
+
+    use(monster) {
         if(monster.isPlayer) {
             playSound("newLevel");
             if (level == numLevels) {
@@ -213,6 +223,19 @@ class StairsUp extends Tile {
 
     stepOn(monster) {
         if (monster.isPlayer) {
+        }
+    }
+
+    use(monster) {
+        if(monster.isPlayer) {
+            playSound("newLevel");
+            if (level == numLevels) {
+                addScore(score, true);
+                showTitle();
+            } else {
+                level--;
+                startLevel(Math.min(maxHp, player.hp+1), player.spells);
+            }
         }
     }
 }

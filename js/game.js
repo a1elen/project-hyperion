@@ -160,13 +160,48 @@ function startGame() {
     gameState = "running";
 }
 
-function startLevel(playerHp, playerSpells) {
+function startLevel(playerHp, playerSpells, randomUpStairs) {
     spawnRate = 10;
     spawnCounter = spawnRate;
 
     if (gameStarted) {
         // Save player stats
-        playerMaxHealth = player.maxHealth;
+        savePlayer();
+    }
+
+    let levelType = 0;
+    if (level > 5) {
+        levelType = 1;
+    } else {
+        levelType = 0;
+    }
+
+    generateLevel(levelType);
+
+    let playerRandomTile = randomPassableTile();
+    player = new Player(playerRandomTile, playerClass);
+    
+    if (gameStarted) {
+        // Restore player stats
+        restorePlayer();
+    }
+
+    if (playerSpells) {
+        player.spells = playerSpells;
+    }
+
+    // place stairs
+    if (randomUpStairs) {
+        randomPassableTile().replace(StairsUp);
+    } else {
+        playerRandomTile.replace(StairsUp);
+    }
+    
+    randomPassableTile().replace(StairsDown);
+}
+
+function savePlayer() {
+    playerMaxHealth = player.maxHealth;
         playerHp = player.hp;
         playerLevel = player.level;
         playerXp = player.xp;
@@ -184,23 +219,10 @@ function startLevel(playerHp, playerSpells) {
 
         playerWeaponDamage = player.weaponDamage;
         playerEvasion = player.evasion;
-    }
+}
 
-    let levelType = 0;
-    if (level > 5) {
-        levelType = 1;
-    } else {
-        levelType = 0;
-    }
-
-    generateLevel(levelType);
-
-    let playerRandomTile = randomPassableTile();
-    player = new Player(playerRandomTile, playerClass);
-    
-    if (gameStarted) {
-        // Restore player stats
-        player.maxHealth = playerMaxHealth;
+function restorePlayer() {
+    player.maxHealth = playerMaxHealth;
         player.hp = playerHp;
         player.level = playerLevel;
         player.xp = playerXp;
@@ -218,13 +240,6 @@ function startLevel(playerHp, playerSpells) {
     
         player.weaponDamage = playerWeaponDamage;
         player.evasion = playerEvasion;
-    }
-
-    if (playerSpells) {
-        player.spells = playerSpells;
-    }
-    playerRandomTile.replace(StairsUp);
-    randomPassableTile().replace(StairsDown);
 }
 
 function drawText(text, size, centered, textY, color, textX) {

@@ -117,11 +117,11 @@ function generateMonsters() {
 
 function spawnMonster(rare) {
     let monsterType;
-    if (level <= 3) {
-        monsterType = shuffle([Spider, Worm, GreenSlime])[0];
-    } else if (level <= 5) {
-        monsterType = shuffle([Snake, Zombie, Skeleton])[0];
+    if (level <= 5) {
+        monsterType = shuffle([Spider, Snake, GreenSlime])[0];
     } else if (level <= 10) {
+        monsterType = shuffle([Worm, Zombie, Skeleton])[0];
+    } else if (level <= 15) {
         monsterType = shuffle([Zombie, Skeleton, RedDragonBaby])[0];
     } else {
         monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton, RedDragonBaby, GreenSlime])[0];

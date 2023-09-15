@@ -369,6 +369,17 @@ class Player extends Monster {
             gameState = "running";
         }
     }
+
+    pickUp() {
+        this.tile.get();
+    }
+
+    moveUp() {
+        this.tile.use(monster);
+    }
+    moveDown() {
+        this.tile.use(monster);
+    }
 }
 
 class Spider extends Monster {
@@ -399,6 +410,7 @@ class Worm extends Monster {
         let neighbours = this.tile.getAdjacentNeighbours().filter(t => !t.passable && inBounds(t.x, t.y));
         if (neighbours.length) {
             neighbours[0].replace(Floor);
+            this.maxHealth += 1;
             this.heal(1);
         } else {
             super.doStuff();
