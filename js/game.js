@@ -210,7 +210,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         if (randomUpStairs) {
             randomPassableTile().replace(StairsUp);
         } else {
-            playerRandomTile.replace(StairsUp);
+            player.tile.replace(StairsUp);
         }
 
         randomPassableTile().replace(StairsDown);
