@@ -152,6 +152,10 @@ class Floor extends Tile {
         }
     }
 
+    use() {
+        
+    }
+
     get() {
         if (this.treasure) {
             score += randomRange(9, 21);
