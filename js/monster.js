@@ -375,10 +375,10 @@ class Player extends Monster {
     }
 
     moveUp() {
-        this.tile.use(monster);
+        this.tile.use(player);
     }
     moveDown() {
-        this.tile.use(monster);
+        this.tile.use(player);
     }
 }
 
