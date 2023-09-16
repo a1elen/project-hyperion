@@ -97,19 +97,7 @@ function addStatus(name, duration, target) {
         return;
     }
 
-    let count = 0;
-    for (let i = 0; i < target.statuses.length; i++) {
-        if (target.statuses[i].constructor.name == String(name)) {
-            target.statuses[i].duration += duration;
-            count++;
-        }
-    }
-    if (count < 1) {
-        target.statuses.push(new name(duration));
-    }
-
-
-    /*if (name == "Stunned") {
+ if (name == "Stunned") {
         let count = 0;
         for (let i = 0; i < target.statuses.length; i++) {
             if (target.statuses[i].constructor.name == "Stunned") {
@@ -159,5 +147,5 @@ function addStatus(name, duration, target) {
         if (count < 1) {
             target.statuses.push(new AllSeeingEye(duration));
         }
-    }*/
+    }
 }
