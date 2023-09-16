@@ -80,6 +80,40 @@ function draw() {
                 drawText(spellText, 20, false, 170 + i * 40, "aqua");
             }
         }
+        
+
+        // dirty FOV implementation
+        let playerSeeTiles = player.tile.getAdjacentNeighbours();
+        playerSeeTiles.push(player.tile);
+        let playerHalfSeeTiles = [];
+        
+        for (let i = 0; i < playerSeeTiles.length; i++) {
+            playerHalfSeeTiles.push(playerSeeTiles[i].getAdjacentNeighbours());
+        }
+
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                if (!playerSeeTiles.includes(tiles[i][j]) && playerHalfSeeTiles.includes(tiles[i][j])) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+                    ctx.fillRect(tiles[i][j].x * tileSize, tiles[i][j].y * tileSize, tileSize, tileSize);
+                } else if (!playerSeeTiles.includes(tiles[i][j]) && !playerHalfSeeTiles.includes(tiles[i][j])) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                    ctx.fillRect(tiles[i][j].x * tileSize, tiles[i][j].y * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+
+        /*let playerSeeTiles = player.tile.getAdjacentNeighbours();
+        playerSeeTiles.push(player.tile);
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                if (!playerSeeTiles.includes(tiles[i][j])) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                    ctx.fillRect(tiles[i][j].x * tileSize, tiles[i][j].y * tileSize, tileSize, tileSize);
+                }
+            }
+        }*/
+
     }
 }
 
@@ -206,6 +240,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         let playerRandomTile = randomPassableTile();
         player = new Player(playerRandomTile, playerClass);
         playerRandomTile.monster = player;
+        player.tile = playerRandomTile;
 
         if (gameStarted) {
             // Restore player stats
