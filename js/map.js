@@ -11,7 +11,18 @@ function generateLevel(levelGen) {
         tryTo('generate map', function() {
             passableTilesCount = generateCellular(wallChance);
             iterateCellular(5);
-            return passableTilesCount == randomPassableTile().getConnectedTiles().length;
+            let passables = randomPassableTile().getConnectedTiles();
+            //fillNonPassable(passables);
+
+            for (let i = 0; i < numTiles; i++) {
+                for (let j = 0; j < numTiles; j++) {
+                    if (!passables.includes(tiles[i][j])) {
+                        tiles[i][j].replace(Wall);
+                    }
+                }
+            }
+
+            return passableTilesCount == passables.length;
         })
     }
 
