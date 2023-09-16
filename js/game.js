@@ -225,7 +225,16 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
             player.tile.replace(StairsUp);
         }
 
-        randomPassableTile().replace(StairsDown);
+        tryTo('place stairs down', function() {
+            let randomTile = randomPassableTile();
+            if (randomTile.constructor.name == "StairsUp") {
+                randomPassableTile().replace(StairsDown);
+                return true;
+            } else {
+                return false;
+            }
+ 
+        })
     }
 }
 
