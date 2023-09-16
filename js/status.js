@@ -99,7 +99,7 @@ function addStatus(name, duration, target) {
 
     let count = 0;
     for (let i = 0; i < target.statuses.length; i++) {
-        if (target.statuses[i].includes(name)) {
+        if (target.statuses[i].consctructor.name == String(name)) {
             target.statuses[i].duration += duration;
             count++;
         }
