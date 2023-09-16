@@ -240,7 +240,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
         let playerRandomTile = randomPassableTile();
         player = new Player(playerRandomTile, playerClass);
         playerRandomTile.monster = player;
-        player.tile = playerRandomTile;
+        player.move(playerRandomTile);
 
         if (gameStarted) {
             // Restore player stats
