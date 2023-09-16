@@ -421,7 +421,7 @@ class Worm extends Monster {
                 monsters.push(monster);
                 this.updateStats();
                 this.hp = Math.floor(this.hp / 2);
-                this.maxHealth = hp;
+                this.maxHealth = this.hp;
             } else {
                 this.maxHealth++;
                 this.heal(1);
