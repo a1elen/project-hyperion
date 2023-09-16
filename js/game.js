@@ -257,6 +257,8 @@ function savePlayer() {
 
         playerWeaponDamage = player.weaponDamage;
         playerEvasion = player.evasion;
+
+        playerStatuses = player.statuses;
 }
 
 function restorePlayer() {
@@ -278,6 +280,8 @@ function restorePlayer() {
     
         player.weaponDamage = playerWeaponDamage;
         player.evasion = playerEvasion;
+
+        playerStatuses = player.statuses;
 }
 
 function drawText(text, size, centered, textY, color, textX) {
