@@ -57,6 +57,8 @@ function draw() {
         }*/
 
         for (let i = 0; i < monsters.length; i++) {
+            //ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
+            //ctx.fillRect(monsters[i].tile.x * tileSize, monsters[i].tile.y * tileSize, tileSize, tileSize);
             let distance = Math.max(Math.abs(monsters[i].tile.x - player.tile.x,
                 monsters[i].tile.y - player.tile.y));
             if (distance < 3) {
