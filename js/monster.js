@@ -378,11 +378,15 @@ class Player extends Monster {
     }
 
     moveUp() {
-        this.tile.use(player);
+        this.tile.moveUp(player);
     }
 
     moveDown() {
-        this.tile.use(player);
+        this.tile.moveDown(player);
+    }
+
+    use() {
+        this.tile.use();
     }
 }
 

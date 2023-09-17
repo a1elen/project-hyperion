@@ -91,6 +91,7 @@ function initKeyControls() {
             if (e.key == "g") player.pickUp();
             if (e.key == ">") player.moveDown();
             if (e.key == "<") player.moveUp();
+            if (e.key == "e") player.use();
             if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
             if (e.key == "r") startLevel(Math.min(maxHp, player.hp-5), player.spells);
 

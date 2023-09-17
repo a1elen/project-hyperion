@@ -155,7 +155,9 @@ class Floor extends Tile {
     }
 
     use() {
-
+        if (this.trap && !this.trapWorks && this.visible) {
+            this.trapWorks = true;
+        }
     }
 
     get() {
@@ -180,6 +182,10 @@ class Floor extends Tile {
             }
             // TO DO
             //playSound("scroll");
+        }
+
+        if (this.trap) {
+            this.trap = false;
         }
     }
 }
@@ -208,7 +214,11 @@ class StairsDown extends Tile {
         }*/
     }
 
-    use(monster) {
+    use() {
+
+    }
+
+    moveDown(monster) {
         if(monster.isPlayer) {
             playSound("newLevel");
             if (level == numLevels) {
@@ -238,7 +248,11 @@ class StairsUp extends Tile {
         }
     }
 
-    use(monster) {
+    use() {
+
+    }
+
+    moveUp(monster) {
         if(monster.isPlayer) {
             playSound("newLevel");
             if (level == 1) {
