@@ -74,7 +74,7 @@ function draw() {
 
             drawText("Level: " + player.level + " " + player.xp + "/" + player.xpToLevel, 20, false, 170, "yellow")
             drawText("Health: " + player.hp, 20, false, 200, "red")
-            drawText("Weapon: " + player.weaponDamage[0] + "d" + this.weaponDamage[1], 20, false, 230, "white")
+            drawText("Weapon: " + player.weaponDamage[0] + "d" + player.weaponDamage[1], 20, false, 230, "white")
             drawText("AV / EV: " + player.armorClass + "/" + player.evasionClass, 20, false, 260, "white")
 
             drawText("Strength: " + player.strength, 20, false, 290, "white")
