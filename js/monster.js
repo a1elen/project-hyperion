@@ -316,7 +316,7 @@ class Monster {
         this.updateStats();
 
         this.hp = this.maxHealth;
-        this.xpPoints = (this.xpPoints + randomRange(0, 3)) * level;
+        this.xpPoints = (this.xpPoints + randomRange(1, 5)) * level;
         this.rare = true;
     }
 }
@@ -467,7 +467,7 @@ class Worm extends Monster {
                 monsters.push(monster);
                 this.hp = Math.floor(this.hp / 2);
             } else {
-                this.heal(Math.Floor(this.maxHealth / 10));
+                this.heal(Math.floor(this.maxHealth / 10));
             }
         } else {
             super.doStuff();
