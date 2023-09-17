@@ -23,6 +23,14 @@ function roll(count, sides) {
     }
 }
 
+function rollSum(count, sides) {
+    let sum = 0;
+    for (let i = 0; i < count; i++) {
+        sum = sum + randomRange(1, sides);
+    }
+    return sum;
+}
+
 function shuffle(arr) {
     let temp, r;
     for (let i = 1; i < arr.length; i++) {

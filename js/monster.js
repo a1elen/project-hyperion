@@ -22,12 +22,13 @@ class Monster {
         this.isPlayer = false;
         this.statuses = [];
         this.bleedingChance = 0;
-        this.weaponDamage = 1;
+        this.weaponDamage = new Array(1, 1);
         this.armorClass = 1;
         this.evasionClass = 1;
 
         // main stats
-        this.initMainStats(2, 2, 2, 2, 2, 2);
+        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.initSkills(1, 1, 1, 1, 1);
     }
 
     initMainStats(strength, constitution, perception, agiity, arcane, will) {
@@ -37,6 +38,14 @@ class Monster {
         this.agiity = agiity;
         this.arcane = arcane;
         this.will = will;
+    }
+
+    initSkills(fighting, endurance, dodge, weaponSkill, magic) {
+        this.fighting = fighting;
+        this.endurance = endurance;
+        this.dodge = dodge;
+        this.weaponSkill = weaponSkill;
+        this.magic = magic;
     }
 
     heal(damage) {
@@ -214,21 +223,22 @@ class Monster {
                         return;
                     }
 
-                    let damage;
+                    this.offsetX = (newTile.x - this.tile.x) / 2;
+                    this.offsetY = (newTile.y - this.tile.y) / 2;
 
-                    if (roll(1, 20) > newTile.monster.evasionClass) {
-                        if (roll(1, 20) > newTile.monster.armorClass) {
+                    let damage = 0;
+
+                    if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge) {
+                        if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                             if (roll(1, 20) == 20) {
-                                damage = roll(1, this.weaponDamage) * 2;
+                                damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
+                            } else {
+                                damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                             }
-                            damage = roll(1, this.weaponDamage);
                         }
                     }
 
                     damage = damage + this.bonusAttack;
-
-                    this.offsetX = (newTile.x - this.tile.x) / 2;
-                    this.offsetY = (newTile.y - this.tile.y) / 2;
 
                     newTile.monster.hit(damage, this);
 
