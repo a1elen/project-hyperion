@@ -343,7 +343,8 @@ class Player extends Monster {
         this.xpToLevel = 10;
         this.xp = 0;
         this.level = 1;
-        this.weaponDamage = 5;
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 5;
         this.evasion = this.agility;
         this.attack = this.strength * this.weaponDamage;
         this.cursed = false;
