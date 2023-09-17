@@ -41,11 +41,11 @@ class Monster {
     }
 
     initSkills(fighting, endurance, dodge, weaponSkill, magic) {
-        this.fighting = fighting;
-        this.endurance = endurance;
-        this.dodge = dodge;
-        this.weaponSkill = weaponSkill;
-        this.magic = magic;
+        this.fighting = Number(fighting);
+        this.endurance = Number(endurance);
+        this.dodge = Number(dodge);
+        this.weaponSkill = Number(weaponSkill);
+        this.magic = Number(magic);
     }
 
     heal(damage) {
@@ -102,11 +102,12 @@ class Monster {
     }
 
     updateStats() {
-        this.attack = this.strength * this.weaponDamage;
+        this.attack = this.strength// * this.weaponDamage;
         this.maxHealth = this.constitution * 10;
         this.evasion = this.agiity;
         this.defense = Math.floor((this.constitution + this.agiity) / 2);
         this.evasionClass = this.agility;
+        this.armorClass = 0;
     }
 
     doStuff() {
@@ -228,6 +229,8 @@ class Monster {
 
                     let damage = 0;
 
+                    console.log("first roll" + roll(1, 20) + this.fighting + " > " + newTile.monster.evasionClass + newTile.monster.dodge);
+                    console.log("second roll " + roll(1, 20) + this.weaponSkill + " > " + newTile.monster.armorClass + newTile.monster.endurance);
                     if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge) {
                         if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                             if (roll(1, 20) == 20) {
