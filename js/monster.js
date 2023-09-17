@@ -31,7 +31,7 @@ class Monster {
         this.initSkills(1, 1, 1, 1, 1);
     }
 
-    initMainStats(strength, constitution, perception, agiity, arcane, will) {
+    initMainStats(strength, constitution, perception, agility, arcane, will) {
         this.strength = strength;
         this.constitution = constitution;
         this.perception = perception;
