@@ -12,11 +12,15 @@ function randomRange(min, max) {
 }
 
 function roll(count, sides) {
-    rolls = [];
-    for (let i = 0; i < count; i++) {
-        rolls.push(randomRange(1, sides));
+    if (count > 1) {
+        let rolls = [];
+        for (let i = 0; i < count; i++) {
+            rolls.push(randomRange(1, sides));
+        }
+        return rolls;
+    } else {
+        return randomRange(1, sides);
     }
-    return;
 }
 
 function shuffle(arr) {

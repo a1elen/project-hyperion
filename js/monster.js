@@ -23,6 +23,8 @@ class Monster {
         this.statuses = [];
         this.bleedingChance = 0;
         this.weaponDamage = 1;
+        this.armorClass = 1;
+        this.evasionClass = 1;
 
         // main stats
         this.initMainStats(2, 2, 2, 2, 2, 2);
@@ -92,9 +94,10 @@ class Monster {
 
     updateStats() {
         this.attack = this.strength * this.weaponDamage;
-        this.maxHealth = this.constitution * 5;
+        this.maxHealth = this.constitution * 10;
         this.evasion = this.agiity;
         this.defense = Math.floor((this.constitution + this.agiity) / 2);
+        this.evasionClass = this.agility;
     }
 
     doStuff() {
@@ -183,7 +186,7 @@ class Monster {
                         }
                     }
 
-                    let damage = Math.max((this.attack + this.bonusAttack), 1)
+                    /*let damage = Math.max((this.attack + this.bonusAttack), 1)
 
                     if (newTile.monster.defense > damage) {
                         if (randomRange(1, 2) > 1) {
@@ -198,18 +201,34 @@ class Monster {
                         newTile.monster.tile.blood = true;
                     }
                     
-                    this.offsetX = (newTile.x - this.tile.x) / 2;
-                    this.offsetY = (newTile.y - this.tile.y) / 2;
+
 
                     if (randomRange(1, 100 ) < newTile.monster.evasion) {
                         check_for_tick();
                         return;
                     }
+                    */
 
                     if (newTile.monster.shielded || newTile.monster.teleportCounter > 1) {
                         check_for_tick();
                         return;
                     }
+
+                    let damage;
+
+                    if (roll(1, 20) > newTile.monster.evasionClass) {
+                        if (roll(1, 20) > newTile.monster.armorClass) {
+                            if (roll(1, 20) == 20) {
+                                damage = roll(1, this.weaponDamage) * 2;
+                            }
+                            damage = roll(1, this.weaponDamage);
+                        }
+                    }
+
+                    damage = damage + this.bonusAttack;
+
+                    this.offsetX = (newTile.x - this.tile.x) / 2;
+                    this.offsetY = (newTile.y - this.tile.y) / 2;
 
                     newTile.monster.hit(damage, this);
 
@@ -293,12 +312,12 @@ class Player extends Monster {
         if (playerClass == 1) {
             super(tile, 0, 10);
 
-            this.initMainStats(5, 4, 2, 2, 1, 1)      
+            this.initMainStats(5, 5, 5, 5, 5, 5)      
             numSpells = 3;
         } else {
             super(tile, 20, 10);
 
-            this.initMainStats(1, 2, 2, 3, 4, 4);
+            this.initMainStats(5, 5, 5, 5, 5, 5);
             numSpells = 9;
         }
         this.hp = this.constitution * 5;
@@ -310,10 +329,11 @@ class Player extends Monster {
         this.xpToLevel = 10;
         this.xp = 0;
         this.level = 1;
-        this.weaponDamage = 1;
+        this.weaponDamage = 5;
         this.evasion = this.agility;
         this.attack = this.strength * this.weaponDamage;
         this.cursed = false;
+        this.updateStats();
     }
 
     levelUp() {
