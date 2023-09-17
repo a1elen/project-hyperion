@@ -111,8 +111,8 @@ class Floor extends Tile {
             }
 
             if (monster.isPlayer) {
-                let isTrapdoor = randomRange(1, 2);
-                if (isTrapdoor == 1) {
+                let isTrapdoor = randomRange(1, 100);
+                if (isTrapdoor > 10) {
                     playSound("trap");
                     addStatus("Bleeding", randomRange(2, 5), monster);
                     addStatus("Stunned", randomRange(2, 5), monster);
