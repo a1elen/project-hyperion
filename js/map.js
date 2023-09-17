@@ -29,8 +29,8 @@ function generateLevel(levelGen) {
     generateMonsters();
 
     let treasureNumber = clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4));
-    let scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 3));
-    let trapNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 5));
+    let scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 2));
+    let trapNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 3));
     
 
     for (let i = 0; i < treasureNumber; i++) {
@@ -129,8 +129,9 @@ function generateMonsters() {
     for (let i = 0; i < numMonsters; i++) {
         if (i < numberOfRare) {
             spawnMonster(true);
+        } else {
+            spawnMonster(false);
         }
-        spawnMonster(false);
     }
 }
 
