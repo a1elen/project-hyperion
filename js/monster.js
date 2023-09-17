@@ -448,7 +448,7 @@ class Worm extends Monster {
         this.initMainStats(1, 1, 1, 2, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
-        this.hp = this.maxHealth;
+        this.hp = this.maxHealth / 2;
         //this.attack = 1;
         //this.defense = 0;
         this.xpPoints = 2;
@@ -461,16 +461,13 @@ class Worm extends Monster {
         if (neighbours.length) {
             neighbours[0].replace(Floor);
  
-            if (this.maxHealth >= this.constitution * 5 * 2) {
+            if (this.hp >= this.maxHealth) {
                 let spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
                 let monster = new Worm(spawnTile);
                 monsters.push(monster);
-                this.updateStats();
                 this.hp = Math.floor(this.hp / 2);
-                this.maxHealth = this.hp;
             } else {
-                this.maxHealth++;
-                this.heal(1);
+                this.heal(Math.Floor(this.maxHealth / 10));
             }
         } else {
             super.doStuff();
