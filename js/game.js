@@ -66,16 +66,16 @@ function draw() {
 
         player.draw();
 
-        drawText("Level: " + level, 30, false, 40, "violet");
+        drawText("Depth: " + level, 30, false, 40, "violet");
         drawText("Score: " + score, 30, false, 70, "violet");
 
         if (gameState == "running") {
             drawText("Stats:", 30, false, 130, "violet");
 
-            drawText("XP Level: " + player.level + " " + player.xp + "/" + player.xpToLevel, 20, false, 170, "yellow")
+            drawText("Level: " + player.level + " " + player.xp + "/" + player.xpToLevel, 20, false, 170, "yellow")
             drawText("Health: " + player.hp, 20, false, 200, "red")
-            drawText("Attack: " + player.attack + " + " + player.bonusAttack, 20, false, 230, "white")
-            drawText("Defense: " + player.defense, 20, false, 260, "white")
+            drawText("Weapon: " + player.weaponDamage[0] + "d" + this.weaponDamage[1], 20, false, 230, "white")
+            drawText("AV / EV: " + player.armorClass + "/" + player.evasionClass, 20, false, 260, "white")
 
             drawText("Strength: " + player.strength, 20, false, 290, "white")
             drawText("Constitution: " + player.constitution, 20, false, 320, "white")

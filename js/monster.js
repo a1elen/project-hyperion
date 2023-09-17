@@ -163,9 +163,15 @@ class Monster {
         ctx.fillRect(x, y, width, healthBarHeight);
 
         // Draw health/attack/armor text
-        drawText(this.hp + "/" + this.maxHealth
-        + " !" + this.attack
-        + " #" + this.defense,
+        drawText("Lvl: " + this.level,
+        10, false, y + 5 - tileSize, "white", x)
+
+        drawText(this.weaponDamage[0] + "d" + this.weaponDamage[1]
+        + " #" + this.armorClass
+        + " E" + this.evasionClass,
+        10, false, y - 5, "white", x)
+
+        drawText(this.hp + "/" + this.maxHealth,
         10, false, y + 5, "white", x)
     }
 
