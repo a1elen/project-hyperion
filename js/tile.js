@@ -8,6 +8,7 @@ class Tile {
         this.trapWorks = true;
         this.blood = false;
         this.wallBlood = false;
+        this.known = false;
     }
 
     replace(newTileType) {

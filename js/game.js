@@ -29,14 +29,39 @@ function draw() {
 
         screenshake();
 
+        // new dirty FOV
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
-                getTile(i, j).draw();
+                let distance = (Math.max(Math.abs(getTile(i, j).x - player.tile.x),
+                    Math.abs(getTile(i, j).y - player.tile.y) ))
+                if (distance < 2) {
+                    getTile(i, j).draw();
+                    getTile(i, j).known = true;
+                } else if (distance < 3) {
+                    getTile(i, j).draw();
+                    getTile(i, j).known = true;
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+                    ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
+                } else if (getTile(i, j).known) {
+                    getTile(i, j).draw();
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
+                }
             }
         }
 
+        /*for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                getTile(i, j).draw();
+            }
+        }*/
+
         for (let i = 0; i < monsters.length; i++) {
-            monsters[i].draw();
+            let distance = Math.max(Math.abs(monsters[i].tile.x - player.tile.x,
+                monsters[i].tile.y - player.tile.y));
+            if (distance < 3) {
+                monsters[i].draw();
+            }
         }
 
         player.draw();
@@ -83,7 +108,7 @@ function draw() {
         
 
         // dirty FOV implementation
-        let playerSeeTiles = player.tile.getAdjacentNeighbours();
+        /*let playerSeeTiles = player.tile.getAdjacentNeighbours();
         playerSeeTiles.push(player.tile);
         let playerHalfSeeTiles = [];
         
@@ -101,7 +126,7 @@ function draw() {
                     ctx.fillRect(tiles[i][j].x * tileSize, tiles[i][j].y * tileSize, tileSize, tileSize);
                 }
             }
-        }
+        }*/
 
         /*let playerSeeTiles = player.tile.getAdjacentNeighbours();
         playerSeeTiles.push(player.tile);
