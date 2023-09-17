@@ -228,15 +228,20 @@ class Monster {
 
                     let damage = 0;
 
-                    console.log("first roll" + roll(1, 20) + this.fighting + " > " + newTile.monster.evasionClass + newTile.monster.dodge);
-                    console.log("second roll " + roll(1, 20) + this.weaponSkill + " > " + newTile.monster.armorClass + newTile.monster.endurance);
                     if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge) {
                         if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
-                            if (roll(1, 20) == 20) {
+                            if (roll(1, 20) >= 20) {
                                 damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
+                                newTile.monster.tile.blood = true;
                             } else {
                                 damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                             }
+                            console.log("first roll: " + roll(1, 20) + " + " + this.fighting + " > " + newTile.monster.evasionClass + " + " + newTile.monster.dodge);
+                            console.log("evasion check failed");
+                            console.log("second roll: " + roll(1, 20)+ " + " + this.weaponSkill + " > " + newTile.monster.armorClass + " + " + newTile.monster.endurance);
+                            console.log("armor check failed");
+                            console.log("damage is - " + damage);
+
                         }
                     }
 
@@ -355,18 +360,16 @@ class Player extends Monster {
 
     levelUp() {
         this.level++;
-        if(playerClass == 1) {
-            if (randomRange(1, 2) > 1) {
-                this.fighting++;
-            } else {
-                this.weaponSkill++;
+
+        for (let i = 0; i < 5; i++) {
+            switch(randomRange(1, 5)) {
+                case 1: this.fighting++; break;
+                case 2: this.endurance++; break;
+                case 3: this.dodge++; break;
+                case 4: this.weaponSkill++; break;
+                case 5: this.magic++; break;
             }
-        } else {
-            if (randomRange(1, 2) > 1) {
-                this.agiity++;
-            } else {
-                this.arcane++;
-            }
+            console.log("wow, its " + i+1);
         }
 
         this.updateStats();
