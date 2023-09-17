@@ -337,7 +337,7 @@ class Player extends Monster {
             this.initSkills(0, 0, 0, 0, 4);
             numSpells = 9;
         }
-        this.hp = this.constitution * 5;
+        this.hp = this.constitution * 10;
         this.maxHealth = this.hp;
         this.isPlayer = true;
         this.teleportCounter = 0;
