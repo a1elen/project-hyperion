@@ -299,14 +299,16 @@ class Monster {
         //this.attack = this.attack + randomRange(1, 2) * amount;
         //this.defense = this.defense + randomRange(1, 2) * Math.floor(amount / 2)
         for (let i = 0; i < amount; i++) {
-            let chosenStat = randomRange(1, 3);
+            let chosenSkill = randomRange(1, 4);
             
-            if (chosenStat == 1) {
-                this.strength += randomRange(1, 2) * amount;
-            } else if (chosenStat == 2) {
-                this.constitution += randomRange(1, 2) * amount;
+            if (chosenSkill == 1) {
+                this.fighting += amount;
+            } else if (chosenSkill == 2) {
+                this.dodge += amount;
+            } else if (chosenSkill == 3) {
+                this.weaponSkill += amount;
             } else {
-                this.agiity += randomRange(1, 2) * amount;
+                this.endurance += amount;
             }
         }
         this.updateStats();
@@ -322,12 +324,14 @@ class Player extends Monster {
         if (playerClass == 1) {
             super(tile, 0, 10);
 
-            this.initMainStats(5, 5, 5, 5, 5, 5)      
+            this.initMainStats(5, 5, 5, 5, 5, 5);
+            this.initSkills(1, 1, 1, 1, 0);
             numSpells = 3;
         } else {
             super(tile, 20, 10);
 
             this.initMainStats(5, 5, 5, 5, 5, 5);
+            this.initSkills(0, 0, 0, 0, 4);
             numSpells = 9;
         }
         this.hp = this.constitution * 5;
@@ -350,9 +354,9 @@ class Player extends Monster {
         this.level++;
         if(playerClass == 1) {
             if (randomRange(1, 2) > 1) {
-                this.strength++;
+                this.fighting++;
             } else {
-                this.constitution++;
+                this.weaponSkill++;
             }
         } else {
             if (randomRange(1, 2) > 1) {
@@ -425,6 +429,7 @@ class Spider extends Monster {
         super(tile, 4, 2);
         this.initMainStats(1, 1, 1, 1, 1, 1);
         this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         //this.attack = 1;
         //this.defense = 0;
@@ -437,6 +442,7 @@ class Worm extends Monster {
         super(tile, 5, 1);
         this.initMainStats(1, 1, 1, 2, 1, 1);
         this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         //this.attack = 1;
         //this.defense = 0;
@@ -471,6 +477,7 @@ class Snake extends Monster {
         super(tile, 6, 1);
         this.initMainStats(1, 1, 2, 2, 1, 1);
         this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         //this.attack = 1;
         //this.defense = 0;
@@ -486,6 +493,7 @@ class Zombie extends Monster {
         super(tile, 7, 3);
         this.initMainStats(2, 3, 1, 1, 1, 1);
         this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         //this.attack = 1;
         //this.defense = 1;
@@ -499,6 +507,7 @@ class Skeleton extends Monster {
         super(tile, 30, 2);
         this.initMainStats(2, 2, 1, 1, 1, 1);
         this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         //this.attack = 2;
         //this.defense = 0;
@@ -525,6 +534,7 @@ class RedDragonBaby extends Monster {
         super(tile, 21, 2);
         this.initMainStats(4, 5, 4, 4, 2, 2);
         this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         //this.attack = 2;
         //this.defense = 0;
@@ -537,6 +547,7 @@ class GreenSlime extends Monster {
         super(tile, 22, 2);
         this.initMainStats(1, 1, 1, 1, 1, 1);
         this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         //this.attack = 2;
         //this.defense = 0;
