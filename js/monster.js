@@ -35,17 +35,17 @@ class Monster {
         this.strength = strength;
         this.constitution = constitution;
         this.perception = perception;
-        this.agiity = agiity;
+        this.agility = agility;
         this.arcane = arcane;
         this.will = will;
     }
 
     initSkills(fighting, endurance, dodge, weaponSkill, magic) {
-        this.fighting = Number(fighting);
-        this.endurance = Number(endurance);
-        this.dodge = Number(dodge);
-        this.weaponSkill = Number(weaponSkill);
-        this.magic = Number(magic);
+        this.fighting = fighting;
+        this.endurance = endurance;
+        this.dodge = dodge;
+        this.weaponSkill = weaponSkill;
+        this.magic = magic;
     }
 
     heal(damage) {
@@ -107,7 +107,6 @@ class Monster {
         this.evasion = this.agiity;
         this.defense = Math.floor((this.constitution + this.agiity) / 2);
         this.evasionClass = this.agility;
-        this.armorClass = 0;
     }
 
     doStuff() {
