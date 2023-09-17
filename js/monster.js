@@ -242,11 +242,11 @@ class Monster {
                             } else {
                                 damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                             }
-                            console.log("first roll: " + roll(1, 20) + " + " + this.fighting + " > " + newTile.monster.evasionClass + " + " + newTile.monster.dodge);
+                            /*console.log("first roll: " + roll(1, 20) + " + " + this.fighting + " > " + newTile.monster.evasionClass + " + " + newTile.monster.dodge);
                             console.log("evasion check failed");
                             console.log("second roll: " + roll(1, 20)+ " + " + this.weaponSkill + " > " + newTile.monster.armorClass + " + " + newTile.monster.endurance);
                             console.log("armor check failed");
-                            console.log("damage is - " + damage);
+                            console.log("damage is - " + damage);*/
 
                         }
                     }
