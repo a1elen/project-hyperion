@@ -434,6 +434,8 @@ class Spider extends Monster {
         //this.attack = 1;
         //this.defense = 0;
         this.xpPoints = 1;
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 1;
     }
 }
 
@@ -447,7 +449,8 @@ class Worm extends Monster {
         //this.attack = 1;
         //this.defense = 0;
         this.xpPoints = 2;
-
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 1;
     }
 
     doStuff() {
@@ -484,7 +487,8 @@ class Snake extends Monster {
         this.moveSpeed = 75;
         this.xpPoints = 2;
         this.bleedingChance = 10;
-
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 1;
     }
 }
 
@@ -499,6 +503,8 @@ class Zombie extends Monster {
         //this.defense = 1;
         this.moveSpeed = 150;
         this.xpPoints = 3;
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 2;
     }
 }
 
@@ -513,6 +519,8 @@ class Skeleton extends Monster {
         //this.defense = 0;
         this.xpPoints = 1;
         this.angry = false;
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 2;
     }
 
     doStuff() {
@@ -539,6 +547,8 @@ class RedDragonBaby extends Monster {
         //this.attack = 2;
         //this.defense = 0;
         this.xpPoints = 10;
+        this.weaponDamage[0] = 2;
+        this.weaponDamage[1] = 3;
     }
 }
 
@@ -553,5 +563,7 @@ class GreenSlime extends Monster {
         //this.defense = 0;
         this.xpPoints = 1;
         this.moveSpeed = 200;
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 1;
     }
 }
