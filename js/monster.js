@@ -8,6 +8,7 @@ class Monster {
         this.offsetX = 0;
         this.offsetY = 0;
         this.lastMove = [-1, 0];
+        this.level = 1;
         this.bonusAttack = 0;
         this.moveSpeed = 100;
         this.attackSpeed = 100;
@@ -304,6 +305,7 @@ class Monster {
         tile.stepOn(this);
     }
 
+    /*
     upgrade(amount) {
         //let upgradeHp = randomRange(1, 2) * amount;
         //this.maxHealth = this.maxHealth + upgradeHp;
@@ -326,6 +328,26 @@ class Monster {
         }
         this.updateStats();
 
+        this.hp = this.maxHealth;
+        this.xpPoints = (this.xpPoints + randomRange(1, 5)) * level;
+        this.rare = true;
+    }
+}*/
+
+    levelUp() {
+        this.level++;
+
+        for (let i = 0; i < 5; i++) {
+            switch(randomRange(1, 5)) {
+                case 1: this.fighting++; break;
+                case 2: this.endurance++; break;
+                case 3: this.dodge++; break;
+                case 4: this.weaponSkill++; break;
+                case 5: this.magic++; break;
+            }
+        }
+
+        this.updateStats();
         this.hp = this.maxHealth;
         this.xpPoints = (this.xpPoints + randomRange(1, 5)) * level;
         this.rare = true;
@@ -375,7 +397,6 @@ class Player extends Monster {
                 case 4: this.weaponSkill++; break;
                 case 5: this.magic++; break;
             }
-            console.log("wow, its " + i+1);
         }
 
         this.updateStats();
