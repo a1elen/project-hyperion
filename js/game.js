@@ -7,6 +7,12 @@ function setupCanvas() {
     canvas.style.width = canvas.width + 'px';
     canvas.style.height = canvas.height + 'px';
     ctx.imageSmoothingEnabled = false;
+
+    viewport = {
+        x: 0,
+        y: 0,
+        zoom: 1
+    };
 }
 
 function drawSprite(sprite, x, y) {
@@ -27,18 +33,27 @@ function draw() {
     if (gameState == "running" || gameState == "dead" || gameState == "spells") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        //ctx.setTransform(1, 0, 0, 1, canvas.width / 2, canvas.height / 2);
+
+        /*const { zoom, x, y } = viewport;
+        ctx.translate(-player.tile.x * zoom, -player.tile.y * zoom);
+        ctx.scale(zoom, zoom);*/
+
         screenshake();
 
         // new dirty FOV
+        let seenTiles = []
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
                 let distance = (Math.max(Math.abs(getTile(i, j).x - player.tile.x),
                     Math.abs(getTile(i, j).y - player.tile.y) ))
                 if (distance < 2) {
                     getTile(i, j).draw();
+                    seenTiles.push(getTile(i, j));
                     getTile(i, j).known = true;
                 } else if (distance < 3) {
                     getTile(i, j).draw();
+                    seenTiles.push(getTile(i, j));
                     getTile(i, j).known = true;
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
                     ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
@@ -59,9 +74,12 @@ function draw() {
         for (let i = 0; i < monsters.length; i++) {
             //ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
             //ctx.fillRect(monsters[i].tile.x * tileSize, monsters[i].tile.y * tileSize, tileSize, tileSize);
-            let distance = Math.max(Math.abs(monsters[i].tile.x - player.tile.x,
+            /*let distance = Math.max(Math.abs(monsters[i].tile.x - player.tile.x,
                 monsters[i].tile.y - player.tile.y));
             if (distance < 3) {
+                monsters[i].draw();
+            }*/
+            if (seenTiles.includes(monsters[i].tile)) {
                 monsters[i].draw();
             }
         }
@@ -233,10 +251,12 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
     }
 
     let levelType = 0;
-    if (level > 5) {
+    if (level <= 5) {
+        levelType = 0;
+    } else if (level <= 10) {
         levelType = 1;
     } else {
-        levelType = 0;
+        levelType = 2;
     }
 
     if (gameStarted) {

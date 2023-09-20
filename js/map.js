@@ -4,20 +4,27 @@ function generateLevel(levelGen) {
     if (levelType == 0) {
         wallChance = 0.3;
         tryTo('generate map', function() {
-            return generateCellular(wallChance) == randomPassableTile().getConnectedTiles().length;
+            return generateCellular(wallChance, levelType) == randomPassableTile().getConnectedTiles().length;
         })
     } else {
         wallChance = 0.45
         tryTo('generate map', function() {
-            passableTilesCount = generateCellular(wallChance);
-            iterateCellular(5);
+            passableTilesCount = generateCellular(wallChance, levelType);
+            iterateCellular(5, levelType);
             let passables = randomPassableTile().getConnectedTiles();
             //fillNonPassable(passables);
 
             for (let i = 0; i < numTiles; i++) {
                 for (let j = 0; j < numTiles; j++) {
                     if (!passables.includes(tiles[i][j])) {
-                        tiles[i][j].replace(Wall);
+                        if (levelType == 0) {
+                            tiles[i][j].replace(Wall, 3);
+                        } else if (levelType == 1) {
+                            tiles[i][j].replace(Wall, 33);
+                        } else if (levelType == 2) {
+                            tiles[i][j].replace(Wall, 35);
+                        }
+                        
                     }
                 }
             }
@@ -54,7 +61,7 @@ function loadLevel() {
     tiles = levelTiles[level-1];
 }
 
-function generateCellular(wallChance) {
+function generateCellular(wallChance, levelType) {
     let passableTiles=0;
 
     // clean level
@@ -68,9 +75,21 @@ function generateCellular(wallChance) {
         //tiles[i] = [];
         for (let j = 0; j < numTiles; j++) {
             if (Math.random() < wallChance || !inBounds(i, j)) {
-                tiles[i][j] = new Wall(i, j);
+                if (levelType == 0) {
+                    tiles[i][j] = new Wall(i, j, 3);
+                } else if (levelType == 1) {
+                    tiles[i][j] = new Wall(i, j, 33);
+                } else if(levelType == 2) {
+                    tiles[i][j] = new Wall(i, j, 35);
+                }
             } else {
-                tiles[i][j] = new Floor(i, j);
+                if (levelType == 0) {
+                    tiles[i][j] = new Floor(i, j, 2);
+                } else if (levelType == 1) {
+                    tiles[i][j] = new Floor(i, j, 32);
+                } else if (levelType == 2) {
+                    tiles[i][j] = new Floor(i, j, 34);
+                }
                 passableTiles++;
             }
         }
@@ -78,7 +97,7 @@ function generateCellular(wallChance) {
     return passableTiles;
 }
 
-function iterateCellular(count) {
+function iterateCellular(count, levelType) {
     for(let c = 0; c < count; c++) {
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
@@ -86,12 +105,25 @@ function iterateCellular(count) {
                 if (tiles[i][j].passable) {
                     if(neighbours >= 5); {
                         //tiles[i][j] = null;
-                        tiles[i][j] = tiles[i][j].replace(Wall)
+                        if (levelType == 0) {
+                            tiles[i][j] = tiles[i][j].replace(Wall, 3);
+                        } else if (levelType == 1) {
+                            tiles[i][j] = tiles[i][j].replace(Wall, 33);
+                        } else if (levelType == 2) {
+                            tiles[i][j] = tiles[i][j].replace(Wall, 35);
+                        }
+                        
                     }
                 } else {
                     if(neighbours < 5); {
                         //tiles[i][j] = null;
-                        tiles[i][j] = tiles[i][j].replace(Floor);
+                        if (levelType == 0) {
+                            tiles[i][j] = tiles[i][j].replace(Floor, 2);
+                        } else if (levelType == 1) {
+                            tiles[i][j] = tiles[i][j].replace(Floor, 32);
+                        } else if (levelType == 2) {
+                            tiles[i][j] = tiles[i][j].replace(Floor, 34)
+                        }
                     }
                 }
             }
@@ -107,7 +139,9 @@ function getTile(x, y) {
     if (inBounds(x, y)) {
         return tiles[x][y];
     } else {
-        return new Wall(x, y);
+        let newWall = new Wall(x, y, 36);
+        newWall.known = true;
+        return newWall;
     }
 }
 

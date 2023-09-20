@@ -82,6 +82,9 @@ function initKeyControls() {
             if (e.key == "a" || e.key == "4") player.tryMove(-1, 0);
             if (e.key == "d" || e.key == "6") player.tryMove(1, 0);
 
+            if (e.key == "z" || e.key == "z") ctx.translate(-2, -2);
+            //if (e.key == "s" || e.key == "2") ctx.scale(2, 2);
+
             // Diagonal Movement
             if (e.key == "9") player.tryMove(1, -1);
             if (e.key == "3") player.tryMove(1, 1);
@@ -94,7 +97,10 @@ function initKeyControls() {
             if (e.key == "e") player.use();
             if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
             if (e.key == "r") startLevel(Math.min(maxHp, player.hp-5), player.spells);
-
+            if (e.key == "p") {
+                level++;
+                startLevel(Math.min(maxHp, player.hp+1), player.spells);
+            }
             if (e.key == "5") tick();
 
             if (e.key == "0") gameState = "spells";

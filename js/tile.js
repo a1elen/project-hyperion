@@ -11,8 +11,13 @@ class Tile {
         this.known = false;
     }
 
-    replace(newTileType) {
-        tiles[this.x][this.y] = new newTileType(this.x, this.y);
+    replace(newTileType, sprite) {
+        if (sprite) {
+            tiles[this.x][this.y] = new newTileType(this.x, this.y, sprite);
+        } else {
+            tiles[this.x][this.y] = new newTileType(this.x, this.y, 2);
+        }
+        
         return tiles[this.x][this.y];
     }
 
@@ -99,8 +104,8 @@ class Tile {
 }
 
 class Floor extends Tile {
-    constructor(x, y) {
-        super(x, y, 2, true);
+    constructor(x, y, sprite) {
+        super(x, y, sprite, true);
     }
 
     stepOn(monster) {
@@ -191,8 +196,8 @@ class Floor extends Tile {
 }
 
 class Wall extends Tile {
-    constructor(x, y) {
-        super(x, y, 3, false);
+    constructor(x, y, sprite) {
+        super(x, y, sprite, false);
     }
 }
 

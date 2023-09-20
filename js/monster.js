@@ -104,7 +104,7 @@ class Monster {
 
     updateStats() {
         this.attack = this.strength// * this.weaponDamage;
-        this.maxHealth = this.constitution * 10;
+        this.maxHealth = this.constitution * 5;
         this.evasion = this.agiity;
         this.defense = Math.floor((this.constitution + this.agiity) / 2);
         this.evasionClass = this.agility;
@@ -243,6 +243,7 @@ class Monster {
                             } else {
                                 damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                             }
+                            newTile.monster.hit(damage, this);
                             /*console.log("first roll: " + roll(1, 20) + " + " + this.fighting + " > " + newTile.monster.evasionClass + " + " + newTile.monster.dodge);
                             console.log("evasion check failed");
                             console.log("second roll: " + roll(1, 20)+ " + " + this.weaponSkill + " > " + newTile.monster.armorClass + " + " + newTile.monster.endurance);
@@ -250,11 +251,12 @@ class Monster {
                             console.log("damage is - " + damage);*/
 
                         }
+                    } else {
+                        //console.log("dodged! - " + newTile.monster.constructor.name);
+                        newTile.monster.tryDodge();
                     }
 
                     damage = damage + this.bonusAttack;
-
-                    newTile.monster.hit(damage, this);
 
                     this.bonusAttack = 0;
 
@@ -262,6 +264,21 @@ class Monster {
                 }
             }
             return true;
+        }
+    }
+
+    tryDodge() {
+        let newTile = this.tile.getAdjacentPassableNeighbours();
+        newTile.filter(function (tile) {
+            return !tile.monster;
+        })
+
+        if (newTile) {
+            let newTileChosen = shuffle(newTile)[0];
+            let dx = newTileChosen.x - this.tile.x;
+            let dy = newTileChosen.y - this.tile.y;
+            //console.log(dx, dy);
+            this.tryMove(dx, dy);
         }
     }
 
@@ -369,7 +386,7 @@ class Player extends Monster {
             this.initSkills(0, 0, 0, 0, 4);
             numSpells = 9;
         }
-        this.hp = this.constitution * 10;
+        this.hp = this.constitution * 5;
         this.maxHealth = this.hp;
         this.isPlayer = true;
         this.teleportCounter = 0;
@@ -419,6 +436,7 @@ class Player extends Monster {
         }
 
         if (super.tryMove(dx, dy)) {
+            //ctx.translate(-player.x * 4, -player.y * 4);
             this.moveCounter += this.moveSpeed;
             check_for_tick();
         }
@@ -478,7 +496,7 @@ class Worm extends Monster {
         this.initMainStats(1, 1, 1, 2, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
-        this.hp = this.maxHealth / 2;
+        this.hp = Math.floor(this.maxHealth / 2);
         //this.attack = 1;
         //this.defense = 0;
         this.xpPoints = 2;
