@@ -2,8 +2,10 @@ function setupCanvas() {
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
 
-    canvas.width = tileSize * (numTiles + uiWidth);
-    canvas.height = tileSize * numTiles;
+    //canvas.width = tileSize * (numTiles + uiWidth);
+    //canvas.height = tileSize * numTiles;
+    canvas.width = 800;
+    canvas.height = 600;
     canvas.style.width = canvas.width + 'px';
     canvas.style.height = canvas.height + 'px';
     ctx.imageSmoothingEnabled = false;
@@ -32,6 +34,17 @@ function drawSprite(sprite, x, y) {
 function draw() {
     if (gameState == "running" || gameState == "dead" || gameState == "spells") {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+        ctx.save();
+        /*ctx.translate(player.getDisplayX() * tileSize, player.getDisplayY() * tileSize);
+        //ctx.translate(player.tile.x * tileSize, player.tile.y * tileSize);
+        ctx.scale(1, 1);
+        ctx.translate(-canvas.width / tileSize, -canvas.height / tileSize);*/
+        //ctx.translate(player.getDisplayX() * tileSize - canvas.width / 2, player.getDisplayY() * tileSize - canvas.height / 2);
+        ctx.translate(-player.getDisplayX() * tileSize + (canvas.width / 2) - (tileSize/2), -player.getDisplayY() * tileSize + (canvas.height / 2) - (tileSize/2));
+
+        
 
         //ctx.setTransform(1, 0, 0, 1, canvas.width / 2, canvas.height / 2);
 
@@ -159,6 +172,8 @@ function draw() {
             }
         }*/
 
+        ctx.restore();
+
     }
 }
 
@@ -184,8 +199,8 @@ function check_dead() {
     }
 }
 
-function check_for_tick() {
-        tick();
+function check_for_tick() {    
+    tick();
 }
 
 function tick() {
