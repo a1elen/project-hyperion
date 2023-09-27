@@ -98,9 +98,9 @@ function addStatus(name, duration, target) {
 
  if (name == "Stunned") {
         let count = 0;
-        for (let i = 0; i < target.statuses.length; i++) {
-            if (target.statuses[i].constructor.name == "Stunned") {
-                target.statuses[i].duration += duration;
+        for (const status of target.statuses) {
+            if (status.constructor.name == "Stunned") {
+                status.duration += duration;
                 count++;
             }
         }
@@ -111,9 +111,9 @@ function addStatus(name, duration, target) {
 
     if (name == "Bleeding") {
         let count = 0;
-        for (let i = 0; i < target.statuses.length; i++) {
-            if (target.statuses[i].constructor.name == "Bleeding") {
-                target.statuses[i].duration += duration;
+        for (const status of target.statuses) {
+            if (status.constructor.name == "Bleeding") {
+                status.duration += duration;
                 count++;
             }
         }
@@ -124,9 +124,9 @@ function addStatus(name, duration, target) {
 
     if (name == "Shielded") {
         let count = 0;
-        for (let i = 0; i < target.statuses.length; i++) {
-            if (target.statuses[i].constructor.name == "Shielded") {
-                target.statuses[i].duration += duration;
+        for (const status of target.statuses) {
+            if (status.constructor.name == "Shielded") {
+                status.duration += duration;
                 count++;
             }
         }
@@ -135,16 +135,17 @@ function addStatus(name, duration, target) {
         }
     }
 
-    if (name == "AllSeeingEye") {
-        let count = 0;
-        for (let i = 0; i < target.statuses.length; i++) {
-            if (target.statuses[i].constructor.name == "AllSeeingEye") {
-                target.statuses[i].duration += duration;
-                count++;
-            }
+    if (name != "AllSeeingEye") {
+        return;
+    }
+    let count = 0;
+    for (const status of target.statuses) {
+        if (status.constructor.name == "AllSeeingEye") {
+            status.duration += duration;
+            count++;
         }
-        if (count < 1) {
-            target.statuses.push(new AllSeeingEye(duration));
-        }
+    }
+    if (count < 1) {
+        target.statuses.push(new AllSeeingEye(duration));
     }
 }

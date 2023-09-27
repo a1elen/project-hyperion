@@ -4,8 +4,8 @@ function setupCanvas() {
 
     canvas.width = 800;
     canvas.height = 600;
-    canvas.style.width = canvas.width + 'px';
-    canvas.style.height = canvas.height + 'px';
+    canvas.style.width = `${canvas.width}px`;
+    canvas.style.height = `${canvas.height}px`;
     ctx.imageSmoothingEnabled = false;
 
     viewport = {
@@ -30,120 +30,117 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (gameState == "running" || gameState == "dead" || gameState == "spells") {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
-        ctx.save();
-        ctx.translate(-player.getDisplayX() * tileSize + (canvas.width / 2) - (tileSize/2), -player.getDisplayY() * tileSize + (canvas.height / 2) - (tileSize/2));
-
-        screenshake();
-
-        let seenTiles = [];
-
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                let target = getTile(i, j);
-                let distance = (Math.max(Math.abs(target.x - player.tile.x), Math.abs(target.y - player.tile.y)))
-
-                if (distance == 3) {
-                    drawLine(player.tile.x, player.tile.y, target.x, target.y);
-                }
-            }
-        }
-
-        function drawLine(x1, y1, x2, y2) {
-            let dx = Math.abs(x2 - x1);
-            let dy = Math.abs(y2 - y1);
-            let length = dx > dy ? dx : dy;
-            for (let i = 0; i <= length; ++i) {
-                let t = i / length;
-                let x = x1 + Math.round(t * (x2 - x1));
-                let y = y1 + Math.round(t * (y2 - y1));
-                seenTiles.push(getTile(x, y));
-                getTile(x, y).known = true;
-                if (!getTile(x, y).passable) {
-                    return;
-                }
-            }
-        }
-
-        for (let i = 0; i < seenTiles.length; i++) {
-            seenTiles[i].draw();
-        }
-
-
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                if (getTile(i, j).known && !seenTiles.includes(getTile(i, j))) {
-                    getTile(i, j).draw();
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                    ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
-                }
-            }
-        }
-
-        for (let i = 0; i < monsters.length; i++) {
-            if (seenTiles.includes(monsters[i].tile)) {
-                monsters[i].draw();
-            }
-        }
-
-        player.draw();
-
-        drawText("Depth: " + level, 30, false, 40, "violet");
-        drawText("Score: " + score, 30, false, 70, "violet");
-
-        if (gameState == "running") {
-            drawText("Stats:", 30, false, 130, "violet");
-
-            drawText("Level: " + player.level + " " + player.xp + "/" + player.xpToLevel, 20, false, 170, "yellow")
-            drawText("Health: " + player.hp, 20, false, 200, "red")
-            drawText("Weapon: " + player.weaponDamage[0] + "d" + player.weaponDamage[1], 20, false, 230, "white")
-            drawText("AV / EV: " + player.armorClass + "/" + player.evasionClass, 20, false, 260, "white")
-
-            drawText("Strength: " + player.strength, 20, false, 290, "white")
-            drawText("Constitution: " + player.constitution, 20, false, 320, "white")
-            drawText("Perception: " + player.perception, 20, false, 350, "white")
-            drawText("Agility: " + player.agility, 20, false, 380, "white")
-            drawText("Arcane: " + player.arcane, 20, false, 410, "white")
-            drawText("Will: " + player.will, 20, false, 440, "white")
-
-            drawText("Status:", 30, false, 500, "violet");
-
-
-            for (let i = 0; i < player.statuses.length; i++) {
-                let statusText = (player.statuses[i].constructor.name + " (" + player.statuses[i].duration + ")");
-                drawText(statusText, 20, false, 540 + i * 30, "aqua");
-              
-            }
-        }
-
-        if (gameState == "spells") {
-            drawText("Spells:", 30, false, 130, "violet");
-
-            for (let i = 0; i < /*player.spells.length*/numSpells; i++) {
-                let spellText = (i + 1) + ") " + (player.spells[i] || "--- ");
-                drawText(spellText, 20, false, 170 + i * 40, "aqua");
-            }
-        }
-        ctx.restore();
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells")) {
+        return;
     }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+    ctx.save();
+    ctx.translate(-player.getDisplayX() * tileSize + (canvas.width / 2) - (tileSize/2), -player.getDisplayY() * tileSize + (canvas.height / 2) - (tileSize/2));
+
+    screenshake();
+
+    const seenTiles = [];
+
+    for (let i = 0; i < numTiles; i++) {
+        for (let j = 0; j < numTiles; j++) {
+            const target = getTile(i, j);
+            const distance = (Math.max(Math.abs(target.x - player.tile.x), Math.abs(target.y - player.tile.y)))
+
+            if (distance == 3) {
+                drawLine(player.tile.x, player.tile.y, target.x, target.y);
+            }
+        }
+    }
+
+    function drawLine(x1, y1, x2, y2) {
+        const dx = Math.abs(x2 - x1);
+        const dy = Math.abs(y2 - y1);
+        const length = dx > dy ? dx : dy;
+        for (let i = 0; i <= length; ++i) {
+            const t = i / length;
+            const x = x1 + Math.round(t * (x2 - x1));
+            const y = y1 + Math.round(t * (y2 - y1));
+            seenTiles.push(getTile(x, y));
+            getTile(x, y).known = true;
+            if (!getTile(x, y).passable) {
+                return;
+            }
+        }
+    }
+
+    for (const seenTile of seenTiles) {
+        seenTile.draw();
+    }
+
+
+    for (let i = 0; i < numTiles; i++) {
+        for (let j = 0; j < numTiles; j++) {
+            if (getTile(i, j).known && !seenTiles.includes(getTile(i, j))) {
+                getTile(i, j).draw();
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
+            }
+        }
+    }
+
+    for (const monster of monsters) {
+        if (seenTiles.includes(monster.tile)) {
+            monster.draw();
+        }
+    }
+
+    player.draw();
+
+    drawText(`Depth: ${level}`, 30, false, 40, "violet");
+    drawText(`Score: ${score}`, 30, false, 70, "violet");
+
+    if (gameState == "running") {
+        drawText("Stats:", 30, false, 130, "violet");
+
+        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, 170, "yellow")
+        drawText(`Health: ${player.hp}`, 20, false, 200, "red")
+        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 230, "white")
+        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, 260, "white")
+
+        drawText(`Strength: ${player.strength}`, 20, false, 290, "white")
+        drawText(`Constitution: ${player.constitution}`, 20, false, 320, "white")
+        drawText(`Perception: ${player.perception}`, 20, false, 350, "white")
+        drawText(`Agility: ${player.agility}`, 20, false, 380, "white")
+        drawText(`Arcane: ${player.arcane}`, 20, false, 410, "white")
+        drawText(`Will: ${player.will}`, 20, false, 440, "white")
+
+        drawText("Status:", 30, false, 500, "violet");
+
+
+        for (let i = 0; i < player.statuses.length; i++) {
+            const statusText = (`${player.statuses[i].constructor.name} (${player.statuses[i].duration})`);
+            drawText(statusText, 20, false, 540 + i * 30, "aqua");
+              
+        }
+    }
+
+    if (gameState == "spells") {
+        drawText("Spells:", 30, false, 130, "violet");
+
+        for (let i = 0; i < numSpells; i++) {
+            const spellText = `${i + 1}) ${player.spells[i] || "--- "}`;
+            drawText(spellText, 20, false, 170 + i * 40, "aqua");
+        }
+    }
+    ctx.restore();
 }
 
 function check_dead() {
     for (let k = monsters.length - 1; k >= 0; k--) {
         if (monsters[k].dead) {
             // Xp gain
-            if (monsters[k].rare) {
-                player.xp = player.xp + monsters[k].xpPoints;
-            } else {
-                player.xp = player.xp + monsters[k].xpPoints + randomRange(0, 3);
-            }
+            player.xp = monsters[k].rare ? player.xp + monsters[k].xpPoints : player.xp + monsters[k].xpPoints + randomRange(0, 3);
             if (player.xp >= player.xpToLevel) {
                 player.levelUp();
                 player.xp = 0;
-                player.xpToLevel = player.xpToLevel * 2;
+                player.xpToLevel *= 2;
             }
 
             monsters.splice(k, 1);
@@ -159,10 +156,10 @@ function check_for_tick() {
 
 function tick() {
     for (let k = monsters.length - 1; k >= 0; k--) {
-        if (!monsters[k].dead) {
-            monsters[k].update();
-        } else {
+        if (monsters[k].dead) {
             monsters.splice(k, 1);
+        } else {
+            monsters[k].update();
         }
     }
 
@@ -229,31 +226,26 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
     }
 
     if (gameStarted) {
-        //saveLevel();
     }
 
-    if(!gameStarted) {
-        generateLevel(levelType);
-        placePlayer();
-        placeStairs();
-        console.log("generated");
-    } else {
+    if(gameStarted) {
         if(levelTiles[level-1]) {
             loadLevel();
             placePlayer();
-            console.log("loaded");
-            console.log(levelTiles[level-1].length);
         } else {
             generateLevel(levelType);
             placePlayer();
             placeStairs();
-            console.log("generated after checks");
         }
+    } else {
+        generateLevel(levelType);
+        placePlayer();
+        placeStairs();
     }
  
 
     function placePlayer() {
-        let playerRandomTile = randomPassableTile();
+        const playerRandomTile = randomPassableTile();
         player = new Player(playerRandomTile, playerClass);
         playerRandomTile.monster = player;
         player.move(playerRandomTile);
@@ -276,8 +268,8 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
             player.tile.replace(StairsUp);
         }
 
-        tryTo('place stairs down', function() {
-            let randomTile = randomPassableTile();
+        tryTo('place stairs down', () => {
+            const randomTile = randomPassableTile();
             if (randomTile.constructor.name == "StairsUp") {
                 randomPassableTile().replace(StairsDown);
                 return true;
@@ -337,30 +329,22 @@ function restorePlayer() {
 
 function drawText(text, size, centered, textY, color, textX) {
     ctx.fillStyle = color;
-    ctx.font = size + "px monospace";
+    ctx.font = `${size}px monospace`;
     if (!textX) {
-        if (centered) {
-            textX = (canvas.width-ctx.measureText(text).width)/2;
-        } else {
-            textX = canvas.width - uiWidth * tileSize + 25;
-        }
+        textX = centered ? (canvas.width-ctx.measureText(text).width)/2 : canvas.width - uiWidth * tileSize + 25;
     }
 
     ctx.fillText(text, textX, textY);
 }
 
 function getScores() {
-    if (localStorage["scores"]) {
-        return JSON.parse(localStorage["scores"]);
-    } else {
-        return [];
-    }
+    return localStorage.scores ? JSON.parse(localStorage.scores) : [];
 }
 
 function addScore(score, won) {
-    let scores = getScores();
-    let scoreObject = {score: score, run: 1, totalScore: score, active: won};
-    let lastScore = scores.pop();
+    const scores = getScores();
+    const scoreObject = {score, run: 1, totalScore: score, active: won};
+    const lastScore = scores.pop();
 
     if (lastScore) {
         if (lastScore.active) {
@@ -372,36 +356,35 @@ function addScore(score, won) {
     }
     scores.push(scoreObject);
 
-    localStorage["scores"] = JSON.stringify(scores);
+    localStorage.scores = JSON.stringify(scores);
 }
 
 function drawScores() {
-    let scores = getScores();
-    if (scores.length) {
+    const scores = getScores();
+    if (!scores.length) {
+        return;
+    }
+    drawText(
+        rightPad(["RUN", "SCORE", "TOTAL"]),
+        18,
+        true,
+        canvas.height / 2,
+        "white"
+    );
+
+    const newestScore = scores.pop();
+    scores.sort((a, b) => b.totalScore - a.totalScore);
+    scores.unshift(newestScore);
+
+    for (let i = 0; i < Math.min(10, scores.length); i++) {
+        const scoreText = rightPad([scores[i].run, scores[i].score, scores[i].totalScore]);
         drawText(
-            rightPad(["RUN", "SCORE", "TOTAL"]),
+            scoreText,
             18,
             true,
-            canvas.height / 2,
-            "white"
+            canvas.height / 2 + 24 + i * 24,
+            i == 0 ? "aqua" : "violet"
         );
-
-        let newestScore = scores.pop();
-        scores.sort(function(a, b) {
-            return b.totalScore - a.totalScore;
-        });
-        scores.unshift(newestScore);
-
-        for (let i = 0; i < Math.min(10, scores.length); i++) {
-            let scoreText = rightPad([scores[i].run, scores[i].score, scores[i].totalScore]);
-            drawText(
-                scoreText,
-                18,
-                true,
-                canvas.height / 2 + 24 + i * 24,
-                i == 0 ? "aqua" : "violet"
-            );
-        }
     }
 }
 
@@ -409,7 +392,7 @@ function screenshake() {
     if (shakeAmount) {
         shakeAmount--;
     }
-    let shakeAngle = Math.random() * Math.PI*2;
+    const shakeAngle = Math.random() * Math.PI*2;
     shakeX = Math.round(Math.cos(shakeAngle) * shakeAmount);
     shakeY = Math.round(Math.sin(shakeAngle) * shakeAmount);
 }

@@ -12,11 +12,7 @@ class Tile {
     }
 
     replace(newTileType, sprite) {
-        if (sprite) {
-            tiles[this.x][this.y] = new newTileType(this.x, this.y, sprite);
-        } else {
-            tiles[this.x][this.y] = new newTileType(this.x, this.y, 2);
-        }
+        tiles[this.x][this.y] = sprite ? new newTileType(this.x, this.y, sprite) : new newTileType(this.x, this.y, 2);
         
         return tiles[this.x][this.y];
     }
@@ -53,7 +49,7 @@ class Tile {
         let connectedTiles = [this];
         let frontier = [this];
         while (frontier.length) {
-            let neighbours = frontier.pop()
+            const neighbours = frontier.pop()
                 .getAdjacentPassableNeighbours()
                 .filter(t => !connectedTiles.includes(t));
             connectedTiles = connectedTiles.concat(neighbours);
@@ -89,12 +85,13 @@ class Tile {
             }
         }
 
-        if (this.effectCounter) {
-            this.effectCounter--;
-            ctx.globalAlpha = this.effectCounter / 30;
-            drawSprite(this.effect, this.x, this.y);
-            ctx.globalAlpha = 1;
+        if (!this.effectCounter) {
+            return;
         }
+        this.effectCounter--;
+        ctx.globalAlpha = this.effectCounter / 30;
+        drawSprite(this.effect, this.x, this.y);
+        ctx.globalAlpha = 1;
     }
 
     setEffect(effectSprite) {
@@ -109,54 +106,50 @@ class Floor extends Tile {
     }
 
     stepOn(monster) {
-        if (this.trap) {
+        if (!this.trap) {
+            return;
+        }
+        if (!this.trapWorks) {
+            return;
+        }
 
-            if (!this.trapWorks) {
-                return;
-            }
-
-            if (monster.isPlayer) {
-                let isTrapdoor = randomRange(1, 100);
-                if (isTrapdoor > 10) {
-                    playSound("trap");
-                    addStatus("Bleeding", randomRange(2, 5), monster);
-                    addStatus("Stunned", randomRange(2, 5), monster);
-                    this.blood = true;
-                    let neighbours = this.getAdjacentNeighbours();
-                    for (let i = 0; i < neighbours.length; i++) {
-                        if (!neighbours[i].passable) {
-                            if (randomRange(1, 3) == 3) {
-                                neighbours[i].wallBlood = true;
-                            }
-                        }
-                    }
-                } else {
-                    playSound("trapdoor");
-                    saveLevel();
-                    level++;
-                    startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
-                    shakeAmount = 50;
-
-                }
-            } else {
+        if (monster.isPlayer) {
+            const isTrapdoor = randomRange(1, 100);
+            if (isTrapdoor > 10) {
                 playSound("trap");
                 addStatus("Bleeding", randomRange(2, 5), monster);
                 addStatus("Stunned", randomRange(2, 5), monster);
                 this.blood = true;
-                let neighbours = this.getAdjacentNeighbours();
-                for (let i = 0; i < neighbours.length; i++) {
-                    if (!neighbours[i].passable) {
-                        if (randomRange(1, 3) == 3) {
-                            neighbours[i].wallBlood = true;
-                        }
+                const neighbours = this.getAdjacentNeighbours();
+                for (const neighbour of neighbours) {
+                    if (!neighbour.passable && randomRange(1, 3) == 3) {
+                        neighbour.wallBlood = true;
                     }
                 }
-            }
+            } else {
+                playSound("trapdoor");
+                saveLevel();
+                level++;
+                startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
+                shakeAmount = 50;
 
-            this.visible = true;
-            this.trapWorks = false;
-            shakeAmount = 10;
+            }
+        } else {
+            playSound("trap");
+            addStatus("Bleeding", randomRange(2, 5), monster);
+            addStatus("Stunned", randomRange(2, 5), monster);
+            this.blood = true;
+            const neighbours = this.getAdjacentNeighbours();
+            for (const neighbour of neighbours) {
+                if (!neighbour.passable && randomRange(1, 3) == 3) {
+                    neighbour.wallBlood = true;
+                }
+            }
         }
+
+        this.visible = true;
+        this.trapWorks = false;
+        shakeAmount = 10;
     }
 
     use() {
@@ -175,14 +168,10 @@ class Floor extends Tile {
             }
         }
 
-        if (this.scroll) {
-            if (player.spells.length < numSpells) {
-                console
-                player.addSpell();
-                this.scroll = false;
-            }
-            // TO DO
-            //playSound("scroll");
+        if (this.scroll && player.spells.length < numSpells) {
+            console
+            player.addSpell();
+            this.scroll = false;
         }
 
         if (this.trap) {
@@ -235,8 +224,6 @@ class StairsUp extends Tile {
     }
 
     stepOn(monster) {
-        if (monster.isPlayer) {
-        }
     }
 
     use() {

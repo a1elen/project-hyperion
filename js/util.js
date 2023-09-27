@@ -4,7 +4,7 @@ function tryTo(description, callback) {
             return
         }
     }
-    throw 'Timeout while trying to ' + description;
+    throw `Timeout while trying to ${description}`;
 }
 
 function randomRange(min, max) {
@@ -13,7 +13,7 @@ function randomRange(min, max) {
 
 function roll(count, sides) {
     if (count > 1) {
-        let rolls = [];
+        const rolls = [];
         for (let i = 0; i < count; i++) {
             rolls.push(randomRange(1, sides));
         }
@@ -26,13 +26,14 @@ function roll(count, sides) {
 function rollSum(count, sides) {
     let sum = 0;
     for (let i = 0; i < count; i++) {
-        sum = sum + randomRange(1, sides);
+        sum += randomRange(1, sides);
     }
     return sum;
 }
 
 function shuffle(arr) {
-    let temp, r;
+    let temp;
+    let r;
     for (let i = 1; i < arr.length; i++) {
         r = randomRange(0, i);
         temp = arr[i];

@@ -1,26 +1,23 @@
 function generateLevel(levelGen) {
-    let levelType = levelGen;
     let wallChance = 0.3;
-    if (levelType == 0) {
+    if (levelGen == 0) {
         wallChance = 0.3;
-        tryTo('generate map', function() {
-            return generateCellular(wallChance, levelType) == randomPassableTile().getConnectedTiles().length;
-        })
+        tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
     } else {
         wallChance = 0.45
-        tryTo('generate map', function() {
-            passableTilesCount = generateCellular(wallChance, levelType);
-            iterateCellular(5, levelType);
-            let passables = randomPassableTile().getConnectedTiles();
+        tryTo('generate map', () => {
+            passableTilesCount = generateCellular(wallChance, levelGen);
+            iterateCellular(5, levelGen);
+            const passables = randomPassableTile().getConnectedTiles();
 
             for (let i = 0; i < numTiles; i++) {
                 for (let j = 0; j < numTiles; j++) {
                     if (!passables.includes(tiles[i][j])) {
-                        if (levelType == 0) {
+                        if (levelGen == 0) {
                             tiles[i][j].replace(Wall, 3);
-                        } else if (levelType == 1) {
+                        } else if (levelGen == 1) {
                             tiles[i][j].replace(Wall, 33);
-                        } else if (levelType == 2) {
+                        } else if (levelGen == 2) {
                             tiles[i][j].replace(Wall, 35);
                         }
                         
@@ -34,9 +31,8 @@ function generateLevel(levelGen) {
 
     generateMonsters();
 
-    let treasureNumber = clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4));
-    let scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 2));
-    let trapNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 3));
+    const treasureNumber = clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4));
+    const scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 2));
     
 
     for (let i = 0; i < treasureNumber; i++) {
@@ -100,7 +96,7 @@ function iterateCellular(count, levelType) {
     for(let c = 0; c < count; c++) {
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
-                let neighbours = tiles[i][j].getAdjacentPassableNeighbours();
+                const neighbours = tiles[i][j].getAdjacentPassableNeighbours();
                 if (tiles[i][j].passable) {
                     if(neighbours >= 5); {
                         //tiles[i][j] = null;
@@ -136,18 +132,17 @@ function inBounds(x, y) {
 function getTile(x, y) {
     if (inBounds(x, y)) {
         return tiles[x][y];
-    } else {
-        let newWall = new Wall(x, y, 36);
-        newWall.known = true;
-        return newWall;
     }
+    const newWall = new Wall(x, y, 36);
+    newWall.known = true;
+    return newWall;
 }
 
 function randomPassableTile() {
     let tile;
-    tryTo('get random passable tile', function() {
-        let x = randomRange(0, numTiles-1);
-        let y = randomRange(0, numTiles-1);
+    tryTo('get random passable tile', () => {
+        const x = randomRange(0, numTiles-1);
+        const y = randomRange(0, numTiles-1);
         tile = getTile(x, y);
         return tile.passable && !tile.monster;
     })
@@ -156,8 +151,8 @@ function randomPassableTile() {
 
 function generateMonsters() {
     monsters = [];
-    let numMonsters = Math.floor(level / 5) + 2;
-    let numberOfRare = Math.floor(level / 5);
+    const numMonsters = Math.floor(level / 5) + 2;
+    const numberOfRare = Math.floor(level / 5);
     for (let i = 0; i < numMonsters; i++) {
         if (i < numberOfRare) {
             spawnMonster(true);
@@ -180,9 +175,9 @@ function spawnMonster(rare) {
     }
     
     
-    let monster = new monsterType(randomPassableTile());
+    const monster = new monsterType(randomPassableTile());
     if (rare) {
-        let amount = Math.floor(level / 2.5);
+        const amount = Math.floor(level / 2.5);
         for (let i = 0; i < amount; i++) {
             monster.levelUp();
         }

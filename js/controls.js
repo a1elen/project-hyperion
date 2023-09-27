@@ -5,8 +5,6 @@ function initTouchControls() {
     let touchendX = 0;
     let touchstartY = 0;    
     let touchendY = 0;
-    let xDist = 0;
-    let yDist = 0;
 
     document.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].screenX;
@@ -63,7 +61,7 @@ function checkDirection() {
 }
 
 function initKeyControls() {
-    document.querySelector("html").onkeypress = function(e) {
+    document.querySelector("html").onkeypress = (e) => {
         if (gameState == "title") {
             if (e.key == "1") {
                 playerClass = 1;
@@ -82,7 +80,7 @@ function initKeyControls() {
             if (e.key == "a" || e.key == "4") player.tryMove(-1, 0);
             if (e.key == "d" || e.key == "6") player.tryMove(1, 0);
 
-            if (e.key == "z" || e.key == "z") ctx.translate(-2, -2);
+            if (e.key == "z") ctx.translate(-2, -2);
 
             // Diagonal Movement
             if (e.key == "9") player.tryMove(1, -1);

@@ -58,16 +58,12 @@ class Monster {
         if (this.statuses.length > 0) {
             for (let i = 0; i < this.statuses.length; i++) {
 
-                if (this.statuses[i].constructor.name == "Stunned") {
-                    if (this.statuses[i].duration < 1) {
-                        this.stunned = false;
-                    }
+                if (this.statuses[i].constructor.name == "Stunned" && this.statuses[i].duration < 1) {
+                    this.stunned = false;
                 }
 
-                if (this.statuses[i].constructor.name == "Shielded") {
-                    if (this.statuses[i].duration < 1) {
-                        this.shielded = false;
-                    }
+                if (this.statuses[i].constructor.name == "Shielded" && this.statuses[i].duration < 1) {
+                    this.shielded = false;
                 }
 
                 if (this.statuses[i].constructor.name == "AllSeeingEye") {
@@ -115,11 +111,12 @@ class Monster {
 
         neighbours = neighbours.filter(t => !t.monster || t.monster.isPlayer);
 
-        if (neighbours.length) {
-            neighbours.sort((a, b) => a.dist(player.tile) - b.dist(player.tile));
-            let newTile = neighbours[0];
-            this.tryMove(newTile.x - this.tile.x, newTile.y - this.tile.y);
+        if (!neighbours.length) {
+            return;
         }
+        neighbours.sort((a, b) => a.dist(player.tile) - b.dist(player.tile));
+        const newTile = neighbours[0];
+        this.tryMove(newTile.x - this.tile.x, newTile.y - this.tile.y);
     }
 
     getDisplayX() {
@@ -150,29 +147,27 @@ class Monster {
     }
 
     drawHp() {
-        let healthBarWidth = 60;
-        let healthBarHeight = 5;
-        
-        let maxWidth = healthBarWidth;
-        let width = (this.hp / this.maxHealth) * maxWidth;
-        let height;
+        const healthBarWidth = 60;
+        const healthBarHeight = 5;
 
-        let x = ((this.getDisplayX() * tileSize) - healthBarWidth / 2) + (tileSize / 2);
-        let y = ((this.getDisplayY() * tileSize) - healthBarHeight / 2) + tileSize;
+        const width = (this.hp / this.maxHealth) * healthBarWidth;
+
+        const x = ((this.getDisplayX() * tileSize) - healthBarWidth / 2) + (tileSize / 2);
+        const y = ((this.getDisplayY() * tileSize) - healthBarHeight / 2) + tileSize;
 
         ctx.fillStyle = 'rgba(255, 74, 83, 0.75)';
         ctx.fillRect(x, y, width, healthBarHeight);
 
         // Draw health/attack/armor text
-        drawText("Lvl: " + this.level,
+        drawText(`Lvl: ${this.level}`,
         10, false, y + 5 - tileSize, "white", x)
 
-        drawText(this.weaponDamage[0] + "d" + this.weaponDamage[1]
+        drawText(`${this.weaponDamage[0]}d${this.weaponDamage[1]}`
         + " #" + this.armorClass
         + " E" + this.evasionClass,
         10, false, y - 5, "white", x)
 
-        drawText(this.hp + "/" + this.maxHealth,
+        drawText(`${this.hp}/${this.maxHealth}`,
         10, false, y + 5, "white", x)
     }
 
@@ -185,71 +180,69 @@ class Monster {
     }
 
     tryMove(dx, dy) {
-        let newTile = this.tile.getNeighbour(dx, dy);
-        if (newTile.passable) {
-            this.lastMove = [dx, dy];
-            if (!newTile.monster) {
-                this.move(newTile);
-            } else {
-                if (this.isPlayer != newTile.monster.isPlayer) {
-                    if (randomRange(1, 100) < this.strength) {
-                        addStatus("Stunned", randomRange(2, 2 + this.strength), newTile.monster);
-                    }
-
-                    if (this.bleedingChance != 0) {
-                        if (randomRange(1, 100) < this.bleedingChance) {
-                            addStatus("Bleeding", randomRange(2, 5), newTile.monster);
-                        }
-                    }
-
-                    if (newTile.monster.shielded || newTile.monster.teleportCounter > 1) {
-                        check_for_tick();
-                        return;
-                    }
-
-                    this.offsetX = (newTile.x - this.tile.x) / 2;
-                    this.offsetY = (newTile.y - this.tile.y) / 2;
-
-                    let damage = 0;
-
-                    if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge) {
-                        if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
-                            if (roll(1, 20) >= 20) {
-                                damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
-                                newTile.monster.tile.blood = true;
-                            } else {
-                                damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
-                            }
-                            newTile.monster.hit(damage, this);
-
-                        }
-                    } else {
-                        newTile.monster.tryDodge();
-                    }
-
-                    damage = damage + this.bonusAttack;
-
-                    this.bonusAttack = 0;
-
-                    shakeAmount = 5;
-                }
-            }
-            return true;
+        const newTile = this.tile.getNeighbour(dx, dy);
+        if (!newTile.passable) {
+            return;
         }
+        this.lastMove = [dx, dy];
+        if (newTile.monster) {
+            if (this.isPlayer != newTile.monster.isPlayer) {
+                if (randomRange(1, 100) < this.strength) {
+                    addStatus("Stunned", randomRange(2, 2 + this.strength), newTile.monster);
+                }
+
+                if (this.bleedingChance != 0 && randomRange(1, 100) < this.bleedingChance) {
+                    addStatus("Bleeding", randomRange(2, 5), newTile.monster);
+                }
+
+                if (newTile.monster.shielded || newTile.monster.teleportCounter > 1) {
+                    check_for_tick();
+                    return;
+                }
+
+                this.offsetX = (newTile.x - this.tile.x) / 2;
+                this.offsetY = (newTile.y - this.tile.y) / 2;
+
+                let damage = 0;
+
+                if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge) {
+                    if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
+                        if (roll(1, 20) >= 20) {
+                            damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
+                            newTile.monster.tile.blood = true;
+                        } else {
+                            damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
+                        }
+                        newTile.monster.hit(damage, this);
+
+                    }
+                } else {
+                    newTile.monster.tryDodge();
+                }
+
+                damage += this.bonusAttack;
+
+                this.bonusAttack = 0;
+
+                shakeAmount = 5;
+            }
+        } else {
+            this.move(newTile);
+        }
+        return true;
     }
 
     tryDodge() {
-        let newTile = this.tile.getAdjacentPassableNeighbours();
-        newTile.filter(function (tile) {
-            return !tile.monster;
-        })
+        const newTile = this.tile.getAdjacentPassableNeighbours();
+        newTile.filter((tile) => !tile.monster)
 
-        if (newTile) {
-            let newTileChosen = shuffle(newTile)[0];
-            let dx = newTileChosen.x - this.tile.x;
-            let dy = newTileChosen.y - this.tile.y;
-            this.tryMove(dx, dy);
+        if (!newTile) {
+            return;
         }
+        const newTileChosen = shuffle(newTile)[0];
+        const dx = newTileChosen.x - this.tile.x;
+        const dy = newTileChosen.y - this.tile.y;
+        this.tryMove(dx, dy);
     }
 
     hit(damage, attacker) {
@@ -352,7 +345,7 @@ class Player extends Monster {
 
         this.updateStats();
 
-        let levelHealth = clamp(randomRange(this.constitution, this.maxHealth-this.hp), 1, this.maxHealth);
+        const levelHealth = clamp(randomRange(this.constitution, this.maxHealth-this.hp), 1, this.maxHealth);
         this.hp += levelHealth;
     }
 
@@ -374,18 +367,19 @@ class Player extends Monster {
     }
 
     addSpell() {
-        let newSpell = shuffle(Object.keys(spells))[0];
+        const newSpell = shuffle(Object.keys(spells))[0];
         this.spells.push(newSpell);
     }
 
     castSpell(index) {
-        let spellName = this.spells[index];
-        if (spellName) {
-            this.spells.splice(index, 1);
-            spells[spellName]();
-            playSound("spell");
-            gameState = "running";
+        const spellName = this.spells[index];
+        if (!spellName) {
+            return;
         }
+        this.spells.splice(index, 1);
+        spells[spellName]();
+        playSound("spell");
+        gameState = "running";
     }
 
     pickUp() {
@@ -431,13 +425,13 @@ class Worm extends Monster {
     }
 
     doStuff() {
-        let neighbours = this.tile.getAdjacentNeighbours().filter(t => !t.passable && inBounds(t.x, t.y));
+        const neighbours = this.tile.getAdjacentNeighbours().filter(t => !t.passable && inBounds(t.x, t.y));
         if (neighbours.length) {
             neighbours[0].replace(Floor);
  
             if (this.hp >= this.maxHealth) {
-                let spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
-                let monster = new Worm(spawnTile);
+                const spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
+                const monster = new Worm(spawnTile);
                 monsters.push(monster);
                 this.hp = Math.floor(this.hp / 2);
             } else {
@@ -492,7 +486,7 @@ class Skeleton extends Monster {
     }
 
     doStuff() {
-        let neighbours = this.tile.getAdjacentPassableNeighbours();
+        const neighbours = this.tile.getAdjacentPassableNeighbours();
         if (this.tile.dist(player.tile) < 4) {
             this.angry = true;
             this.sprite = 8;
