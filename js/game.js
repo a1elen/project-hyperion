@@ -55,7 +55,7 @@ function draw() {
         screenshake();
 
         // new dirty FOV
-        let seenTiles = []
+        /*let seenTiles = []
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
                 let distance = (Math.max(Math.abs(getTile(i, j).x - player.tile.x),
@@ -71,6 +71,61 @@ function draw() {
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
                     ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
                 } else if (getTile(i, j).known) {
+                    getTile(i, j).draw();
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
+                }
+            }
+        }*/
+
+        let seenTiles = [];
+
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                let target = getTile(i, j);
+                let distance = (Math.max(Math.abs(target.x - player.tile.x), Math.abs(target.y - player.tile.y)))
+
+                if (distance == 3) {
+                    drawLine(player.tile.x, player.tile.y, target.x, target.y);
+                }
+
+            /*
+            drawLine(player.tile.x, player.tile.y, player.tile.x + 2, player.tile.y);
+            drawLine(player.tile.x, player.tile.y, player.tile.x - 2, player.tile.y);
+            drawLine(player.tile.x, player.tile.y, player.tile.x, player.tile.y + 2);
+            drawLine(player.tile.x, player.tile.y, player.tile.x, player.tile.y - 2);
+
+            drawLine(player.tile.x, player.tile.y, player.tile.x + 2, player.tile.y + 2);
+            drawLine(player.tile.x, player.tile.y, player.tile.x - 2, player.tile.y - 2);
+            drawLine(player.tile.x, player.tile.y, player.tile.x + 2, player.tile.y - 2);
+            drawLine(player.tile.x, player.tile.y, player.tile.x - 2, player.tile.y + 2);
+            */
+            }
+        }
+        function drawLine(x1, y1, x2, y2) {
+            let dx = Math.abs(x2 - x1);
+            let dy = Math.abs(y2 - y1);
+            let length = dx > dy ? dx : dy;
+            for (let i = 0; i <= length; ++i) {
+                let t = i / length;
+                let x = x1 + Math.round(t * (x2 - x1));
+                let y = y1 + Math.round(t * (y2 - y1));
+                seenTiles.push(getTile(x, y));
+                getTile(x, y).known = true;
+                if (!getTile(x, y).passable) {
+                    return;
+                }
+            }
+        }
+
+        for (let i = 0; i < seenTiles.length; i++) {
+            seenTiles[i].draw();
+        }
+
+
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                if (getTile(i, j).known && !seenTiles.includes(getTile(i, j))) {
                     getTile(i, j).draw();
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                     ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
