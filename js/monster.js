@@ -103,7 +103,7 @@ class Monster {
     }
 
     updateStats() {
-        this.attack = this.strength// * this.weaponDamage;
+        this.attack = this.strength;
         this.maxHealth = this.constitution * 5;
         this.evasion = this.agiity;
         this.defense = Math.floor((this.constitution + this.agiity) / 2);
@@ -202,29 +202,6 @@ class Monster {
                         }
                     }
 
-                    /*let damage = Math.max((this.attack + this.bonusAttack), 1)
-
-                    if (newTile.monster.defense > damage) {
-                        if (randomRange(1, 2) > 1) {
-                            damage = Math.floor(clamp(damage / 2, 1, damage));
-                        }
-                    } else {
-                        damage = Math.floor(clamp(damage - newTile.monster.defense / 4, 1, damage));
-                    }
-
-                    if (randomRange(1, 100) < this.perception) {
-                        damage = damage * 2;
-                        newTile.monster.tile.blood = true;
-                    }
-                    
-
-
-                    if (randomRange(1, 100 ) < newTile.monster.evasion) {
-                        check_for_tick();
-                        return;
-                    }
-                    */
-
                     if (newTile.monster.shielded || newTile.monster.teleportCounter > 1) {
                         check_for_tick();
                         return;
@@ -244,15 +221,9 @@ class Monster {
                                 damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                             }
                             newTile.monster.hit(damage, this);
-                            /*console.log("first roll: " + roll(1, 20) + " + " + this.fighting + " > " + newTile.monster.evasionClass + " + " + newTile.monster.dodge);
-                            console.log("evasion check failed");
-                            console.log("second roll: " + roll(1, 20)+ " + " + this.weaponSkill + " > " + newTile.monster.armorClass + " + " + newTile.monster.endurance);
-                            console.log("armor check failed");
-                            console.log("damage is - " + damage);*/
 
                         }
                     } else {
-                        //console.log("dodged! - " + newTile.monster.constructor.name);
                         newTile.monster.tryDodge();
                     }
 
@@ -277,19 +248,11 @@ class Monster {
             let newTileChosen = shuffle(newTile)[0];
             let dx = newTileChosen.x - this.tile.x;
             let dy = newTileChosen.y - this.tile.y;
-            //console.log(dx, dy);
             this.tryMove(dx, dy);
         }
     }
 
     hit(damage, attacker) {
-
-        /*if (attacker.strength > this.constitution) {
-            if (randomRange(1, 100) < attacker.strength) {
-                
-            }
-        }*/
-
         this.hp -= damage;
         if(this.hp <= 0) {
             this.hp = 0;
@@ -321,35 +284,6 @@ class Monster {
         tile.monster = this;
         tile.stepOn(this);
     }
-
-    /*
-    upgrade(amount) {
-        //let upgradeHp = randomRange(1, 2) * amount;
-        //this.maxHealth = this.maxHealth + upgradeHp;
-        //this.hp = this.hp + upgradeHp;
-
-        //this.attack = this.attack + randomRange(1, 2) * amount;
-        //this.defense = this.defense + randomRange(1, 2) * Math.floor(amount / 2)
-        for (let i = 0; i < amount; i++) {
-            let chosenSkill = randomRange(1, 4);
-            
-            if (chosenSkill == 1) {
-                this.fighting += amount;
-            } else if (chosenSkill == 2) {
-                this.dodge += amount;
-            } else if (chosenSkill == 3) {
-                this.weaponSkill += amount;
-            } else {
-                this.endurance += amount;
-            }
-        }
-        this.updateStats();
-
-        this.hp = this.maxHealth;
-        this.xpPoints = (this.xpPoints + randomRange(1, 5)) * level;
-        this.rare = true;
-    }
-}*/
 
     levelUp() {
         this.level++;
@@ -424,8 +358,6 @@ class Player extends Monster {
 
     update() {
         super.update()
-        //this.shield--;
-        //if (this.shield < 0) this.shield = 0;
     }
 
     tryMove(dx, dy) {
@@ -436,7 +368,6 @@ class Player extends Monster {
         }
 
         if (super.tryMove(dx, dy)) {
-            //ctx.translate(-player.x * 4, -player.y * 4);
             this.moveCounter += this.moveSpeed;
             check_for_tick();
         }
@@ -450,7 +381,6 @@ class Player extends Monster {
     castSpell(index) {
         let spellName = this.spells[index];
         if (spellName) {
-            //delete this.spells[index];
             this.spells.splice(index, 1);
             spells[spellName]();
             playSound("spell");
@@ -482,8 +412,6 @@ class Spider extends Monster {
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
-        //this.attack = 1;
-        //this.defense = 0;
         this.xpPoints = 1;
         this.weaponDamage[0] = 1;
         this.weaponDamage[1] = 1;
@@ -497,8 +425,6 @@ class Worm extends Monster {
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = Math.floor(this.maxHealth / 2);
-        //this.attack = 1;
-        //this.defense = 0;
         this.xpPoints = 2;
         this.weaponDamage[0] = 1;
         this.weaponDamage[1] = 1;
@@ -530,8 +456,6 @@ class Snake extends Monster {
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
-        //this.attack = 1;
-        //this.defense = 0;
         this.moveSpeed = 75;
         this.xpPoints = 2;
         this.bleedingChance = 10;
@@ -547,8 +471,6 @@ class Zombie extends Monster {
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
-        //this.attack = 1;
-        //this.defense = 1;
         this.moveSpeed = 150;
         this.xpPoints = 3;
         this.weaponDamage[0] = 1;
@@ -563,8 +485,6 @@ class Skeleton extends Monster {
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
-        //this.attack = 2;
-        //this.defense = 0;
         this.xpPoints = 1;
         this.angry = false;
         this.weaponDamage[0] = 1;
@@ -592,8 +512,6 @@ class RedDragonBaby extends Monster {
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
-        //this.attack = 2;
-        //this.defense = 0;
         this.xpPoints = 10;
         this.weaponDamage[0] = 2;
         this.weaponDamage[1] = 3;
@@ -607,8 +525,6 @@ class GreenSlime extends Monster {
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
-        //this.attack = 2;
-        //this.defense = 0;
         this.xpPoints = 1;
         this.moveSpeed = 200;
         this.weaponDamage[0] = 1;

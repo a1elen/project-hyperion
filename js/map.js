@@ -12,7 +12,6 @@ function generateLevel(levelGen) {
             passableTilesCount = generateCellular(wallChance, levelType);
             iterateCellular(5, levelType);
             let passables = randomPassableTile().getConnectedTiles();
-            //fillNonPassable(passables);
 
             for (let i = 0; i < numTiles; i++) {
                 for (let j = 0; j < numTiles; j++) {
@@ -116,7 +115,6 @@ function iterateCellular(count, levelType) {
                     }
                 } else {
                     if(neighbours < 5); {
-                        //tiles[i][j] = null;
                         if (levelType == 0) {
                             tiles[i][j] = tiles[i][j].replace(Floor, 2);
                         } else if (levelType == 1) {

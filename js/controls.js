@@ -83,7 +83,6 @@ function initKeyControls() {
             if (e.key == "d" || e.key == "6") player.tryMove(1, 0);
 
             if (e.key == "z" || e.key == "z") ctx.translate(-2, -2);
-            //if (e.key == "s" || e.key == "2") ctx.scale(2, 2);
 
             // Diagonal Movement
             if (e.key == "9") player.tryMove(1, -1);

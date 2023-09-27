@@ -86,8 +86,6 @@ spells = {
         player.tile.setEffect(13);
         player.heal(5);
 
-        //addStatus("Stunned", randomRange(1, 2), player);
-
         player.bonusAttack = 5;
     },
     Duplicate: function() {

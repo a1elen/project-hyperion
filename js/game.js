@@ -2,8 +2,6 @@ function setupCanvas() {
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
 
-    //canvas.width = tileSize * (numTiles + uiWidth);
-    //canvas.height = tileSize * numTiles;
     canvas.width = 800;
     canvas.height = 600;
     canvas.style.width = canvas.width + 'px';
@@ -37,46 +35,9 @@ function draw() {
 
 
         ctx.save();
-        /*ctx.translate(player.getDisplayX() * tileSize, player.getDisplayY() * tileSize);
-        //ctx.translate(player.tile.x * tileSize, player.tile.y * tileSize);
-        ctx.scale(1, 1);
-        ctx.translate(-canvas.width / tileSize, -canvas.height / tileSize);*/
-        //ctx.translate(player.getDisplayX() * tileSize - canvas.width / 2, player.getDisplayY() * tileSize - canvas.height / 2);
         ctx.translate(-player.getDisplayX() * tileSize + (canvas.width / 2) - (tileSize/2), -player.getDisplayY() * tileSize + (canvas.height / 2) - (tileSize/2));
 
-        
-
-        //ctx.setTransform(1, 0, 0, 1, canvas.width / 2, canvas.height / 2);
-
-        /*const { zoom, x, y } = viewport;
-        ctx.translate(-player.tile.x * zoom, -player.tile.y * zoom);
-        ctx.scale(zoom, zoom);*/
-
         screenshake();
-
-        // new dirty FOV
-        /*let seenTiles = []
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                let distance = (Math.max(Math.abs(getTile(i, j).x - player.tile.x),
-                    Math.abs(getTile(i, j).y - player.tile.y) ))
-                if (distance < 2) {
-                    getTile(i, j).draw();
-                    seenTiles.push(getTile(i, j));
-                    getTile(i, j).known = true;
-                } else if (distance < 3) {
-                    getTile(i, j).draw();
-                    seenTiles.push(getTile(i, j));
-                    getTile(i, j).known = true;
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-                    ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
-                } else if (getTile(i, j).known) {
-                    getTile(i, j).draw();
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                    ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
-                }
-            }
-        }*/
 
         let seenTiles = [];
 
@@ -88,20 +49,9 @@ function draw() {
                 if (distance == 3) {
                     drawLine(player.tile.x, player.tile.y, target.x, target.y);
                 }
-
-            /*
-            drawLine(player.tile.x, player.tile.y, player.tile.x + 2, player.tile.y);
-            drawLine(player.tile.x, player.tile.y, player.tile.x - 2, player.tile.y);
-            drawLine(player.tile.x, player.tile.y, player.tile.x, player.tile.y + 2);
-            drawLine(player.tile.x, player.tile.y, player.tile.x, player.tile.y - 2);
-
-            drawLine(player.tile.x, player.tile.y, player.tile.x + 2, player.tile.y + 2);
-            drawLine(player.tile.x, player.tile.y, player.tile.x - 2, player.tile.y - 2);
-            drawLine(player.tile.x, player.tile.y, player.tile.x + 2, player.tile.y - 2);
-            drawLine(player.tile.x, player.tile.y, player.tile.x - 2, player.tile.y + 2);
-            */
             }
         }
+
         function drawLine(x1, y1, x2, y2) {
             let dx = Math.abs(x2 - x1);
             let dy = Math.abs(y2 - y1);
@@ -133,20 +83,7 @@ function draw() {
             }
         }
 
-        /*for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                getTile(i, j).draw();
-            }
-        }*/
-
         for (let i = 0; i < monsters.length; i++) {
-            //ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
-            //ctx.fillRect(monsters[i].tile.x * tileSize, monsters[i].tile.y * tileSize, tileSize, tileSize);
-            /*let distance = Math.max(Math.abs(monsters[i].tile.x - player.tile.x,
-                monsters[i].tile.y - player.tile.y));
-            if (distance < 3) {
-                monsters[i].draw();
-            }*/
             if (seenTiles.includes(monsters[i].tile)) {
                 monsters[i].draw();
             }
@@ -180,9 +117,6 @@ function draw() {
                 drawText(statusText, 20, false, 540 + i * 30, "aqua");
               
             }
-            /*if (player.stunned) {
-                drawText("Stunned! (" + (player.stunCounter + 1) + ")", 20, false, 390, "aqua")
-            }*/
         }
 
         if (gameState == "spells") {
@@ -193,42 +127,7 @@ function draw() {
                 drawText(spellText, 20, false, 170 + i * 40, "aqua");
             }
         }
-        
-
-        // dirty FOV implementation
-        /*let playerSeeTiles = player.tile.getAdjacentNeighbours();
-        playerSeeTiles.push(player.tile);
-        let playerHalfSeeTiles = [];
-        
-        for (let i = 0; i < playerSeeTiles.length; i++) {
-            playerHalfSeeTiles.push(playerSeeTiles[i].getAdjacentNeighbours());
-        }
-
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                if (!playerSeeTiles.includes(tiles[i][j]) && playerHalfSeeTiles.includes(tiles[i][j])) {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-                    ctx.fillRect(tiles[i][j].x * tileSize, tiles[i][j].y * tileSize, tileSize, tileSize);
-                } else if (!playerSeeTiles.includes(tiles[i][j]) && !playerHalfSeeTiles.includes(tiles[i][j])) {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-                    ctx.fillRect(tiles[i][j].x * tileSize, tiles[i][j].y * tileSize, tileSize, tileSize);
-                }
-            }
-        }*/
-
-        /*let playerSeeTiles = player.tile.getAdjacentNeighbours();
-        playerSeeTiles.push(player.tile);
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                if (!playerSeeTiles.includes(tiles[i][j])) {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-                    ctx.fillRect(tiles[i][j].x * tileSize, tiles[i][j].y * tileSize, tileSize, tileSize);
-                }
-            }
-        }*/
-
         ctx.restore();
-
     }
 }
 

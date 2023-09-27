@@ -168,10 +168,6 @@ class Floor extends Tile {
     get() {
         if (this.treasure) {
             score += randomRange(9, 21);
-            //if (score % 3 == 0 && numSpells < 9) {
-                //numSpells++;
-                //player.addSpell();
-            //}
             playSound("treasure");
             this.treasure = false;
             if (randomRange(0, 2) < 1) {
@@ -207,16 +203,6 @@ class StairsDown extends Tile {
     }
 
     stepOn(monster) {
-        /*if(monster.isPlayer) {
-            playSound("newLevel");
-            if (level == numLevels) {
-                addScore(score, true);
-                showTitle();
-            } else {
-                level++;
-                startLevel(Math.min(maxHp, player.hp+1), player.spells);
-            }
-        }*/
     }
 
     use() {
