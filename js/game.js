@@ -97,26 +97,29 @@ function draw() {
     drawText(`Score: ${score}`, 30, false, 70, "violet");
 
     if (gameState == "running") {
-        drawText("Stats:", 30, false, 130, "violet");
+        let centerY = player.getDisplayY() * tileSize;
+        let centerX = player.getDisplayX() * tileSize;
 
-        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, 170, "yellow")
-        drawText(`Health: ${player.hp}`, 20, false, 200, "red")
-        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 230, "white")
-        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, 260, "white")
+        drawText("Stats:", 30, false, centerY - 230, "violet");
 
-        drawText(`Strength: ${player.strength}`, 20, false, 290, "white")
-        drawText(`Constitution: ${player.constitution}`, 20, false, 320, "white")
-        drawText(`Perception: ${player.perception}`, 20, false, 350, "white")
-        drawText(`Agility: ${player.agility}`, 20, false, 380, "white")
-        drawText(`Arcane: ${player.arcane}`, 20, false, 410, "white")
-        drawText(`Will: ${player.will}`, 20, false, 440, "white")
+        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, centerY - 200, "yellow")
+        drawText(`Health: ${player.hp}`, 20, false, centerY - 170, "red")
+        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, centerY - 140, "white")
+        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, centerY - 110, "white")
 
-        drawText("Status:", 30, false, 500, "violet");
+        drawText(`Strength: ${player.strength}`, 20, false, centerY - 80, "white")
+        drawText(`Constitution: ${player.constitution}`, 20, false, centerY - 50, "white")
+        drawText(`Perception: ${player.perception}`, 20, false, centerY - 20, "white")
+        drawText(`Agility: ${player.agility}`, 20, false, centerY + 10, "white")
+        drawText(`Arcane: ${player.arcane}`, 20, false, centerY + 40, "white")
+        drawText(`Will: ${player.will}`, 20, false, centerY + 70, "white")
+
+        drawText("Status:", 30, false, centerY + 110, "violet");
 
 
         for (let i = 0; i < player.statuses.length; i++) {
             const statusText = (`${player.statuses[i].constructor.name} (${player.statuses[i].duration})`);
-            drawText(statusText, 20, false, 540 + i * 30, "aqua");
+            drawText(statusText, 20, false, centerY + 150 + i * 30, "aqua");
               
         }
     }
@@ -336,6 +339,8 @@ function drawText(text, size, centered, textY, color, textX) {
 
     ctx.fillText(text, textX, textY);
 }
+
+
 
 function getScores() {
     return localStorage.scores ? JSON.parse(localStorage.scores) : [];
