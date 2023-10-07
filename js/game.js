@@ -126,11 +126,11 @@ function draw() {
     }
 
     if (gameState == "spells") {
-        drawText("Spells:", 30, false, centerY - 230, "violet", centerX);
+        drawText("Spells:", 30, false, centerY - 170, "violet", centerX);
 
         for (let i = 0; i < numSpells; i++) {
             const spellText = `${i + 1}) ${player.spells[i] || "--- "}`;
-            drawText(spellText, 20, false, centerY - 200 + i * 40, "aqua", centerX);
+            drawText(spellText, 20, false, centerY - 140 + i * 40, "aqua", centerX);
         }
     }
     ctx.restore();
