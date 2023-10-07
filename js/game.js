@@ -93,14 +93,15 @@ function draw() {
 
     player.draw();
 
-    drawText(`Depth: ${level}`, 30, false, 40, "violet");
-    drawText(`Score: ${score}`, 30, false, 70, "violet");
+    let centerY = player.getDisplayY() * tileSize;
+    let centerX = player.getDisplayX() * tileSize - 350;
+
+    drawText(`Depth: ${level}`, 10, false, centerY - 250, "violet", centerX);
+    drawText(`Score: ${score}`, 10, false, centerY - 240, "violet", centerX);
 
     if (gameState == "running") {
-        let centerY = player.getDisplayY() * tileSize;
-        let centerX = player.getDisplayX() * tileSize - 350;
 
-        drawText("Stats:", 30, false, centerY - 230, "violet");
+        drawText("Stats:", 30, false, centerY - 230, "violet", centerX);
 
         drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, centerY - 200, "yellow", centerX)
         drawText(`Health: ${player.hp}`, 20, false, centerY - 170, "red", centerX)
