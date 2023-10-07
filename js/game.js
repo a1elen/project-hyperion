@@ -98,28 +98,28 @@ function draw() {
 
     if (gameState == "running") {
         let centerY = player.getDisplayY() * tileSize;
-        let centerX = player.getDisplayX() * tileSize;
+        let centerX = player.getDisplayX() * tileSize - 350;
 
         drawText("Stats:", 30, false, centerY - 230, "violet");
 
-        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, centerY - 200, "yellow")
-        drawText(`Health: ${player.hp}`, 20, false, centerY - 170, "red")
-        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, centerY - 140, "white")
-        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, centerY - 110, "white")
+        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, centerY - 200, "yellow", centerX)
+        drawText(`Health: ${player.hp}`, 20, false, centerY - 170, "red", centerX)
+        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, centerY - 140, "white", centerX)
+        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, centerY - 110, "white", centerX)
 
-        drawText(`Strength: ${player.strength}`, 20, false, centerY - 80, "white")
-        drawText(`Constitution: ${player.constitution}`, 20, false, centerY - 50, "white")
-        drawText(`Perception: ${player.perception}`, 20, false, centerY - 20, "white")
-        drawText(`Agility: ${player.agility}`, 20, false, centerY + 10, "white")
-        drawText(`Arcane: ${player.arcane}`, 20, false, centerY + 40, "white")
-        drawText(`Will: ${player.will}`, 20, false, centerY + 70, "white")
+        drawText(`Strength: ${player.strength}`, 20, false, centerY - 80, "white", centerX)
+        drawText(`Constitution: ${player.constitution}`, 20, false, centerY - 50, "white", centerX)
+        drawText(`Perception: ${player.perception}`, 20, false, centerY - 20, "white", centerX)
+        drawText(`Agility: ${player.agility}`, 20, false, centerY + 10, "white", centerX)
+        drawText(`Arcane: ${player.arcane}`, 20, false, centerY + 40, "white", centerX)
+        drawText(`Will: ${player.will}`, 20, false, centerY + 70, "white", centerX)
 
-        drawText("Status:", 30, false, centerY + 110, "violet");
+        drawText("Status:", 30, false, centerY + 110, "violet", centerX);
 
 
         for (let i = 0; i < player.statuses.length; i++) {
             const statusText = (`${player.statuses[i].constructor.name} (${player.statuses[i].duration})`);
-            drawText(statusText, 20, false, centerY + 150 + i * 30, "aqua");
+            drawText(statusText, 20, false, centerY + 150 + i * 30, "aqua", centerX);
               
         }
     }
