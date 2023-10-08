@@ -93,45 +93,45 @@ function draw() {
 
     player.draw();
 
-    let centerY = player.getDisplayY() * tileSize;
-    let centerX = player.getDisplayX() * tileSize - 350;
+    ctx.restore();
 
-    drawText(`Depth: ${level}`, 30, false, centerY - 230, "violet", centerX);
-    drawText(`Score: ${score}`, 30, false, centerY - 200, "violet", centerX);
+    let centerY = canvas.height / 2;
+    let centerX = canvas.width / 2;
+
+    drawText(`Depth: ${level}`, 30, false, 40, "violet", 20);
+    drawText(`Score: ${score}`, 30, false, 70, "violet", 20);
 
     if (gameState == "running") {
 
-        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, centerY - 140, "yellow", centerX)
-        drawText(`Health: ${player.hp}`, 20, false, centerY - 110, "red", centerX)
-        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, centerY - 80, "white", centerX)
-        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, centerY - 40, "white", centerX)
+        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, 100, "yellow", 20)
+        drawText(`Health: ${player.hp}`, 20, false, 120, "red", centerX)
+        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20)
+        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, 170, "white", 20)
 
-        drawText("Status:", 30, false, centerY + 180, "violet", centerX);
+        drawText("Status:", 30, false, 200, "violet", 20);
 
 
         for (let i = 0; i < player.statuses.length; i++) {
             const statusText = (`${player.statuses[i].constructor.name} (${player.statuses[i].duration})`);
-            drawText(statusText, 20, false, centerY + 210 + i * 30, "aqua", centerX);
+            drawText(statusText, 20, false, 230 + i * 30, "aqua", 20);
               
         }
     }
 
     if (gameState == "spells") {
-        drawText("Spells:", 30, false, centerY - 170, "violet", centerX);
+        drawText("Spells:", 30, false, 200, "violet", 20);
 
         for (let i = 0; i < numSpells; i++) {
             const spellText = `${i + 1}) ${player.spells[i] || "--- "}`;
-            drawText(spellText, 20, false, centerY - 140 + i * 40, "aqua", centerX);
+            drawText(spellText, 20, false, 230 + i * 40, "aqua", 20);
         }
     }
 
     if (gameState == "stats") {
         drawUIBox();
-        drawMainStats(player, centerX-50, centerY);
-        drawSkillStats(player, centerX+50, centerY);
+        drawMainStats(player, centerX-100, centerY);
+        drawSkillStats(player, centerX+100, centerY);
     }
-
-    ctx.restore();
 }
 
 function drawMainStats(target, x, y) {
