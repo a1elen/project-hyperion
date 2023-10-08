@@ -104,7 +104,7 @@ function draw() {
     if (gameState == "running") {
 
         drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, 100, "yellow", 20)
-        drawText(`Health: ${player.hp}`, 20, false, 120, "red", centerX)
+        drawText(`Health: ${player.hp}`, 20, false, 120, "red", 20)
         drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20)
         drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, 170, "white", 20)
 
@@ -129,13 +129,13 @@ function draw() {
 
     if (gameState == "stats") {
         drawUIBox();
-        drawMainStats(player, centerX-100, centerY);
+        drawMainStats(player, centerX-200, centerY);
         drawSkillStats(player, centerX+100, centerY);
     }
 }
 
 function drawMainStats(target, x, y) {
-    drawText("Main Stats:", 30, false, y - 170, "violet", x);
+    drawText("Main Stats:", 30, false, y - 140, "violet", x);
 
     drawText(`Strength: ${target.strength}`, 20, false, y - 10, "white", x)
     drawText(`Constitution: ${target.constitution}`, 20, false, y + 20, "white", x)
@@ -146,7 +146,7 @@ function drawMainStats(target, x, y) {
 }
 
 function drawSkillStats(target, x, y) {
-    drawText("Skills:", 30, false, y - 170, "violet", x);
+    drawText("Skills:", 30, false, y - 140, "violet", x);
 
     drawText(`Fighting: ${target.fighting}`, 20, false, y - 10, "white", x)
     drawText(`Endurance: ${target.endurance}`, 20, false, y + 20, "white", x)
@@ -157,7 +157,7 @@ function drawSkillStats(target, x, y) {
 
 function drawUIBox() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-    ctx.fillRect(0+100, 0+150, canvas.width-100, canvas.height-150);
+    ctx.fillRect(0+100, 0+100, canvas.width-200, canvas.height-200);
 }
 
 function check_dead() {
