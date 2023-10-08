@@ -80,8 +80,6 @@ function initKeyControls() {
             if (e.key == "a" || e.key == "4") player.tryMove(-1, 0);
             if (e.key == "d" || e.key == "6") player.tryMove(1, 0);
 
-            if (e.key == "z") ctx.translate(-2, -2);
-
             // Diagonal Movement
             if (e.key == "9") player.tryMove(1, -1);
             if (e.key == "3") player.tryMove(1, 1);
