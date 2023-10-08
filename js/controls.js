@@ -102,14 +102,14 @@ function initKeyControls() {
 
             if (e.key == "0") gameState = "spells";
 
-            if (e.key == "s") gamestate = "stats";
+            if (e.key == "@") gameState = "stats";
 
         } else if (gameState == "spells") {
             if (e.key >= 1 && e.key <= 9) player.castSpell(e.key-1);
 
             if (e.key == "0") gameState = "running";
         } else if (gameState == "stats") {
-            if (e.key == "s") gameState = "running";
+            if (e.key == "@") gameState = "running";
         }
     }
 }

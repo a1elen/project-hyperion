@@ -30,7 +30,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -126,33 +126,33 @@ function draw() {
     }
 
     if (gameState == "stats") {
-        drawMainStats(player, centerX-50);
-        drawSkillStats(player, centerX+50);
+        drawUIBox();
+        drawMainStats(player, centerX-50, centerY);
+        drawSkillStats(player, centerX+50, centerY);
     }
 
     ctx.restore();
 }
 
-function drawMainStats(target, x) {
-    drawUIBox();
-    drawText("Main Stats:", 30, false, centerY - 170, "violet", x);
+function drawMainStats(target, x, y) {
+    drawText("Main Stats:", 30, false, y - 170, "violet", x);
 
-    drawText(`Strength: ${target.strength}`, 20, false, centerY - 10, "white", x)
-    drawText(`Constitution: ${target.constitution}`, 20, false, centerY + 20, "white", x)
-    drawText(`Perception: ${target.perception}`, 20, false, centerY + 50, "white", x)
-    drawText(`Agility: ${target.agility}`, 20, false, centerY + 80, "white", x)
-    drawText(`Arcane: ${target.arcane}`, 20, false, centerY + 110, "white", x)
-    drawText(`Will: ${target.will}`, 20, false, centerY + 140, "white", x)
+    drawText(`Strength: ${target.strength}`, 20, false, y - 10, "white", x)
+    drawText(`Constitution: ${target.constitution}`, 20, false, y + 20, "white", x)
+    drawText(`Perception: ${target.perception}`, 20, false, y + 50, "white", x)
+    drawText(`Agility: ${target.agility}`, 20, false, y + 80, "white", x)
+    drawText(`Arcane: ${target.arcane}`, 20, false, y + 110, "white", x)
+    drawText(`Will: ${target.will}`, 20, false, y + 140, "white", x)
 }
 
-function drawSkillStats(target, x) {
-    drawText("Skills:", 30, false, centerY - 170, "violet", x);
+function drawSkillStats(target, x, y) {
+    drawText("Skills:", 30, false, y - 170, "violet", x);
 
-    drawText(`Fighting: ${target.fighting}`, 20, false, centerY - 10, "white", x)
-    drawText(`Endurance: ${target.endurance}`, 20, false, centerY + 20, "white", x)
-    drawText(`Dodge: ${target.dodge}`, 20, false, centerY + 50, "white", x)
-    drawText(`Weapon Skill: ${target.weaponSkill}`, 20, false, centerY + 80, "white", x)
-    drawText(`Magic: ${target.magic}`, 20, false, centerY + 110, "white", x)
+    drawText(`Fighting: ${target.fighting}`, 20, false, y - 10, "white", x)
+    drawText(`Endurance: ${target.endurance}`, 20, false, y + 20, "white", x)
+    drawText(`Dodge: ${target.dodge}`, 20, false, y + 50, "white", x)
+    drawText(`Weapon Skill: ${target.weaponSkill}`, 20, false, y + 80, "white", x)
+    drawText(`Magic: ${target.magic}`, 20, false, y + 110, "white", x)
 }
 
 function drawUIBox() {
