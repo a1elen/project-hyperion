@@ -37,6 +37,7 @@ function draw() {
 
 
     ctx.save();
+    ctx.scale(1, 1);
     ctx.translate(-player.getDisplayX() * tileSize + (canvas.width / 2) - (tileSize/2), -player.getDisplayY() * tileSize + (canvas.height / 2) - (tileSize/2));
 
     screenshake();
