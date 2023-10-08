@@ -98,6 +98,13 @@ function initKeyControls() {
                 level++;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }
+            if (e.key == "z") {
+                if (!zoomed) {
+                    zoomed = true;
+                } else {
+                    zoomed = false;
+                }
+            }
             if (e.key == "5") tick();
 
             if (e.key == "0") gameState = "spells";

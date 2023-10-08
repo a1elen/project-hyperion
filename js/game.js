@@ -13,6 +13,8 @@ function setupCanvas() {
         y: 0,
         zoom: 1
     };
+
+    zoomed = false;
 }
 
 function drawSprite(sprite, x, y) {
@@ -35,10 +37,23 @@ function draw() {
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    let scaleX = 1;
+    let scaleY = 1;
 
+    if (zoomed) {
+        scaleX = 0.75;
+        scaleY = 0.75;
+    } else {
+        scaleX = 1;
+        scaleY = 1;
+    }
+
+    let translateX = -player.getDisplayX() * tileSize + (canvas.width / scaleX / 2) - (tileSize/2);
+    let translateY = -player.getDisplayY() * tileSize + (canvas.height / scaleY / 2) - (tileSize/2);
+    
     ctx.save();
-    ctx.scale(1, 1);
-    ctx.translate(-player.getDisplayX() * tileSize + (canvas.width / 2) - (tileSize/2), -player.getDisplayY() * tileSize + (canvas.height / 2) - (tileSize/2));
+    ctx.scale(scaleX, scaleY);
+    ctx.translate(translateX, translateY);
 
     screenshake();
 
