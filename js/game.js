@@ -101,19 +101,10 @@ function draw() {
 
     if (gameState == "running") {
 
-        drawText("Stats:", 30, false, centerY - 170, "violet", centerX);
-
         drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, centerY - 140, "yellow", centerX)
         drawText(`Health: ${player.hp}`, 20, false, centerY - 110, "red", centerX)
         drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, centerY - 80, "white", centerX)
         drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, centerY - 40, "white", centerX)
-
-        drawText(`Strength: ${player.strength}`, 20, false, centerY - 10, "white", centerX)
-        drawText(`Constitution: ${player.constitution}`, 20, false, centerY + 20, "white", centerX)
-        drawText(`Perception: ${player.perception}`, 20, false, centerY + 50, "white", centerX)
-        drawText(`Agility: ${player.agility}`, 20, false, centerY + 80, "white", centerX)
-        drawText(`Arcane: ${player.arcane}`, 20, false, centerY + 110, "white", centerX)
-        drawText(`Will: ${player.will}`, 20, false, centerY + 140, "white", centerX)
 
         drawText("Status:", 30, false, centerY + 180, "violet", centerX);
 
@@ -133,7 +124,40 @@ function draw() {
             drawText(spellText, 20, false, centerY - 140 + i * 40, "aqua", centerX);
         }
     }
+
+    if (gameState == "stats") {
+        drawMainStats(player, centerX-50);
+        drawSkillStats(player, centerX+50);
+    }
+
     ctx.restore();
+}
+
+function drawMainStats(target, x) {
+    drawUIBox();
+    drawText("Main Stats:", 30, false, centerY - 170, "violet", x);
+
+    drawText(`Strength: ${target.strength}`, 20, false, centerY - 10, "white", x)
+    drawText(`Constitution: ${target.constitution}`, 20, false, centerY + 20, "white", x)
+    drawText(`Perception: ${target.perception}`, 20, false, centerY + 50, "white", x)
+    drawText(`Agility: ${target.agility}`, 20, false, centerY + 80, "white", x)
+    drawText(`Arcane: ${target.arcane}`, 20, false, centerY + 110, "white", x)
+    drawText(`Will: ${target.will}`, 20, false, centerY + 140, "white", x)
+}
+
+function drawSkillStats(target, x) {
+    drawText("Skills:", 30, false, centerY - 170, "violet", x);
+
+    drawText(`Fighting: ${target.fighting}`, 20, false, centerY - 10, "white", x)
+    drawText(`Endurance: ${target.endurance}`, 20, false, centerY + 20, "white", x)
+    drawText(`Dodge: ${target.dodge}`, 20, false, centerY + 50, "white", x)
+    drawText(`Weapon Skill: ${target.weaponSkill}`, 20, false, centerY + 80, "white", x)
+    drawText(`Magic: ${target.magic}`, 20, false, centerY + 110, "white", x)
+}
+
+function drawUIBox() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    ctx.fillRect(0+100, 0+150, canvas.width-100, canvas.height-150);
 }
 
 function check_dead() {
@@ -341,7 +365,18 @@ function drawText(text, size, centered, textY, color, textX) {
     ctx.fillText(text, textX, textY);
 }
 
+function screenshake() {
+    if (shakeAmount) {
+        shakeAmount--;
+    }
+    const shakeAngle = Math.random() * Math.PI*2;
+    shakeX = Math.round(Math.cos(shakeAngle) * shakeAmount);
+    shakeY = Math.round(Math.sin(shakeAngle) * shakeAmount);
+}
 
+/* ///////////////////
+// score.js
+*/ ///////////////////
 
 function getScores() {
     return localStorage.scores ? JSON.parse(localStorage.scores) : [];
@@ -394,14 +429,9 @@ function drawScores() {
     }
 }
 
-function screenshake() {
-    if (shakeAmount) {
-        shakeAmount--;
-    }
-    const shakeAngle = Math.random() * Math.PI*2;
-    shakeX = Math.round(Math.cos(shakeAngle) * shakeAmount);
-    shakeY = Math.round(Math.sin(shakeAngle) * shakeAmount);
-}
+/* ///////////////////
+// sound.js
+*/ ///////////////////
 
 function initSounds() {
     sounds = {
