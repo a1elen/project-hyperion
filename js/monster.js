@@ -156,11 +156,11 @@ class Monster {
         const y = ((this.getDisplayY() * tileSize) - healthBarHeight / 2) + tileSize;
 
         ctx.fillStyle = 'rgba(255, 74, 83, 0.75)';
-        ctx.fillRect(x, y, width, healthBarHeight);
+        ctx.fillRect(x, y - 2.5, width, healthBarHeight);
 
         // Draw health/attack/armor text
         drawText(`Lvl: ${this.level}`,
-        10, false, y + 5 - tileSize, "white", x)
+        10, false, y + 10 - tileSize, "white", x)
 
         drawText(`${this.weaponDamage[0]}d${this.weaponDamage[1]}`
         + " #" + this.armorClass
@@ -168,7 +168,7 @@ class Monster {
         10, false, y - 5, "white", x)
 
         drawText(`${this.hp}/${this.maxHealth}`,
-        10, false, y + 5, "white", x)
+        10, false, y + 2.5, "white", x)
     }
 
     drawStun() {
