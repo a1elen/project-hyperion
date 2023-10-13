@@ -9,6 +9,15 @@ class Tile {
         this.blood = false;
         this.wallBlood = false;
         this.known = false;
+
+        this.liquid;
+        this.liquidVolume;
+
+        this.stain;
+        this.stainVolume;
+
+        this.items = [];
+        this.traps = [];
     }
 
     replace(newTileType, sprite) {
@@ -32,6 +41,7 @@ class Tile {
             this.getNeighbour(0, 1),
             this.getNeighbour(-1, 0),
             this.getNeighbour(1, 0),
+            
             // Diagonal directions
             this.getNeighbour(-1, -1),
             this.getNeighbour(1, 1),

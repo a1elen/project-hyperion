@@ -115,7 +115,7 @@ function draw() {
     let centerX = canvas.width / 2;
 
     drawText(`Depth: ${level}`, 30, false, 40, "violet", 20);
-    drawText(`Score: ${score}`, 30, false, 70, "violet", 20);
+    drawText(`Gold: ${score}`, 30, false, 70, "violet", 20);
 
     if (gameState == "running") {
 
