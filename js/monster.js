@@ -62,11 +62,11 @@ class Monster {
         if (this.statuses.length > 0) {
             for (let i = 0; i < this.statuses.length; i++) {
 
-                if (this.statuses[i].constructor.name == "Stunned" && this.statuses[i].duration < 1) {
+                if (this.statuses[i].constructor.name == "Stunned" && this.statuses[i].duration <= 1) {
                     this.stunned = false;
                 }
 
-                if (this.statuses[i].constructor.name == "Shielded" && this.statuses[i].duration < 1) {
+                if (this.statuses[i].constructor.name == "Shielded" && this.statuses[i].duration <= 1) {
                     this.shielded = false;
                 }
 
@@ -77,7 +77,7 @@ class Monster {
                     }
                 }
 
-                if (this.statuses[i].duration < 1) {
+                if (this.statuses[i].duration <= 1) {
                     this.statuses.splice(i, 1);
                 } else {
                     this.statuses[i].update(this);
