@@ -207,8 +207,8 @@ function tick() {
                 if (tiles[i][j].liquidVolume > tiles[i][j].liquidVolumeCapacity) {
                     let neigbours = shuffle(tiles[i][j].getAdjacentPassableNeighbours());
                     neigbours[0].liquid = tiles[i][j].liquid;
-                    neigbours[0].liquidVolume = tiles[i][j].liquidVolumeCapacity - tiles[i][j].liquidVolume;
-                    tiles[i][j].liquidVolume = tiles[i][j].liquidVolumeCapacity - tiles[i][j].liquidVolume;
+                    neigbours[0].liquidVolume = tiles[i][j].liquidVolume - tiles[i][j].liquidVolumeCapacity;
+                    tiles[i][j].liquidVolume = tiles[i][j].liquidVolume - tiles[i][j].liquidVolumeCapacity;
                 }
             }
         }
