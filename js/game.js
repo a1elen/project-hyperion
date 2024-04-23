@@ -200,6 +200,20 @@ function check_for_tick() {
 }
 
 function tick() {
+
+    for (let i = 0; i < tiles.length; i++) {
+        for (let j = 0; j < tiles.length; j++) {
+            if (tiles[i][j].liquid == "Blood") {
+                if (tiles[i][j].liquidVolume > tiles[i][j].liquidVolumeCapacity) {
+                    let neigbours = shuffle(tiles[i][j].getAdjacentPassableNeighbours());
+                    neigbours[0].liquid = tiles[i][j].liquid;
+                    neigbours[0].liquidVolume = tiles[i][j].liquidVolumeCapacity - tiles[i][j].liquidVolume;
+                    tiles[i][j].liquidVolume = tiles[i][j].liquidVolumeCapacity - tiles[i][j].liquidVolume;
+                }
+            }
+        }
+    }
+
     for (let k = monsters.length - 1; k >= 0; k--) {
         if (monsters[k].dead) {
             monsters.splice(k, 1);

@@ -12,6 +12,7 @@ class Tile {
 
         this.liquid;
         this.liquidVolume;
+        this.liquidVolumeCapacity;
 
         this.stain;
         this.stainVolume;
@@ -71,8 +72,10 @@ class Tile {
     draw() {
         drawSprite(this.sprite, this.x, this.y);
 
-        if (this.blood) {
-            drawSprite(25, this.x, this.y);
+        if (this.liquid == "Blood") {
+            if (this.liquidVolume > 0) {
+                drawSprite(25, this.x, this.y);
+            }
         }
 
         if (this.wallBlood) {
@@ -113,6 +116,8 @@ class Tile {
 class Floor extends Tile {
     constructor(x, y, sprite) {
         super(x, y, sprite, true);
+
+        this.liquidVolumeCapacity = 500;
     }
 
     stepOn(monster) {

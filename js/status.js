@@ -63,7 +63,8 @@ class Bleeding extends StatusEffect {
 
     update(target) {
         target.hp--;
-        target.tile.blood = true;
+        target.tile.liquid = "Blood";
+        target.tile.liquidVolume += randomRange(0, 200);
         check_dead();
         super.update(target);
     }

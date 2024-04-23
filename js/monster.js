@@ -213,7 +213,8 @@ class Monster {
                     if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                         if (roll(1, 20) >= 20) {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
-                            newTile.monster.tile.blood = true;
+                            newTile.monster.tile.liquid = "Blood";
+                            newTile.monster.tile.liquidVolume += randomRange(0, 200);
                         } else {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                         }
