@@ -237,7 +237,7 @@ class Monster {
     }
 
     tryDodge() {
-        const newTile = this.tile.getAdjacentPassableNeighbours();
+        let newTile = this.tile.getAdjacentPassableNeighbours();
         newTile = newTile.filter((tile) => !tile.monster)
 
         if (!newTile) {

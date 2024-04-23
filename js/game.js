@@ -275,8 +275,8 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
 
     if(gameStarted) {
         if(levelTiles[level-1]) {
-            loadLevel(upOrDown);
-            placePlayer();
+            loadLevel();
+            placePlayer(upOrDown);
         } else {
             generateLevel(levelType);
             placePlayer();
@@ -292,15 +292,28 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
     function placePlayer(upOrDown) {
         let playerRandomTile;
 
+
         if (upOrDown == 1) {
-            playerRandomTile = levelTiles[level-1].filter(t => t.constructor.name == "StairsDown");
+            for (let i = 0; i < levelTiles[level-1].length; i++) {
+                for (let j = 0; j < levelTiles[level-1].length; j++) {
+                    if (levelTiles[level-1][i][j].constructor.name == "StairsDown") {
+                        playerRandomTile = levelTiles[level-1][i][j];
+                    }
+                }
+            }
         }
 
         if (upOrDown == -1) {
-            playerRandomTile = levelTiles[level-1].filter(t => t.constructor.name == "StairsUp");
+            for (let i = 0; i < levelTiles[level-1].length; i++) {
+                for (let j = 0; j < levelTiles[level-1].length; j++) {
+                    if (levelTiles[level-1][i][j].constructor.name == "StairsUp") {
+                        playerRandomTile = levelTiles[level-1][i][j];
+                    }
+                }
+            }
         }
 
-        if (upOrDown == null || playerRandomTile == undefined) { playerRandomTile = randomPassableTile(); }
+        if (upOrDown == undefined || playerRandomTile == undefined) { playerRandomTile = randomPassableTile(); }
 
         player = new Player(playerRandomTile, playerClass);
         playerRandomTile.monster = player;
