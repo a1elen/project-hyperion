@@ -1,4 +1,5 @@
 function setupCanvas() {
+
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
 
@@ -382,9 +383,11 @@ function drawText(text, size, centered, textY, color, textX) {
 }
 
 function screenshake() {
+
     if (shakeAmount) {
         shakeAmount--;
     }
+
     const shakeAngle = Math.random() * Math.PI*2;
     shakeX = Math.round(Math.cos(shakeAngle) * shakeAmount);
     shakeY = Math.round(Math.sin(shakeAngle) * shakeAmount);

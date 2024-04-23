@@ -55,6 +55,10 @@ class Monster {
     }
 
     update() {
+        if (this.hp <= 0) {
+            this.die();
+        }
+
         if (this.statuses.length > 0) {
             for (let i = 0; i < this.statuses.length; i++) {
 
@@ -234,7 +238,7 @@ class Monster {
 
     tryDodge() {
         const newTile = this.tile.getAdjacentPassableNeighbours();
-        newTile.filter((tile) => !tile.monster)
+        newTile = newTile.filter((tile) => !tile.monster)
 
         if (!newTile) {
             return;
