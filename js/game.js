@@ -290,7 +290,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
  
 
     function placePlayer(upOrDown) {
-        const playerRandomTile;
+        let playerRandomTile;
 
         if (upOrDown == 1) {
             playerRandomTile = levelTiles[level-1].filter(t => t.constructor.name == "StairsDown");
