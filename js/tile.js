@@ -11,8 +11,8 @@ class Tile {
         this.known = false;
 
         this.liquid;
-        this.liquidVolume;
-        this.liquidVolumeCapacity;
+        this.liquidVolume = 0;
+        this.liquidVolumeCapacity = 500;
 
         this.stain;
         this.stainVolume;
