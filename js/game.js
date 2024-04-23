@@ -252,7 +252,7 @@ function startGame() {
     gameState = "running";
 }
 
-function startLevel(playerHp, playerSpells, randomUpStairs) {
+function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
     spawnRate = 5;
     spawnCounter = spawnRate;
 
@@ -275,7 +275,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
 
     if(gameStarted) {
         if(levelTiles[level-1]) {
-            loadLevel();
+            loadLevel(upOrDown);
             placePlayer();
         } else {
             generateLevel(levelType);
@@ -289,8 +289,19 @@ function startLevel(playerHp, playerSpells, randomUpStairs) {
     }
  
 
-    function placePlayer() {
-        const playerRandomTile = randomPassableTile();
+    function placePlayer(upOrDown) {
+        const playerRandomTile;
+
+        if (upOrDown == 1) {
+            playerRandomTile = levelTiles[level-1].filter(t => t.constructor.name == "StairsDown");
+        }
+
+        if (upOrDown == -1) {
+            playerRandomTile = levelTiles[level-1].filter(t => t.constructor.name == "StairsUp");
+        }
+
+        if (upOrDown == null || playerRandomTile == undefined) { playerRandomTile = randomPassableTile(); }
+
         player = new Player(playerRandomTile, playerClass);
         playerRandomTile.monster = player;
         player.move(playerRandomTile);

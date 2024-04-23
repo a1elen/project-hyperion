@@ -218,7 +218,7 @@ class StairsDown extends Tile {
                 this.replace(StairsDown);
                 saveLevel();
                 level++;
-                startLevel(Math.min(maxHp, player.hp+1), player.spells);
+                startLevel(Math.min(maxHp, player.hp+1), player.spells, undefined, -1);
             }
         }
     }
@@ -250,7 +250,7 @@ class StairsUp extends Tile {
                 this.replace(StairsUp);
                 saveLevel();
                 level--;
-                startLevel(Math.min(maxHp, player.hp+1), player.spells);
+                startLevel(Math.min(maxHp, player.hp+1), player.spells, undefined, 1);
             }
         }
     }
