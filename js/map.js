@@ -4,7 +4,7 @@ function generateLevel(levelGen) {
         wallChance = 0.3;
         tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
     } else {
-        wallChance = 0.6
+        wallChance = 0.45
         tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
         /*tryTo('generate map', () => {
             passableTilesCount = generateCellular(wallChance, levelGen);
