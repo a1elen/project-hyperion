@@ -352,8 +352,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
         if (randomUpStairs) {
             randomPassableTile().replace(StairsUp);
         } else {
-            let newTile = player.tile;
-            player.tile.replace(StairsUp);
+            let newTile = player.tile.replace(StairsUp);;
             newTile.monster = player;
             player.move(newTile);
         }
