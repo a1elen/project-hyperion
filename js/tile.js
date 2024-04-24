@@ -201,7 +201,9 @@ class Wall extends Tile {
     }
 
     use() {
-        this.replace(Floor);
+        if (roll(1, 20) > 10) {
+            this.replace(Floor);
+        }
     }
 }
 

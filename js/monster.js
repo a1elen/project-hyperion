@@ -401,6 +401,7 @@ class Player extends Monster {
 
     use(dx, dy) {
         this.tile.getNeighbour(dx, dy).use();
+        tick();
         gameState = "running";
     }
 }
