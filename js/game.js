@@ -33,7 +33,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -148,6 +148,10 @@ function draw() {
         drawUIBox();
         drawMainStats(player, centerX-200, centerY);
         drawSkillStats(player, centerX+100, centerY);
+    }
+
+    if (gameState == "useSelect") {
+        
     }
 }
 

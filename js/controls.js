@@ -89,7 +89,9 @@ function initKeyControls() {
             if (e.key == "g") player.pickUp();
             if (e.key == ">") player.moveDown();
             if (e.key == "<") player.moveUp();
-            if (e.key == "e") player.use();
+            if (e.key == "e") {
+                gameState = "useSelect";
+            }
             if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
             if (e.key == "r") startLevel(Math.min(maxHp, player.hp-5), player.spells);
             if (e.key == "p") {
@@ -115,6 +117,16 @@ function initKeyControls() {
             if (e.key == "0") gameState = "running";
         } else if (gameState == "stats") {
             if (e.key == "@") gameState = "running";
+        } else if (gameState == "useSelect") {
+            if (e.key == "w" || e.key == "8") player.use(0, -1);
+            if (e.key == "s" || e.key == "2") player.use(0, 1);
+            if (e.key == "a" || e.key == "4") player.use(-1, 0);
+            if (e.key == "d" || e.key == "6") player.use(1, 0);
+
+            if (e.key == "9") player.use(1, -1);
+            if (e.key == "3") player.use(1, 1);
+            if (e.key == "1") player.use(-1, 1);
+            if (e.key == "7") player.use(-1, -1);
         }
     }
 }

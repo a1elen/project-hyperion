@@ -199,6 +199,10 @@ class Wall extends Tile {
     constructor(x, y, sprite) {
         super(x, y, sprite, false);
     }
+
+    use() {
+        this.replace(Floor);
+    }
 }
 
 class StairsDown extends Tile {
