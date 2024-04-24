@@ -151,7 +151,7 @@ function draw() {
     }
 
     if (gameState == "useSelect") {
-        
+
     }
 }
 
@@ -352,10 +352,26 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
         if (randomUpStairs) {
             randomPassableTile().replace(StairsUp);
         } else {
+            let newTile = player.tile;
             player.tile.replace(StairsUp);
+            newTile.monster = player;
+            player.move(newTile);
         }
 
         tryTo('place stairs down', () => {
+            let randomTile = randomPassableTile();
+            if (randomTile.constructor.name == "StairsUp") {
+                randomTile = randomPassableTile();
+                if (randomTile.constructor.name == "StairsUp") {
+                    randomTile = randomPassableTile();
+                    if (randomTile.constructor.name == "StairsUp") {
+                        return false
+                    } else { randomTile.replace(StairsDown); return true; }
+                } else { randomTile.replace(StairsDown); return true;}
+            } else { randomTile.replace(StairsDown); return true; }
+        })
+
+        /*tryTo('place stairs down', () => {
             const randomTile = randomPassableTile();
             if (randomTile.constructor.name == "StairsUp") {
                 randomPassableTile().replace(StairsDown);
@@ -364,7 +380,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
                 return false;
             }
  
-        })
+        })*/
     }
 }
 
