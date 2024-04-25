@@ -9,6 +9,9 @@ function setupCanvas() {
     canvas.style.height = `${canvas.height}px`;
     ctx.imageSmoothingEnabled = false;
 
+    let mouseX;
+    let mouseY;
+
     viewport = {
         x: 0,
         y: 0,
@@ -33,7 +36,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -118,8 +121,30 @@ function draw() {
     drawText(`Depth: ${level}`, 30, false, 40, "violet", 20);
     drawText(`Gold: ${score}`, 30, false, 70, "violet", 20);
 
-    if (gameState == "running") {
+    //console.log("x is ", mouseX-300);
+    //console.log("y is ", mouseY-50);
 
+    //drawText(`Mouse X is: ${mouseX}`, 20, false, mouseY, "white", mouseX+20);
+    //drawText(`Mouse Y is ${mouseY}`, 20, false, mouseY+20, "white", mouseX+20);
+
+    //let xTile = Math.floor((mouseX)/64)
+    //let yTile = Math.floor((mouseY)/64)
+
+    //let tileName = tiles[xTile][yTile].constructor.name;
+
+    //drawText(`Tile name is ${tileName}`, 20, false, mouseY+40, "white", mouseX+20);
+
+    //drawText(`Tile x ${xTile}`, 20, false, mouseY+60, "white", mouseX+20);
+    //drawText(`Tile y ${yTile}`, 20, false, mouseY+80, "white", mouseX+20);
+
+    //if (selectedTile != undefined) {
+        //selectedTile.selected = false;
+    //}
+
+    //let selectedTile = player.tile.getNeighbour(Math.round(mouseX/64-6), Math.round(mouseY/64-6));
+    //selectedTile.selected = true;
+
+    if (gameState == "running") {
         drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, 100, "yellow", 20)
         drawText(`Health: ${player.hp}`, 20, false, 120, "red", 20)
         drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20)
@@ -153,6 +178,26 @@ function draw() {
     if (gameState == "useSelect") {
 
     }
+
+    if (gameState == "viewmode") {
+        drawText(`Tile Name: ${selectedTile.constructor.name}`, 20, false, 100, "white", 20)
+        drawText(`Tile X: ${selectedTile.x}`, 20, false, 120, "white", 20)
+        drawText(`Tile Y: ${selectedTile.y}`, 20, false, 140, "white", 20)
+        drawText(`Liquid: ${selectedTile.liquid}`, 20, false, 180, "white", 20)
+        drawText(`Liquid Volume: ${selectedTile.liquidVolume}`, 20, false, 200, "white", 20)
+        drawText(`Liquid Capacity: ${selectedTile.liquidVolumeCapacity}`, 20, false, 220, "white", 20)
+        if (selectedTile.monster != undefined) {
+            drawText(`Monster Name: ${selectedTile.monster.constructor.name}`, 20, false, 260, "white", 20)
+            drawText(`Monster Level: ${selectedTile.monster.level}`, 20, false, 280, "white", 20)
+            drawText(`Monster HP: ${selectedTile.monster.hp}`, 20, false, 300, "white", 20)
+        }
+
+    }
+}
+
+function mouseCoords(event) {
+    mouseX = event.offsetX;
+    mouseY = event.offsetY;
 }
 
 function drawMainStats(target, x, y) {
@@ -208,11 +253,16 @@ function tick() {
     for (let i = 0; i < tiles.length; i++) {
         for (let j = 0; j < tiles.length; j++) {
             if (tiles[i][j].liquid == "Blood") {
-                if (tiles[i][j].liquidVolume > tiles[i][j].liquidVolumeCapacity) {
-                    let neigbours = shuffle(tiles[i][j].getAdjacentPassableNeighbours());
-                    neigbours[0].liquid = tiles[i][j].liquid;
-                    neigbours[0].liquidVolume = tiles[i][j].liquidVolume - tiles[i][j].liquidVolumeCapacity;
-                    tiles[i][j].liquidVolume = tiles[i][j].liquidVolume - tiles[i][j].liquidVolumeCapacity;
+                if (tiles[i][j].liquidVolume > tiles[i][j].liquidVolumeCapacity-100) {
+
+                    if (roll(1, 100) > 50) {
+                        let bloodToFlow = randomRange(Math.floor((tiles[i][j].liquidVolume - (tiles[i][j].liquidVolumeCapacity-100))/2), tiles[i][j].liquidVolume - (tiles[i][j].liquidVolumeCapacity-100));
+                        let neigbours = shuffle(tiles[i][j].getAdjacentPassableNeighbours());
+                        neigbours[0].liquid = tiles[i][j].liquid;
+                        tiles[i][j].liquidVolume -= bloodToFlow;
+                        neigbours[0].liquidVolume += bloodToFlow;
+                    }
+
                 }
             }
         }
@@ -299,13 +349,26 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
             generateLevel(levelType);
             placePlayer();
             placeStairs();
+            placeDoors();
         }
     } else {
         generateLevel(levelType);
         placePlayer();
         placeStairs();
+        placeDoors();
     }
  
+
+    function placeDoors() {
+        let doorsNumber = randomRange(0, 5); 
+        for (let x = 0; x < doorsNumber; x++) {
+            let doorTile = randomPassableTile();
+            if (doorTile.constructor.name != "StairsUp" && doorTile.constructor.name != "StairsDown" && doorTile.monster == undefined) {
+                doorTile.replace(ClosedDoor);
+            }
+        }
+        
+    }
 
     function placePlayer(upOrDown) {
         let playerRandomTile;

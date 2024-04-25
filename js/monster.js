@@ -403,6 +403,16 @@ class Player extends Monster {
         this.tile.getNeighbour(dx, dy).use();
         tick();
         gameState = "running";
+
+        player.tile.getNeighbour(0, -1).selected = false;
+        player.tile.getNeighbour(0, 1).selected = false;
+        player.tile.getNeighbour(-1, 0).selected = false;
+        player.tile.getNeighbour(1, 0).selected = false;
+
+        player.tile.getNeighbour(1, -1).selected = false;
+        player.tile.getNeighbour(1, 1).selected = false;
+        player.tile.getNeighbour(-1, 1).selected = false;
+        player.tile.getNeighbour(-1, -1).selected = false;
     }
 }
 

@@ -6,6 +6,8 @@ function initTouchControls() {
     let touchstartY = 0;    
     let touchendY = 0;
 
+    let selectedTile;
+
     document.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].screenX;
         touchstartY = e.changedTouches[0].screenY;
@@ -89,8 +91,26 @@ function initKeyControls() {
             if (e.key == "g") player.pickUp();
             if (e.key == ">") player.moveDown();
             if (e.key == "<") player.moveUp();
+
+            if (e.key == "x") {
+                gameState = "viewmode";
+                selectedTile = player.tile;
+                selectedTile.selected = true;
+            }
+
             if (e.key == "e") {
                 gameState = "useSelect";
+
+                player.tile.getNeighbour(0, -1).selected = true;
+                player.tile.getNeighbour(0, 1).selected = true;
+                player.tile.getNeighbour(-1, 0).selected = true;
+                player.tile.getNeighbour(1, 0).selected = true;
+    
+                player.tile.getNeighbour(1, -1).selected = true;
+                player.tile.getNeighbour(1, 1).selected = true;
+                player.tile.getNeighbour(-1, 1).selected = true;
+                player.tile.getNeighbour(-1, -1).selected = true;
+
             }
             if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
             if (e.key == "r") startLevel(Math.min(maxHp, player.hp-5), player.spells);
@@ -127,6 +147,68 @@ function initKeyControls() {
             if (e.key == "3") player.use(1, 1);
             if (e.key == "1") player.use(-1, 1);
             if (e.key == "7") player.use(-1, -1);
+
+            if (e.key == "e") gameState = "running";
+
+            player.tile.getNeighbour(0, -1).selected = false;
+            player.tile.getNeighbour(0, 1).selected = false;
+            player.tile.getNeighbour(-1, 0).selected = false;
+            player.tile.getNeighbour(1, 0).selected = false;
+    
+            player.tile.getNeighbour(1, -1).selected = false;
+            player.tile.getNeighbour(1, 1).selected = false;
+            player.tile.getNeighbour(-1, 1).selected = false;
+            player.tile.getNeighbour(-1, -1).selected = false;
+        } else if (gameState == "viewmode") {
+
+            if (selectedTile != undefined) {
+                if (selectedTile.selected = true) {
+                    selectedTile.selected = false;
+                }
+            }
+
+            if (e.key == "8") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(0, -1);
+                selectedTile.selected = true;
+            } 
+            if (e.key == "2") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(0, 1);
+                selectedTile.selected = true;
+            }
+            if (e.key == "4") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(-1, 0);
+                selectedTile.selected = true;
+            }
+            if (e.key == "6") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(1, 0);
+                selectedTile.selected = true;
+            }
+            if (e.key == "9") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(1, -1);
+                selectedTile.selected = true;
+            }
+            if (e.key == "3") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(1, 1);
+                selectedTile.selected = true;
+            }
+            if (e.key == "1") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(-1, 1);
+                selectedTile.selected = true;
+            }
+            if (e.key == "7") {
+                selectedTile.selected = false;
+                selectedTile = selectedTile.getNeighbour(-1, -1);
+                selectedTile.selected = true;
+            }
+
+            if (e.key == "x") gameState = "running";
         }
     }
 }

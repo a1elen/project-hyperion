@@ -17,6 +17,8 @@ class Tile {
         this.stain;
         this.stainVolume;
 
+        this.selected = false;
+
         this.items = [];
         this.traps = [];
     }
@@ -73,8 +75,17 @@ class Tile {
         drawSprite(this.sprite, this.x, this.y);
 
         if (this.liquid == "Blood") {
-            if (this.liquidVolume > 0) {
+            if (this.liquidVolume > 400) {
+                drawSprite(40, this.x, this.y);
+            }
+            if (this.liquidVolume > 300) {
+                drawSprite(39, this.x, this.y);
+            }
+            else if (this.liquidVolume > 150) {
                 drawSprite(25, this.x, this.y);
+            }
+            else if (this.liquidVolume > 0) {
+                drawSprite(38, this.x, this.y);
             }
         }
 
@@ -96,6 +107,10 @@ class Tile {
             } else {
                 drawSprite(29, this.x, this.y);
             }
+        }
+
+        if (this.selected) {
+            drawSprite(37, this.x, this.y);
         }
 
         if (!this.effectCounter) {
@@ -204,6 +219,34 @@ class Wall extends Tile {
         if (roll(1, 20) > 10) {
             this.replace(Floor);
         }
+    }
+}
+
+class ClosedDoor extends Tile {
+    constructor(x, y, sprite) {
+        super(x, y, 41, false);
+    }
+
+    stepOn() {
+
+    }
+
+    use() {
+        this.replace(OpenDoor);
+    }
+}
+
+class OpenDoor extends Tile {
+    constructor(x, y, sprite) {
+        super(x, y, 42, true);
+    }
+
+    stepOn() {
+        
+    }
+
+    use() {
+        this.replace(ClosedDoor);
     }
 }
 
