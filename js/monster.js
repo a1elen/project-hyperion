@@ -193,10 +193,12 @@ class Monster {
             if (this.isPlayer != newTile.monster.isPlayer) {
                 if (randomRange(1, 100) < this.strength) {
                     addStatus("Stunned", randomRange(2, 2 + this.strength), newTile.monster);
+                    addPopups("Stun!", "yellow", this);
                 }
 
                 if (this.bleedingChance != 0 && randomRange(1, 100) < this.bleedingChance) {
                     addStatus("Bleeding", randomRange(2, 5), newTile.monster);
+                    addPopups("Bleed!", "red", this);
                 }
 
                 if (newTile.monster.shielded || newTile.monster.teleportCounter > 1) {
@@ -212,12 +214,14 @@ class Monster {
                 if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge) {
                     if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                         if (roll(1, 20) >= 20) {
+                            addPopups("Critical!", "red", this);
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
                             newTile.monster.tile.liquid = "Blood";
                             newTile.monster.tile.liquidVolume += randomRange(0, 200);
                         } else {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                         }
+                        addPopups("Attacked for " + damage, "white", this);
                         newTile.monster.hit(damage, this);
 
                     }
@@ -248,6 +252,7 @@ class Monster {
         const dx = newTileChosen.x - this.tile.x;
         const dy = newTileChosen.y - this.tile.y;
         this.tryMove(dx, dy);
+        addPopups("Dodged!", "white", this);
     }
 
     hit(damage, attacker) {
@@ -300,6 +305,7 @@ class Monster {
         this.hp = this.maxHealth;
         this.xpPoints = (this.xpPoints + randomRange(1, 5)) * level;
         this.rare = true;
+        addPopups("Level up!", "yellow", this);
     }
 }
 
@@ -444,15 +450,18 @@ class Worm extends Monster {
     doStuff() {
         const neighbours = this.tile.getAdjacentNeighbours().filter(t => !t.passable && inBounds(t.x, t.y));
         if (neighbours.length) {
-            neighbours[0].replace(Floor);
- 
-            if (this.hp >= this.maxHealth) {
-                const spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
-                const monster = new Worm(spawnTile);
-                monsters.push(monster);
-                this.hp = Math.floor(this.hp / 2);
-            } else {
-                this.heal(Math.floor(this.maxHealth / 10));
+            if (roll(1, 10) > 8) {
+                neighbours[0].replace(Floor);
+                addPopups("Munch!", "brown", this);
+
+                if (this.hp >= this.maxHealth) {
+                    const spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
+                    const monster = new Worm(spawnTile);
+                    monsters.push(monster);
+                    this.hp = Math.floor(this.hp / 2);
+                } else {
+                    this.heal(Math.max(1, Math.floor(this.maxHealth / 10)));
+                }
             }
         } else {
             super.doStuff();

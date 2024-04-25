@@ -92,6 +92,10 @@ function initKeyControls() {
             if (e.key == ">") player.moveDown();
             if (e.key == "<") player.moveUp();
 
+            if (e.key == "k") {
+                addPopups("Pressed 'k'!", "white", player);
+            }
+
             if (e.key == "x") {
                 gameState = "viewmode";
                 selectedTile = player.tile;

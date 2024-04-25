@@ -149,6 +149,9 @@ class Floor extends Tile {
                 playSound("trap");
                 addStatus("Bleeding", randomRange(2, 5), monster);
                 addStatus("Stunned", randomRange(2, 5), monster);
+                addPopups("Skirr!", "white", monster);
+                addPopups("Bleed!", "red", monster);
+                addPopups("Stun!", "yellow", monster);
                 this.blood = true;
                 const neighbours = this.getAdjacentNeighbours();
                 for (const neighbour of neighbours) {
@@ -168,6 +171,9 @@ class Floor extends Tile {
             playSound("trap");
             addStatus("Bleeding", randomRange(2, 5), monster);
             addStatus("Stunned", randomRange(2, 5), monster);
+            addPopups("Skirr!", "white", monster);
+            addPopups("Bleed!", "red", monster);
+            addPopups("Stun!", "yellow", monster);
             this.blood = true;
             const neighbours = this.getAdjacentNeighbours();
             for (const neighbour of neighbours) {
@@ -218,6 +224,9 @@ class Wall extends Tile {
     use() {
         if (roll(1, 20) > 10) {
             this.replace(Floor);
+            addPopups("Crackle", "brown", player);
+        } else {
+            addPopups("Failed...", "white", player);
         }
     }
 }
@@ -233,6 +242,7 @@ class ClosedDoor extends Tile {
 
     use() {
         this.replace(OpenDoor);
+        addPopups("Creak", "brown", player);
     }
 }
 
@@ -247,6 +257,7 @@ class OpenDoor extends Tile {
 
     use() {
         this.replace(ClosedDoor);
+        addPopups("Creak", "brown", player);
     }
 }
 
@@ -273,6 +284,7 @@ class StairsDown extends Tile {
                 saveLevel();
                 level++;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells, undefined, -1);
+                addPopups("Tap tap tap...", "grey", player);
             }
         }
     }
@@ -305,6 +317,7 @@ class StairsUp extends Tile {
                 saveLevel();
                 level--;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells, undefined, 1);
+                addPopups("Tap tap tap...", "grey", player);
             }
         }
     }

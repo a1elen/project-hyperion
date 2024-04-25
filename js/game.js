@@ -19,6 +19,9 @@ function setupCanvas() {
     };
 
     zoomed = false;
+
+    popupText = [];
+
 }
 
 function drawSprite(sprite, x, y) {
@@ -145,6 +148,22 @@ function draw() {
     //selectedTile.selected = true;
 
     if (gameState == "running") {
+
+
+        // Show popups
+        if (Array.isArray(popupText)) {
+            if (popupText.length) {
+
+                for (let popup of popupText) {
+                    drawText(popup.text, 20, false, 264-popup.timeout+popup.y+popupText.indexOf(popup)*20, popup.color, 364+popup.x);
+                    popup.timeout++;
+                    if (popup.timeout >= 100) {
+                        popupText.splice(popupText.indexOf(popup), 1);
+                    }
+                }
+            }
+        }
+
         drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, 100, "yellow", 20)
         drawText(`Health: ${player.hp}`, 20, false, 120, "red", 20)
         drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20)
@@ -193,6 +212,33 @@ function draw() {
         }
 
     }
+}
+
+function addPopups(txt, clr, target) {
+
+    if (target.constructor.name == "Player") {
+        let textPopup = { 
+            text: txt,
+            color: clr,
+            timeout: 0,
+            x: randomRange(-50, 50),
+            y: 0
+        };
+        popupText.push(textPopup);
+    } else {
+        let textPopup = { 
+            text: target.constructor.name+": "+txt,
+            color: clr,
+            timeout: 0,
+            x: randomRange(-50, 50),
+            y: 0
+        };
+        if (target.tile.dist(player.tile) < 6) {
+            popupText.push(textPopup);
+        }
+    }
+
+
 }
 
 function mouseCoords(event) {

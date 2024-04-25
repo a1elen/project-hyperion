@@ -1,6 +1,7 @@
 spells = {
     Teleport() {
         player.move(randomPassableTile());
+        addPopups("Whoosh", "purple", player);
     },
     Earthquake() {
         for (let i = 0; i < numTiles; i++) {
@@ -9,6 +10,7 @@ spells = {
                 if (tile.monster) {
                     const numWalls = 8 - tile.getAdjacentPassableNeighbours().length;
                     tile.monster.hit(numWalls * 5);
+                    addPopups("Thud!", "brown", monster);
                 }
             }
         }
@@ -18,10 +20,12 @@ spells = {
         for (const monster of monsters) {
             monster.move(randomPassableTile());
             monster.teleportCounter = randomRange(3, 6);
+            addPopups("Whoosh", "purple", monster);
         }
     },
     Rewind() {
         startLevel(startingHp, player.spells);
+        addPopups("Whoosh", "purple", player);
     },
     HealingAura() {
         player.tile.getAdjacentNeighbours().forEach((t) => {
@@ -34,6 +38,7 @@ spells = {
         player.heal(5 * player.arcane);
     },
     Dash() {
+        addPopups("Whoosh!", "white", player);
         let newTile = player.tile;
         while (true) {
             const testTile = newTile.getNeighbour(player.lastMove[0], player.lastMove[1]);
@@ -61,6 +66,7 @@ spells = {
                 const tile = getTile(i, j);
                 if(!tile.passable) {
                     tile.replace(Floor);
+                    addPopups("Crack!", "brown", player);
                 }
             }
         }
@@ -72,6 +78,7 @@ spells = {
                 monsters[k].tile.treasure = true;
                 monsters[k].die();
                 k--;
+                addPopups("Chink", "yellow", monsters[k]);
             }
             k++;
         }
@@ -88,6 +95,7 @@ spells = {
         player.heal(5);
 
         player.bonusAttack = 5;
+        addPopups("Roar!", "red", player);
     },
     Duplicate() {
         for (let i = player.spells.length - 1; i > 0; i--) {
@@ -102,6 +110,7 @@ spells = {
     Bolt() {
         boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 5 * player.arcane);
         playSound("firebolt");
+        addPopups("Crack!", "red", player);
     },
     Cross() {
         const directions = [
@@ -114,6 +123,7 @@ spells = {
             boltTravel(direction, 15 + Math.abs(direction[1]), 5 * player.arcane);
         }
         playSound("firebolt");
+        addPopups("Zap!", "green", player);
     },
     Explosion() {
         const directions = [
@@ -160,15 +170,18 @@ spells = {
                 break;
             case 5:
                 addStatus("AllSeeingEye", randomRange(10, 50), player)
+                addPopups("???", "pink", player);
                 break;
         }
     },
     Regenerate() {
         player.statuses.push(new HpRegen(10));
+        addPopups("Hiss", "green", player);
     },
     Matchstick() {
         player.statuses.push(new Burning(5));
         player.bonusAttack = 5;
+        addPopups("Crackle", "red", player);
     }
 };
 
