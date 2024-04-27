@@ -44,8 +44,8 @@ function draw() {
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let scaleX = 1;
-    let scaleY = 1;
+     scaleX = 1;
+     scaleY = 1;
 
     if (zoomed) {
         scaleX = 0.75;
@@ -55,8 +55,8 @@ function draw() {
         scaleY = 1;
     }
 
-    let translateX = -player.getDisplayX() * tileSize + (canvas.width / scaleX / 2) - (tileSize/2);
-    let translateY = -player.getDisplayY() * tileSize + (canvas.height / scaleY / 2) - (tileSize/2);
+    translateX = -player.getDisplayX() * tileSize + (canvas.width / scaleX / 2) - (tileSize/2);
+    translateY = -player.getDisplayY() * tileSize + (canvas.height / scaleY / 2) - (tileSize/2);
     
     ctx.save();
     ctx.scale(scaleX, scaleY);
@@ -64,14 +64,14 @@ function draw() {
 
     screenshake();
 
-    const seenTiles = [];
+    seenTiles = [];
 
-    for (let i = 0; i < numTiles; i++) {
-        for (let j = 0; j < numTiles; j++) {
+    for (let i = -1; i < numTiles+1; i++) {
+        for (let j = -1; j < numTiles+1; j++) {
             const target = getTile(i, j);
             const distance = (Math.max(Math.abs(target.x - player.tile.x), Math.abs(target.y - player.tile.y)))
 
-            if (distance == 3) {
+            if (distance <= 3 && distance > 0) {
                 drawLine(player.tile.x, player.tile.y, target.x, target.y);
             }
         }
@@ -98,8 +98,8 @@ function draw() {
     }
 
 
-    for (let i = 0; i < numTiles; i++) {
-        for (let j = 0; j < numTiles; j++) {
+    for (let i = -1; i < numTiles+1; i++) {
+        for (let j = -1; j < numTiles+1; j++) {
             if (getTile(i, j).known && !seenTiles.includes(getTile(i, j))) {
                 getTile(i, j).draw();
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -155,7 +155,9 @@ function draw() {
             if (popupText.length) {
 
                 for (let popup of popupText) {
-                    drawText(popup.text, 20, false, 264-popup.timeout+popup.y+popupText.indexOf(popup)*20, popup.color, 364+popup.x);
+                    let drawX = popup.x+tileSize/2-(popup.startTranslateX-translateX);
+                    let drawY = popup.y+popupText.indexOf(popup)*20-popup.timeout-(popup.startTranslateY-translateY);
+                    drawText(popup.text, 20, false, drawY*scaleY, popup.color, drawX*scaleX, "center");
                     popup.timeout++;
                     if (popup.timeout >= 100) {
                         popupText.splice(popupText.indexOf(popup), 1);
@@ -221,17 +223,21 @@ function addPopups(txt, clr, target) {
             text: txt,
             color: clr,
             timeout: 0,
-            x: randomRange(-50, 50),
-            y: 0
+            x: target.tile.x * tileSize + translateX,
+            y: target.tile.y * tileSize + translateY,
+            startTranslateX: translateX,
+            startTranslateY: translateY
         };
         popupText.push(textPopup);
     } else {
         let textPopup = { 
-            text: target.constructor.name+": "+txt,
-            color: clr,
+            text: txt,
+            color: "grey"/*clr*/,
             timeout: 0,
-            x: randomRange(-50, 50),
-            y: 0
+            x: target.tile.x * tileSize + translateX,
+            y: target.tile.y * tileSize + translateY,
+            startTranslateX: translateX,
+            startTranslateY: translateY
         };
         if (target.tile.dist(player.tile) < 6) {
             popupText.push(textPopup);
@@ -538,14 +544,19 @@ function restorePlayer() {
         playerStatuses = player.statuses;
 }
 
-function drawText(text, size, centered, textY, color, textX) {
+function drawText(text, size, centered, textY, color, textX, align) {
     ctx.fillStyle = color;
     ctx.font = `${size}px monospace`;
     if (!textX) {
         textX = centered ? (canvas.width-ctx.measureText(text).width)/2 : canvas.width - uiWidth * tileSize + 25;
     }
 
+    if (align == "center") {
+        ctx.textAlign = align;
+    }
+
     ctx.fillText(text, textX, textY);
+    ctx.textAlign = "left";
 }
 
 function screenshake() {

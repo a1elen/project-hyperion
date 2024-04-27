@@ -214,14 +214,14 @@ class Monster {
                 if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge) {
                     if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                         if (roll(1, 20) >= 20) {
-                            addPopups("Critical!", "red", this);
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
                             newTile.monster.tile.liquid = "Blood";
                             newTile.monster.tile.liquidVolume += randomRange(0, 200);
+                            addPopups("("+damage+")", "red", this);
                         } else {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                         }
-                        addPopups("Attacked for " + damage, "white", this);
+                        addPopups("("+damage+")", "white", this);
                         newTile.monster.hit(damage, this);
 
                     }
@@ -549,5 +549,75 @@ class GreenSlime extends Monster {
         this.moveSpeed = 200;
         this.weaponDamage[0] = 1;
         this.weaponDamage[1] = 1;
+    }
+}
+
+class Mouse extends Monster {
+    constructor (tile) {
+        super(tile, 46, 2);
+        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
+        this.hp = this.maxHealth;
+        this.xpPoints = 1;
+        this.moveSpeed = 300;
+        this.weaponDamage[0] = 0;
+        this.weaponDamage[1] = 1;
+    }
+}
+
+class StoneGolem extends Monster {
+    constructor (tile) {
+        super(tile, 45, 2);
+        this.initMainStats(4, 4, 1, 1, 1, 1);
+        this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
+        this.hp = this.maxHealth;
+        this.xpPoints = 1;
+        this.moveSpeed = 50;
+        this.weaponDamage[0] = 3;
+        this.weaponDamage[1] = 3;
+    }
+}
+
+class GoblinRanger extends Monster {
+    constructor (tile) {
+        super(tile, 48, 2);
+        this.initMainStats(2, 1, 3, 4, 1, 1);
+        this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
+        this.hp = this.maxHealth;
+        this.xpPoints = 1;
+        this.moveSpeed = 150;
+        this.weaponDamage[0] = 2;
+        this.weaponDamage[1] = 2;
+    }
+}
+
+class GoblinSpear extends Monster {
+    constructor (tile) {
+        super(tile, 47, 2);
+        this.initMainStats(2, 2, 2, 2, 1, 1);
+        this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
+        this.hp = this.maxHealth;
+        this.xpPoints = 1;
+        this.moveSpeed = 100;
+        this.weaponDamage[0] = 2;
+        this.weaponDamage[1] = 4;
+    }
+}
+
+class GoblinSwordsman extends Monster {
+    constructor (tile) {
+        super(tile, 49, 2);
+        this.initMainStats(4, 3, 2, 1, 1, 1);
+        this.updateStats();
+        this.initSkills(0, 0, 0, 0, 0);
+        this.hp = this.maxHealth;
+        this.xpPoints = 1;
+        this.moveSpeed = 100;
+        this.weaponDamage[0] = 1;
+        this.weaponDamage[1] = 3;
     }
 }

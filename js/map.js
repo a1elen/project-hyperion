@@ -134,9 +134,25 @@ function getTile(x, y) {
     if (inBounds(x, y)) {
         return tiles[x][y];
     }
-    const newWall = new Wall(x, y, 36);
-    newWall.known = true;
-    return newWall;
+
+    if (tiles[x] == undefined) {
+        const newWall = new Wall(x, y, 36);
+        //newWall.known = true;
+        tiles[x] = [];
+        tiles[x][y] = newWall;
+        //tiles[x][y] = new Wall(x, y, 36);
+        return tiles[x][y];
+        //return newWall;
+    } else if (tiles[x][y] == undefined) {
+        const newWall = new Wall(x, y, 36);
+        tiles[x][y] = newWall;
+        //newWall.known = true;
+        //tiles[x][y] = new Wall(x, y, 36);
+        return tiles[x][y];
+        //return newWall;
+    } else {
+        return tiles[x][y];
+    }
 }
 
 function randomPassableTile() {
@@ -166,13 +182,13 @@ function generateMonsters() {
 function spawnMonster(rare) {
     let monsterType;
     if (level <= 5) {
-        monsterType = shuffle([Spider, Snake, GreenSlime])[0];
+        monsterType = shuffle([Spider, Worm, GreenSlime, Mouse])[0];
     } else if (level <= 10) {
-        monsterType = shuffle([Worm, Zombie, Skeleton])[0];
+        monsterType = shuffle([StoneGolem, Zombie, Skeleton, Snake])[0];
     } else if (level <= 15) {
-        monsterType = shuffle([Zombie, Skeleton, RedDragonBaby])[0];
+        monsterType = shuffle([GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby])[0];
     } else {
-        monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton, RedDragonBaby, GreenSlime])[0];
+        monsterType = shuffle([Spider, Worm, Snake, Zombie, Skeleton, RedDragonBaby, GreenSlime, Mouse, StoneGolem, GoblinRanger, GoblinSpear, GoblinSwordsman])[0];
     }
     
     
