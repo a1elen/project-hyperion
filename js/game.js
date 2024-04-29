@@ -520,9 +520,13 @@ function savePlayer() {
     playerStatuses = player.statuses;
     if (player.weapon != undefined) {
         playerWeapon = player.weapon;
+    } else {
+        playerWeapon = undefined;
     }
     if (player.armor != undefined) {
         playerArmor = player.armor;
+    } else {
+        playerArmor = undefined;
     }
 
 }
@@ -548,10 +552,10 @@ function restorePlayer() {
 
     playerStatuses = player.statuses;
 
-    if (player.weapon != undefined) {
+    if (playerWeapon != undefined) {
         player.wield(playerWeapon);
     }
-    if (player.armor != undefined) {
+    if (playerArmor != undefined) {
         player.wear(playerArmor);
     }
     
