@@ -47,6 +47,19 @@ function generateLevel(levelGen) {
     for (let i = 0; i < scrollNumber; i++) {
         randomPassableTile().trap = true;
     }
+
+    generateItems();
+}
+
+function generateItems(numberOfItems) {
+    randomPassableTile().items.push(
+        weapon = {
+            name: "Iron Sword",
+            sprite: 43,
+            damage_min: 2,
+            damage_max: 4
+        }
+    );
 }
 
 function saveLevel() {

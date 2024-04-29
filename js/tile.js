@@ -116,6 +116,11 @@ class Tile {
         if (!this.effectCounter) {
             return;
         }
+
+        for(item of this.items) {
+            drawSprite(item.sprite, this.x, this.y);
+        }
+
         this.effectCounter--;
         ctx.globalAlpha = this.effectCounter / 30;
         drawSprite(this.effect, this.x, this.y);
