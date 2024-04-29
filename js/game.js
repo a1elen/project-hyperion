@@ -458,13 +458,13 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
         }
     
         if (player.weapon != undefined) {
-            this.weaponDamage[0] = this.weapon.damage_min;
-            this.weaponDamage[1] = this.weapon.damage_max;
+            player.weaponDamage[0] = this.weapon.damage_min;
+            player.weaponDamage[1] = this.weapon.damage_max;
         }
 
         if (player.armor != undefined) {
-            this.armorClass = this.armor.av;
-            this.evasionClass = this.armor.ev;
+            player.armorClass = this.armor.av;
+            player.evasionClass = this.armor.ev;
         }
 
         if (playerSpells) {
