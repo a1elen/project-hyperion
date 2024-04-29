@@ -25,8 +25,10 @@ class Monster {
         this.bleedingChance = 0;
         this.weaponDamage = new Array(1, 1);
         this.armorClass = 1;
-        this.weapon;
         this.evasionClass = 1;
+
+        this.weapon;
+        this.armor;
 
         this.abilities = [];
         this.mastery = [];
@@ -297,13 +299,15 @@ class Monster {
     }
 
     wield(weapon) {
-        this.weaponDamage[0] = weapon.damage_min;
-        this.weaponDamage[1] = weapon.damage_max;
+        this.weapon = weapon;
+        this.weaponDamage[0] = this.weapon.damage_min;
+        this.weaponDamage[1] = this.weapon.damage_max;
     }
 
     wear(armor) {
-        this.armorClass = armor.av;
-        this.evasionClass = armor.ev;
+        this.armor = armor;
+        this.armorClass = this.armor.av;
+        this.evasionClass = this.armor.ev;
     }
 
     levelUp() {
