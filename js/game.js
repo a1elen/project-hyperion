@@ -457,16 +457,6 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
             restorePlayer();
         }
     
-        if (player.weapon != undefined) {
-            player.weaponDamage[0] = this.weapon.damage_min;
-            player.weaponDamage[1] = this.weapon.damage_max;
-        }
-
-        if (player.armor != undefined) {
-            player.armorClass = this.armor.av;
-            player.evasionClass = this.armor.ev;
-        }
-
         if (playerSpells) {
             player.spells = playerSpells;
         }    
@@ -557,6 +547,7 @@ function restorePlayer() {
 
     player.weapon = playerWeapon;
     player.armor = playerArmor;
+    player.rearm();
     
 }
 

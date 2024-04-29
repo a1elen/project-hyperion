@@ -298,6 +298,19 @@ class Monster {
         tile.stepOn(this);
     }
 
+    rearm() {
+        if (this.weapon != undefined) {
+            this.weaponDamage[0] = this.weapon.damage_min;
+            this.weaponDamage[1] = this.weapon.damage_max;
+        }
+
+        if (this.armor != undefined) {
+            this.armorClass = this.armor.av;
+            this.evasionClass = this.armor.ev;
+        }
+
+    }
+
     wield(weapon) {
         if (this.weapon != undefined) {
             this.drop(this.weapon)
