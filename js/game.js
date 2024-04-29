@@ -457,6 +457,16 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
             restorePlayer();
         }
     
+        if (player.weapon != undefined) {
+            this.weaponDamage[0] = this.weapon.damage_min;
+            this.weaponDamage[1] = this.weapon.damage_max;
+        }
+
+        if (player.armor != undefined) {
+            this.armorClass = this.armor.av;
+            this.evasionClass = this.armor.ev;
+        }
+
         if (playerSpells) {
             player.spells = playerSpells;
         }    
@@ -518,16 +528,9 @@ function savePlayer() {
     playerEvasion = player.evasion;
 
     playerStatuses = player.statuses;
-    if (player.weapon != undefined) {
-        playerWeapon = player.weapon;
-    } else {
-        playerWeapon = undefined;
-    }
-    if (player.armor != undefined) {
-        playerArmor = player.armor;
-    } else {
-        playerArmor = undefined;
-    }
+
+    playerWeapon = player.weapon;
+    playerArmor = player.armor;
 
 }
 
@@ -552,12 +555,8 @@ function restorePlayer() {
 
     playerStatuses = player.statuses;
 
-    if (playerWeapon != undefined) {
-        player.wield(playerWeapon);
-    }
-    if (playerArmor != undefined) {
-        player.wear(playerArmor);
-    }
+    player.weapon = playerWeapon;
+    player.armor = playerArmor;
     
 }
 
