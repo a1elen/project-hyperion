@@ -364,7 +364,7 @@ class Player extends Monster {
         this.updateStats();
 
         const levelHealth = clamp(randomRange(this.constitution, this.maxHealth-this.hp), 1, this.maxHealth);
-        this.hp += levelHealth;
+        this.hp = Math.min(this.maxHealth, this.hp+levelHealth);
     }
 
     update() {
