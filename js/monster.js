@@ -299,15 +299,26 @@ class Monster {
     }
 
     wield(weapon) {
+        if (this.weapon != undefined) {
+            this.drop(this.weapon)
+        }
         this.weapon = weapon;
         this.weaponDamage[0] = this.weapon.damage_min;
         this.weaponDamage[1] = this.weapon.damage_max;
     }
 
     wear(armor) {
+        if (this.armor != undefined) {
+            this.drop(this.armor)
+        }
+
         this.armor = armor;
         this.armorClass = this.armor.av;
         this.evasionClass = this.armor.ev;
+    }
+
+    drop(item) {
+        this.tile.items.push(item);
     }
 
     levelUp() {
