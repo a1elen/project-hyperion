@@ -25,6 +25,7 @@ class Monster {
         this.bleedingChance = 0;
         this.weaponDamage = new Array(1, 1);
         this.armorClass = 1;
+        this.weapon;
         this.evasionClass = 1;
 
         this.abilities = [];
@@ -293,6 +294,16 @@ class Monster {
         this.tile = tile;
         tile.monster = this;
         tile.stepOn(this);
+    }
+
+    wield(weapon) {
+        this.weaponDamage[0] = weapon.damage_min;
+        this.weaponDamage[1] = weapon.damage_max;
+    }
+
+    wear(armor) {
+        this.armorClass = armor.av;
+        this.evasionClass = armor.ev;
     }
 
     levelUp() {

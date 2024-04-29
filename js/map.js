@@ -56,15 +56,23 @@ function generateItems(numberOfItems) {
     weapon = {
         name: "Iron Sword",
         sprite: 43,
-        damage_min: 2,
-        damage_max: 4
+        damage_min: 1,
+        damage_max: 8,
+        get() {
+            player.wield(this);
+            return true;
+        }
     };
 
     armor = {
         name: "Leather Chestplate",
         sprite: 44,
         av: 2,
-        ev: 1
+        ev: 2,
+        get() {
+            player.wear(this);
+            return true;
+        }
     };
 
     gold = {
