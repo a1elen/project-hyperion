@@ -220,6 +220,11 @@ class Floor extends Tile {
         if (this.trap) {
             this.trap = false;
         }
+
+        if (this.items.length > 0) {
+            if (items[0].get()) items.splice(0, 1);;
+        }
+
     }
 }
 

@@ -48,7 +48,7 @@ function generateLevel(levelGen) {
         randomPassableTile().trap = true;
     }
 
-    generateItems(randomRange(clamp(Math.floor(level / 2) + 1, 1, 10), 10));
+    generateItems(randomRange(clamp(Math.floor(level / 2) + 5, 1, 10), 20));
 }
 
 function generateItems(numberOfItems) {
@@ -67,13 +67,41 @@ function generateItems(numberOfItems) {
         ev: 1
     };
 
+    gold = {
+        name: "Gold",
+        sprite: 12,
+        amount: 10,
+        get() {
+            score += randomRange(9, 21);
+            playSound("treasure");
+        }
+    };
+
+    magicScroll = {
+        name: "Scroll",
+        sprite: 18,
+        get() { 
+            if (player.spells.length < numSpells) {
+                player.addSpell();
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     let item;
 
     for (let i = 0; i < numberOfItems; i++) {
-        if (randomRange(1,2) == 1) {
+        let randomNumber = randomRange(1,4)
+        if (randomNumber == 1) {
             item = weapon;
-        } else {
+        } else if (randomNumber == 2) {
             item = armor;
+        } else if (randomNumber == 3) {
+            item = gold;
+        } else if (randomNumber == 4) {
+            item = magicScroll;
         }
     
         randomPassableTile().items.push(item);
