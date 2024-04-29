@@ -31,7 +31,7 @@ function drawSprite(sprite, x, y) {
     ctx.drawImage(
         spritesheet,
         sprite*16,
-        0,
+        Math.floor(sprite/50)*16+0,
         16,
         16,
         x*tileSize + shakeX,
