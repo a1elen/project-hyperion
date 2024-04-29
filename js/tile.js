@@ -74,6 +74,12 @@ class Tile {
     draw() {
         drawSprite(this.sprite, this.x, this.y);
 
+        if (this.items.length > 0) {
+            for(let item of this.items) {
+                drawSprite(item.sprite, this.x, this.y);
+            }
+        }
+
         if (this.liquid == "Blood") {
             if (this.liquidVolume > 400) {
                 drawSprite(40, this.x, this.y);
@@ -115,10 +121,6 @@ class Tile {
 
         if (!this.effectCounter) {
             return;
-        }
-
-        for(item of this.items) {
-            drawSprite(item.sprite, this.x, this.y);
         }
 
         this.effectCounter--;

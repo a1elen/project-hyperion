@@ -48,18 +48,37 @@ function generateLevel(levelGen) {
         randomPassableTile().trap = true;
     }
 
-    generateItems();
+    generateItems(clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4)));
 }
 
 function generateItems(numberOfItems) {
-    randomPassableTile().items.push(
-        weapon = {
-            name: "Iron Sword",
-            sprite: 43,
-            damage_min: 2,
-            damage_max: 4
+
+    weapon = {
+        name: "Iron Sword",
+        sprite: 43,
+        damage_min: 2,
+        damage_max: 4
+    };
+
+    armor = {
+        name: "Leather Chestplate",
+        sprite: 44,
+        av: 2,
+        ev: 1
+    };
+
+    let item;
+
+    for (let i = 0; i < numberOfItems; i++) {
+        if (randomRange(1,2) == 1) {
+            item = weapon;
+        } else {
+            item = armor;
         }
-    );
+    
+        randomPassableTile().items.push(item);
+    }
+
 }
 
 function saveLevel() {
