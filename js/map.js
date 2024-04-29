@@ -275,7 +275,7 @@ function spawnMonster(rare) {
         for (let i = 0; i < amount; i++) {
             monster.levelUp();
         }
-    } else {
+    } else if (level > 0) {
         const amount = Math.floor(level / 2) + randomRange(0, 2);
         for (let i = 0; i < amount; i++) {
             monster.levelUp();
