@@ -168,7 +168,7 @@ function randomPassableTile() {
 
 function generateMonsters() {
     monsters = [];
-    const numMonsters = Math.floor(level / 5) + 2;
+    const numMonsters = Math.floor(level / 5) + randomRange(2, 5);
     const numberOfRare = Math.floor(level / 5);
     for (let i = 0; i < numMonsters; i++) {
         if (i < numberOfRare) {
@@ -182,9 +182,9 @@ function generateMonsters() {
 function spawnMonster(rare) {
     let monsterType;
     if (level <= 5) {
-        monsterType = shuffle([Spider, Worm, GreenSlime, Mouse])[0];
+        monsterType = shuffle([Spider, Snake, GreenSlime, Mouse])[0];
     } else if (level <= 10) {
-        monsterType = shuffle([StoneGolem, Zombie, Skeleton, Snake])[0];
+        monsterType = shuffle([StoneGolem, Zombie, Skeleton, Worm])[0];
     } else if (level <= 15) {
         monsterType = shuffle([GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby])[0];
     } else {
