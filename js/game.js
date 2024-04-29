@@ -500,48 +500,50 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
 
 function savePlayer() {
     playerMaxHealth = player.maxHealth;
-        playerHp = player.hp;
-        playerLevel = player.level;
-        playerXp = player.xp;
-        playerXpToLevel = player.xpToLevel;
-        playerAttack = player.attack;
-        playerDefense = player.defense;
+    playerHp = player.hp;
+    playerLevel = player.level;
+    playerXp = player.xp;
+    playerXpToLevel = player.xpToLevel;
+    playerAttack = player.attack;
+    playerDefense = player.defense;
 
-        // main stats
-        playerStrength = player.strength;
-        playerConstitution = player.constitution;
-        playerPerception = player.perception;
-        playerAgility = player.agiity;
-        playerArcane = player.arcane;
-        playerWill = player.will;
+    // main stats
+    playerStrength = player.strength;
+    playerConstitution = player.constitution;
+    playerPerception = player.perception;
+    playerAgility = player.agiity;
+    playerArcane = player.arcane;
+    playerWill = player.will;
 
-        playerWeaponDamage = player.weaponDamage;
-        playerEvasion = player.evasion;
+    playerEvasion = player.evasion;
 
-        playerStatuses = player.statuses;
+    playerStatuses = player.statuses;
+    playerWeapon = player.weapon;
+    playerArmor = player.armor;
 }
 
 function restorePlayer() {
     player.maxHealth = playerMaxHealth;
-        player.hp = playerHp;
-        player.level = playerLevel;
-        player.xp = playerXp;
-        player.xpToLevel = playerXpToLevel;
-        player.attack = playerAttack;
-        player.defense = playerDefense;
+    player.hp = playerHp;
+    player.level = playerLevel;
+    player.xp = playerXp;
+    player.xpToLevel = playerXpToLevel;
+    player.attack = playerAttack;
+    player.defense = playerDefense;
 
-        // main stats
-        player.strength = playerStrength;
-        player.constitution = playerConstitution;
-        player.perception = playerPerception;
-        player.agiity = playerAgility;
-        player.arcane = playerArcane;
-        player.will = playerWill;
+    // main stats
+    player.strength = playerStrength;
+    player.constitution = playerConstitution;
+    player.perception = playerPerception;
+    player.agiity = playerAgility;
+    player.arcane = playerArcane;
+    player.will = playerWill;
     
-        player.weaponDamage = playerWeaponDamage;
-        player.evasion = playerEvasion;
+    player.evasion = playerEvasion;
 
-        playerStatuses = player.statuses;
+    playerStatuses = player.statuses;
+    player.wield(playerWeapon);
+    player.wear(playerArmor);
 }
 
 function drawText(text, size, centered, textY, color, textX, align) {

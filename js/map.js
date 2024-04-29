@@ -53,6 +53,14 @@ function generateLevel(levelGen) {
 
 function generateItems(numberOfItems) {
 
+    for (let i = 0; i < numberOfItems; i++) {
+        randomPassableTile().items.push(getRandomItem());
+    }
+
+}
+
+function getRandomItem() {
+
     weapon = {
         name: "Iron Sword",
         sprite: 43,
@@ -101,21 +109,18 @@ function generateItems(numberOfItems) {
 
     let item;
 
-    for (let i = 0; i < numberOfItems; i++) {
-        let randomNumber = randomRange(1,4)
-        if (randomNumber == 1) {
-            item = weapon;
-        } else if (randomNumber == 2) {
-            item = armor;
-        } else if (randomNumber == 3) {
-            item = gold;
-        } else if (randomNumber == 4) {
-            item = magicScroll;
-        }
-    
-        randomPassableTile().items.push(item);
+    let randomNumber = randomRange(1,4)
+    if (randomNumber == 1) {
+        item = weapon;
+    } else if (randomNumber == 2) {
+        item = armor;
+    } else if (randomNumber == 3) {
+        item = gold;
+    } else if (randomNumber == 4) {
+        item = magicScroll;
     }
 
+    return item;
 }
 
 function saveLevel() {
