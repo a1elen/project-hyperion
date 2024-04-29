@@ -57,7 +57,7 @@ function generateItems(numberOfItems) {
         name: "Iron Sword",
         sprite: 43,
         damage_min: 1,
-        damage_max: 8,
+        damage_max: randomRange(4, 8),
         get() {
             player.wield(this);
             return true;
@@ -67,8 +67,8 @@ function generateItems(numberOfItems) {
     armor = {
         name: "Leather Chestplate",
         sprite: 44,
-        av: 2,
-        ev: 2,
+        av: randomRange(2, 5),
+        ev: randomRange(1, 5),
         get() {
             player.wear(this);
             return true;
@@ -78,7 +78,7 @@ function generateItems(numberOfItems) {
     gold = {
         name: "Gold",
         sprite: 12,
-        amount: 10,
+        amount: randomRange(5, 25),
         get() {
             score += randomRange(9, 21);
             playSound("treasure");
