@@ -27,6 +27,9 @@ class Monster {
         this.armorClass = 1;
         this.evasionClass = 1;
 
+        this.abilities = [];
+        this.mastery = [];
+
         // main stats
         this.initMainStats(1, 1, 1, 1, 1, 1);
         this.initSkills(1, 1, 1, 1, 1);
@@ -252,7 +255,8 @@ class Monster {
         const newTileChosen = shuffle(newTile)[0];
         const dx = newTileChosen.x - this.tile.x;
         const dy = newTileChosen.y - this.tile.y;
-        this.tryMove(dx, dy);
+        //this.tryMove(dx, dy);
+        this.move(this.tile.getNeighbour(dx, dy));
         addPopups("Dodged!", "white", this);
     }
 
