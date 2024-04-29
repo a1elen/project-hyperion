@@ -124,7 +124,7 @@ function initKeyControls() {
             }
 
             if (e.key == "z") {
-                
+
                 if (scaleX < 1.75) {
                     scaleX += 0.25;
                     scaleY += 0.25;
@@ -150,8 +150,13 @@ function initKeyControls() {
                     zoomed = false;
                 }*/
             }
-            if (e.key == "5") tick();
-
+            if (e.key == "5") {
+                tick();
+                if (roll(20) > 10) {
+                    player.heal(1);
+                }
+            }
+            
             if (e.key == "0") gameState = "spells";
 
             if (e.key == "@") gameState = "stats";

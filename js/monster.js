@@ -52,6 +52,7 @@ class Monster {
     heal(damage) {
         playSound("healthUp");
         this.hp = Math.min(this.maxHealth, this.hp+damage);
+        addPopups("+"+damage, "green", this);
     }
 
     update() {
@@ -217,11 +218,11 @@ class Monster {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
                             newTile.monster.tile.liquid = "Blood";
                             newTile.monster.tile.liquidVolume += randomRange(0, 200);
-                            addPopups("("+damage+")", "red", this);
+                            addPopups("-"+damage, "red", newTile.monster);
                         } else {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
                         }
-                        addPopups("("+damage+")", "white", this);
+                        addPopups("-"+damage, "white", newTile.monster);
                         newTile.monster.hit(damage, this);
 
                     }
