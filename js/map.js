@@ -61,6 +61,9 @@ function generateItems(numberOfItems) {
 
 function getRandomItem() {
 
+    // weapon materials: wood, iron, copper, bronze, silver, gold, steel
+    // armor materials, leather, iron, copper, bronze, silver, gold, steel
+
     weapon = {
         name: "Iron Sword",
         sprite: 43,

@@ -518,8 +518,13 @@ function savePlayer() {
     playerEvasion = player.evasion;
 
     playerStatuses = player.statuses;
-    playerWeapon = player.weapon;
-    playerArmor = player.armor;
+    if (player.weapon != undefined) {
+        playerWeapon = player.weapon;
+    }
+    if (player.armor != undefined) {
+        playerArmor = player.armor;
+    }
+
 }
 
 function restorePlayer() {
@@ -542,8 +547,14 @@ function restorePlayer() {
     player.evasion = playerEvasion;
 
     playerStatuses = player.statuses;
-    player.wield(playerWeapon);
-    player.wear(playerArmor);
+
+    if (player.weapon != undefined) {
+        player.wield(playerWeapon);
+    }
+    if (player.armor != undefined) {
+        player.wear(playerArmor);
+    }
+    
 }
 
 function drawText(text, size, centered, textY, color, textX, align) {
