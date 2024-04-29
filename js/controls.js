@@ -122,12 +122,33 @@ function initKeyControls() {
                 level++;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
             }
+
             if (e.key == "z") {
-                if (!zoomed) {
+                
+                if (scaleX < 1.75) {
+                    scaleX += 0.25;
+                    scaleY += 0.25;
+                }
+
+                /*if (!zoomed) {
                     zoomed = true;
                 } else {
                     zoomed = false;
+                }*/
+            }
+
+            if (e.key == "Z") {
+
+                if (scaleX > 0.25) {
+                    scaleX -= 0.25;
+                    scaleY -= 0.25;
                 }
+
+                /*if (!zoomed) {
+                    zoomed = true;
+                } else {
+                    zoomed = false;
+                }*/
             }
             if (e.key == "5") tick();
 

@@ -12,6 +12,9 @@ function setupCanvas() {
     let mouseX;
     let mouseY;
 
+    scaleX = 1;
+    scaleY = 1;
+
     viewport = {
         x: 0,
         y: 0,
@@ -44,16 +47,13 @@ function draw() {
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-     scaleX = 1;
-     scaleY = 1;
-
-    if (zoomed) {
+    /*if (zoomed) {
         scaleX = 0.75;
         scaleY = 0.75;
     } else {
         scaleX = 1;
         scaleY = 1;
-    }
+    }*/
 
     translateX = -player.getDisplayX() * tileSize + (canvas.width / scaleX / 2) - (tileSize/2);
     translateY = -player.getDisplayY() * tileSize + (canvas.height / scaleY / 2) - (tileSize/2);
