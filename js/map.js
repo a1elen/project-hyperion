@@ -48,7 +48,7 @@ function generateLevel(levelGen) {
         randomPassableTile().trap = true;
     }
 
-    generateItems(clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4)));
+    generateItems(randomRange(clamp(Math.floor(level / 2) + 1, 1, 10), 10));
 }
 
 function generateItems(numberOfItems) {
