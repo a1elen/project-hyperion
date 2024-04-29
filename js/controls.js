@@ -151,10 +151,10 @@ function initKeyControls() {
                 }*/
             }
             if (e.key == "5") {
-                tick();
-                if (roll(20) > 10) {
+                if (randomRange(1, 20) > 10) {
                     player.heal(1);
                 }
+                tick();
             }
             
             if (e.key == "0") gameState = "spells";

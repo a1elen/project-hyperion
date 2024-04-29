@@ -54,8 +54,10 @@ class Monster {
 
     heal(damage) {
         playSound("healthUp");
-        this.hp = Math.min(this.maxHealth, this.hp+damage);
-        addPopups("+"+damage, "green", this);
+        if (this.hp < this.maxHealth) {
+            this.hp = Math.min(this.maxHealth, this.hp+damage);
+            addPopups("+"+damage, "green", this);
+        }
     }
 
     update() {
