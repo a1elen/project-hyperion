@@ -222,7 +222,7 @@ class Floor extends Tile {
         }
 
         if (this.items.length > 0) {
-            if (items[0].get()) items.splice(0, 1);;
+            if (this.items[0].get()) this.items.splice(0, 1);
         }
 
     }

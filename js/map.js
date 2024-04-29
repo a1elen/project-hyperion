@@ -74,6 +74,7 @@ function generateItems(numberOfItems) {
         get() {
             score += randomRange(9, 21);
             playSound("treasure");
+            return true;
         }
     };
 
