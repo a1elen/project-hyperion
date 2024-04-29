@@ -567,7 +567,7 @@ class Mouse extends Monster {
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
-        this.moveSpeed = 300;
+        this.moveSpeed = 50;
         this.weaponDamage[0] = 0;
         this.weaponDamage[1] = 1;
     }
@@ -581,7 +581,7 @@ class StoneGolem extends Monster {
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
-        this.moveSpeed = 50;
+        this.moveSpeed = 200;
         this.weaponDamage[0] = 3;
         this.weaponDamage[1] = 3;
     }
@@ -595,7 +595,7 @@ class GoblinRanger extends Monster {
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
-        this.moveSpeed = 150;
+        this.moveSpeed = 75;
         this.weaponDamage[0] = 2;
         this.weaponDamage[1] = 2;
     }
@@ -623,7 +623,7 @@ class GoblinSwordsman extends Monster {
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
-        this.moveSpeed = 100;
+        this.moveSpeed = 125;
         this.weaponDamage[0] = 1;
         this.weaponDamage[1] = 3;
     }
