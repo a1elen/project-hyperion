@@ -151,8 +151,9 @@ function initKeyControls() {
                 }*/
             }
             if (e.key == "5") {
-                if (randomRange(1, 20) > 10) {
+                if (randomRange(1, 20) > 10 && player.hunger > 0) {
                     player.heal(1);
+                    player.hunger = Math.max(0, player.hunger - randomRange(1, 3)) ;
                 }
                 tick();
             }

@@ -4,6 +4,9 @@ class Monster {
         this.sprite = sprite;
         this.maxHealth = 10;
         this.hp = hp;
+        this.mana = 200;
+        this.hunger = 100;
+
         this.teleportCounter = randomRange(3, 6);
         this.offsetX = 0;
         this.offsetY = 0;

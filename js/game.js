@@ -189,6 +189,7 @@ function draw() {
                     case "body_armor": text += " [" + item.av + "/" + item.ev + "]"; break;
                     case "coin": text = item.amount + " " + item.name; break;
                     case "scroll": break;
+                    case "food": break;
                 }
                 drawText("Here lies: ", 20, false, 500, "white", 20);
                 drawText(text, 20, false, 520 + player.tile.items.indexOf(item)*20, "white", 20);
@@ -304,11 +305,26 @@ function check_dead() {
                 player.xpToLevel = Math.floor(player.xpToLevel*1.25);
             }
 
+            dropItems(monsters[k]);
+
             monsters.splice(k, 1);
 
 
         }
     }
+}
+
+function dropItems(monster) {
+    food = {
+        name: "Meat",
+        type: "food",
+        sprite: 19,
+        get() {
+            player.hunger = Math.min(100, player.hunger + randomRange(50, 100));
+        }
+    };
+
+    monster.tile.items.push(food);
 }
 
 function check_for_tick() {    
