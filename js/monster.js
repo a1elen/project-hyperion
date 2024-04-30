@@ -351,7 +351,7 @@ class Monster {
         }
 
         this.updateStats();
-        this.hp = this.maxHealth;
+        //this.hp = this.maxHealth;
         this.xpPoints = (this.xpPoints + randomRange(1, 5)) * this.level;
         this.rare = false;
         addPopups("Level up!", "yellow", this);
@@ -406,7 +406,7 @@ class Player extends Monster {
         this.updateStats();
 
         const levelHealth = clamp(randomRange(this.constitution, this.maxHealth-this.hp), 1, this.maxHealth);
-        this.hp = Math.min(this.maxHealth, this.hp+levelHealth);
+        //this.hp = Math.min(this.maxHealth, this.hp+levelHealth);
     }
 
     update() {
