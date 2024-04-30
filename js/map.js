@@ -33,21 +33,94 @@ function generateLevel(levelGen) {
     generateMonsters();
 
     const treasureNumber = clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4));
-    const scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 2));
+    //const scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 2));
     
-    for (let i = 0; i < scrollNumber; i++) {
-        randomPassableTile().trap = true;
-    }
+    generateTraps(randomRange(1, 5));
+
+    //for (let i = 0; i < scrollNumber; i++) {
+        //randomPassableTile().trap = true;
+    //}
 
     generateItems(randomRange(clamp(Math.floor(level / 2) + 5, 1, 10), 20));
 }
 
-function generateItems(numberOfItems) {
+function generateTraps(numberOfTraps) {
+    for (let i = 0; i < numberOfTraps; i++) {
+        randomPassableTile().traps.push(getRandomTrap());
+    }
+}
 
+function generateItems(numberOfItems) {
     for (let i = 0; i < numberOfItems; i++) {
         randomPassableTile().items.push(getRandomItem());
     }
+}
 
+function getRandomTrap() {
+    beartrap = {
+        name: "Bear Trap",
+        sprite: 28,
+        visible: false,
+        sound: "trap",
+        use(monster) {
+            playSound(this.sound);
+
+            addStatus("Bleeding", randomRange(2, 5), monster);
+            addStatus("Stunned", randomRange(2, 5), monster);
+            addPopups("Skirr!", "white", monster);
+            addPopups("Bleed!", "red", monster);
+            addPopups("Stun!", "yellow", monster);
+
+            this.blood = true;
+            const neighbours = monster.tile.getAdjacentNeighbours();
+            for (const neighbour of neighbours) {
+                if (!neighbour.passable && randomRange(1, 3) == 3) {
+                    neighbour.wallBlood = true;
+                }
+            }
+
+            this.visible = true;
+        }
+    };
+
+    trapdoor = {
+        name: "Trapdoor",
+        sprite: 31,
+        visible: false,
+        sound: "trapdoor",
+        use(monster) {
+            playSound(this.sound);
+
+            if (monster == player) {
+                saveLevel();
+                level++;
+                startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
+            } else {
+                monster.hit(9999);
+            }
+
+            shakeAmount = 50;
+
+            this.visible = true;
+        }
+    };
+
+    let trap;
+
+    let randomNumber = randomRange(1,4)
+    if (randomNumber == 1) {
+        trap = beartrap;
+    } else if (randomNumber == 2) {
+        trap = beartrap;
+        trap.visible = true;
+    } else if (randomNumber == 3) {
+        trap = trapdoor;
+    } else if (randomNumber == 4) {
+        trap = trapdoor;
+        trap.visible = true;
+    }
+
+    return trap;
 }
 
 function getRandomItem() {

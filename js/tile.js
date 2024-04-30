@@ -74,6 +74,12 @@ class Tile {
     draw() {
         drawSprite(this.sprite, this.x, this.y);
 
+        if (this.traps.length > 0) {
+            for (let trap of this.traps) {
+                drawSprite(trap.sprite, this.x, this.y);
+            }
+        }
+
         if (this.items.length > 0) {
             for(let item of this.items) {
                 drawSprite(item.sprite, this.x, this.y);
@@ -143,13 +149,15 @@ class Floor extends Tile {
     }
 
     stepOn(monster) {
-        if (!this.trap) {
-            return;
-        }
-        if (!this.trapWorks) {
+        if (!this.traps.length > 0) {
             return;
         }
 
+        for (let trap in this.traps) {
+            trap.use(monster);
+        }
+
+        /*
         if (monster.isPlayer) {
             const isTrapdoor = randomRange(1, 100);
             if (isTrapdoor > 10) {
@@ -193,6 +201,7 @@ class Floor extends Tile {
         this.visible = true;
         this.trapWorks = false;
         shakeAmount = 10;
+        */
     }
 
     use() {
