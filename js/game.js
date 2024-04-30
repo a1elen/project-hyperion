@@ -323,6 +323,7 @@ function dropItems(monster) {
         sprite: 19,
         get() {
             player.hunger = Math.min(100, player.hunger + randomRange(50, 100));
+            return true;
         }
     };
 
