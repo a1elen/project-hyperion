@@ -103,7 +103,7 @@ function draw() {
             if (getTile(i, j).known && !seenTiles.includes(getTile(i, j))) {
                 getTile(i, j).draw();
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                ctx.fillRect(getTile(i, j).x * tileSize, getTile(i, j).y * tileSize, tileSize, tileSize);
+                ctx.fillRect(getTile(i, j).x * tileSize + shakeX, getTile(i, j).y * tileSize + shakeY, tileSize, tileSize);
             }
         }
     }
