@@ -349,8 +349,8 @@ class Monster {
 
         this.updateStats();
         this.hp = this.maxHealth;
-        this.xpPoints = (this.xpPoints + randomRange(1, 5)) * level;
-        this.rare = true;
+        this.xpPoints = (this.xpPoints + randomRange(1, 5)) * this.level;
+        this.rare = false;
         addPopups("Level up!", "yellow", this);
     }
 }

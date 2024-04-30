@@ -286,7 +286,7 @@ function check_dead() {
             if (player.xp >= player.xpToLevel) {
                 player.levelUp();
                 player.xp = 0;
-                player.xpToLevel *= 2;
+                player.xpToLevel = Math.floor(player.xpToLevel*1.25);
             }
 
             monsters.splice(k, 1);
