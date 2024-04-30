@@ -366,6 +366,7 @@ function startGame() {
     numSpells = 1;
 
     levelTiles = [];
+    levelMonsters = [];
     startLevel(startingHp);
     gameStarted = true;
 
@@ -395,9 +396,12 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
 
     if(gameStarted) {
         if(levelTiles[level-1]) {
+            levelMonsters[level-1+upOrDown] = monsters;
             loadLevel();
+            monsters = levelMonsters[level-1];
             placePlayer(upOrDown);
         } else {
+            levelMonsters[level-1+upOrDown] = monsters;
             generateLevel(levelType);
             placePlayer();
             placeStairs();
