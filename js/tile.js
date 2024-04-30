@@ -149,13 +149,13 @@ class Floor extends Tile {
     }
 
     stepOn(monster) {
-        if (!this.traps.length > 0) {
-            return;
+        if (this.traps.length > 0) {
+            for (let trap of this.traps) {
+                trap.use(monster);
+            }
         }
 
-        for (let trap of this.traps) {
-            trap.use(monster);
-        }
+
 
         /*
         if (monster.isPlayer) {
