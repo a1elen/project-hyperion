@@ -153,7 +153,7 @@ class Floor extends Tile {
             return;
         }
 
-        for (let trap in this.traps) {
+        for (let trap of this.traps) {
             trap.use(monster);
         }
 
