@@ -305,7 +305,9 @@ function check_dead() {
                 player.xpToLevel = Math.floor(player.xpToLevel*1.25);
             }
 
-            dropItems(monsters[k]);
+            if (randomRange(1, 100) > 80) {
+                dropItems(monsters[k]);
+            }
 
             monsters.splice(k, 1);
 
