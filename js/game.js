@@ -179,6 +179,21 @@ function draw() {
             drawText(statusText, 20, false, 230 + i * 30, "aqua", 20);
               
         }
+
+        if (player.tile.items.length > 0) {
+            for (let item of player.tile.items) {
+                let text = item.name;
+
+                switch(item.type) {
+                    case "weapon": text += " [" + item.damage_min + "d" + item.damage_max + "]"; break;
+                    case "body_armor": text += " [" + item.av + "/" + item.ev + "]"; break;
+                    case "coin": text = item.amount + " " + item.name; break;
+                    case "scroll": break;
+                }
+                drawText("Here lies: ", 20, false, 500, "white", 20);
+                drawText(text, 20, false, 520 + player.tile.items.indexOf(item)*20, "white", 20);
+            }
+        }
     }
 
     if (gameState == "spells") {

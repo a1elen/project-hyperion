@@ -131,6 +131,7 @@ function getRandomItem() {
 
     weapon = {
         name: "Iron Sword",
+        type: "weapon",
         sprite: 43,
         damage_min: 1,
         damage_max: randomRange(4, 8),
@@ -142,6 +143,7 @@ function getRandomItem() {
 
     armor = {
         name: "Leather Chestplate",
+        type: "body_armor",
         sprite: 44,
         av: randomRange(2, 5),
         ev: randomRange(1, 5),
@@ -153,6 +155,7 @@ function getRandomItem() {
 
     gold = {
         name: "Gold",
+        type: "coin",
         sprite: 12,
         amount: randomRange(5, 25),
         get() {
@@ -164,6 +167,7 @@ function getRandomItem() {
 
     magicScroll = {
         name: "Scroll",
+        type: "scroll",
         sprite: 18,
         get() { 
             if (player.spells.length < numSpells) {
