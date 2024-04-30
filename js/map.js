@@ -95,6 +95,7 @@ function getRandomTrap() {
                 saveLevel();
                 level++;
                 startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
+                player.hit(10);
             } else {
                 monster.hit(9999);
             }
