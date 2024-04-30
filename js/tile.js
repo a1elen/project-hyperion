@@ -202,20 +202,6 @@ class Floor extends Tile {
     }
 
     get() {
-        if (this.treasure) {
-            score += randomRange(9, 21);
-            playSound("treasure");
-            this.treasure = false;
-            if (randomRange(0, 2) < 1) {
-                spawnMonster();
-            }
-        }
-
-        if (this.scroll && player.spells.length < numSpells) {
-            console
-            player.addSpell();
-            this.scroll = false;
-        }
 
         if (this.trap) {
             this.trap = false;
