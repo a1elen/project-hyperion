@@ -7,6 +7,7 @@ class Monster {
         this.mana = 200;
         this.hunger = 100;
 
+        this.angry = false;
         this.teleportCounter = randomRange(3, 6);
         this.offsetX = 0;
         this.offsetY = 0;
@@ -122,7 +123,7 @@ class Monster {
         this.evasionClass = this.agility;
     }
 
-    doStuff() {
+    moveToPlayer() {
         let neighbours = this.tile.getAdjacentPassableNeighbours();
 
         neighbours = neighbours.filter(t => !t.monster || t.monster.isPlayer);
@@ -133,6 +134,20 @@ class Monster {
         neighbours.sort((a, b) => a.dist(player.tile) - b.dist(player.tile));
         const newTile = neighbours[0];
         this.tryMove(newTile.x - this.tile.x, newTile.y - this.tile.y);
+    }
+
+    doStuff() {
+        const neighbours = this.tile.getAdjacentPassableNeighbours();
+        if (this.tile.dist(player.tile) < 4) {
+            this.angry = true;
+        }
+        if (neighbours.length && !this.angry) {
+            this.tryMove(neighbours[0].x - this.tile.x, neighbours[0].y - this.tile.y);
+        } else {
+            this.moveToPlayer();
+        }
+
+
     }
 
     getDisplayX() {
@@ -560,17 +575,11 @@ class Skeleton extends Monster {
         this.weaponDamage[1] = 2;
     }
 
-    doStuff() {
-        const neighbours = this.tile.getAdjacentPassableNeighbours();
-        if (this.tile.dist(player.tile) < 4) {
-            this.angry = true;
+    update() {
+        if (this.angry) {
             this.sprite = 8;
         }
-        if (neighbours.length && !this.angry) {
-            this.tryMove(neighbours[0].x - this.tile.x, neighbours[0].y - this.tile.y);
-        } else {
-            super.doStuff();
-        }
+        super.update();
     }
 }
 
