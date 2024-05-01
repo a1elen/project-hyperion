@@ -28,10 +28,11 @@ function setupCanvas() {
 }
 
 function drawSprite(sprite, x, y) {
+    
     ctx.drawImage(
         spritesheet,
-        sprite*16,
-        Math.floor(sprite/50)*16+0,
+        (sprite-(Math.floor(sprite/50)*50))*16,
+        Math.floor(sprite/50)*16,
         16,
         16,
         x*tileSize + shakeX,
@@ -108,9 +109,11 @@ function draw() {
         }
     }
 
-    for (const monster of monsters) {
-        if (seenTiles.includes(monster.tile)) {
-            monster.draw();
+    if (monsters != undefined) {
+        for (const monster of monsters) {
+            if (seenTiles.includes(monster.tile)) {
+                monster.draw();
+            }
         }
     }
 
@@ -185,7 +188,7 @@ function draw() {
                 let text = item.name;
 
                 switch(item.type) {
-                    case "weapon": text += " [" + item.damage_min + "d" + item.damage_max + "]"; break;
+                    case "weapon": text = item.quality+" "+text + " [" + item.damage_min + "d" + item.damage_max + "]"; break;
                     case "body_armor": text += " [" + item.av + "/" + item.ev + "]"; break;
                     case "coin": text = item.amount + " " + item.name; break;
                     case "scroll": break;
@@ -305,7 +308,7 @@ function check_dead() {
                 player.xpToLevel = Math.floor(player.xpToLevel*1.25);
             }
 
-            if (randomRange(1, 100) > 80) {
+            if (randomRange(1, 100) > 75) {
                 dropItems(monsters[k]);
             }
 
@@ -320,7 +323,7 @@ function dropItems(monster) {
     food = {
         name: "Meat",
         type: "food",
-        sprite: 19,
+        sprite: 50,
         get() {
             player.hunger = Math.min(100, player.hunger + randomRange(50, 100));
             return true;
@@ -354,11 +357,13 @@ function tick() {
         }
     }
 
-    for (let k = monsters.length - 1; k >= 0; k--) {
-        if (monsters[k].dead) {
-            monsters.splice(k, 1);
-        } else {
-            monsters[k].update();
+    if (monsters != undefined) {
+        for (let k = monsters.length - 1; k >= 0; k--) {
+            if (monsters[k].dead) {
+                monsters.splice(k, 1);
+            } else {
+                monsters[k].update();
+            }
         }
     }
 

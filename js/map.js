@@ -124,22 +124,116 @@ function getRandomTrap() {
     return trap;
 }
 
-function getRandomItem() {
+function getQuality(item) {
+    if (item.type == "weapon") {
+        let randomNumber = randomRange(1, 5);
 
-    // weapon materials: wood, iron, copper, bronze, silver, gold, steel
-    // armor materials, leather, iron, copper, bronze, silver, gold, steel
+        switch (randomNumber) {
+            case 1: item.damage_max-=2; return "Junk"; break;
+            case 2: item.damage_max-=1; return "Rusted"; break;
+            case 3: return "Normal"; break;
+            case 4: item.damage_max+=1; return "Sharp"; break;
+            case 5: item.damage_max+=2; return "Masterpiece"; break;
+        }
+    }
+}
+
+function initSwords() {
+    let swords = [];
 
     weapon = {
-        name: "Iron Sword",
+        name: "Copper Sword",
         type: "weapon",
-        sprite: 43,
+        sprite: 51,
         damage_min: 1,
-        damage_max: randomRange(4, 8),
+        damage_max: 3,
+        quality: "normal",
         get() {
             player.wield(this);
             return true;
         }
     };
+    swords.push(weapon);
+
+    weapon = {
+        name: "Bronze Sword",
+        type: "weapon",
+        sprite: 52,
+        damage_min: 1,
+        damage_max: 5,
+        quality: "normal",
+        get() {
+            player.wield(this);
+            return true;
+        }
+    };
+    swords.push(weapon);
+
+    weapon = {
+        name: "Iron Sword",
+        type: "weapon",
+        sprite: 53,
+        damage_min: 2,
+        damage_max: 5,
+        quality: "normal",
+        get() {
+            player.wield(this);
+            return true;
+        }
+    };
+    swords.push(weapon);
+
+    weapon = {
+        name: "Silver Sword",
+        type: "weapon",
+        sprite: 54,
+        damage_min: 1,
+        damage_max: 7,
+        quality: "normal",
+        get() {
+            player.wield(this);
+            return true;
+        }
+    };
+    swords.push(weapon);
+
+    weapon = {
+        name: "Gold Sword",
+        type: "weapon",
+        sprite: 55,
+        damage_min: 2,
+        damage_max: 6,
+        quality: "normal",
+        get() {
+            player.wield(this);
+            return true;
+        }
+    };
+    swords.push(weapon);
+
+    weapon = {
+        name: "Steel Sword",
+        type: "weapon",
+        sprite: 43,
+        damage_min: 2,
+        damage_max: 7,
+        quality: "normal",
+        get() {
+            player.wield(this);
+            return true;
+        }
+    };
+    swords.push(weapon);
+
+    return swords;
+}
+
+function getRandomItem() {
+
+    // weapon materials: copper, bronze, iron, silver, gold, steel
+    // armor materials, leather, iron, copper, bronze, silver, gold, steel
+
+    weapon = shuffle(initSwords())[0];
 
     armor = {
         name: "Leather Chestplate",
@@ -178,6 +272,8 @@ function getRandomItem() {
             }
         }
     }
+
+    weapon.quality = getQuality(weapon);
 
     let item;
 

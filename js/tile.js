@@ -74,17 +74,6 @@ class Tile {
     draw() {
         drawSprite(this.sprite, this.x, this.y);
 
-        if (this.traps.length > 0) {
-            for (let trap of this.traps) {
-                drawSprite(trap.sprite, this.x, this.y);
-            }
-        }
-
-        if (this.items.length > 0) {
-            for(let item of this.items) {
-                drawSprite(item.sprite, this.x, this.y);
-            }
-        }
 
         if (this.liquid == "Blood") {
             if (this.liquidVolume > 400) {
@@ -98,6 +87,18 @@ class Tile {
             }
             else if (this.liquidVolume > 0) {
                 drawSprite(38, this.x, this.y);
+            }
+        }
+
+        if (this.traps.length > 0) {
+            for (let trap of this.traps) {
+                drawSprite(trap.sprite, this.x, this.y);
+            }
+        }
+
+        if (this.items.length > 0) {
+            for(let item of this.items) {
+                drawSprite(item.sprite, this.x, this.y);
             }
         }
 
