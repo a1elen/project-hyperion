@@ -231,6 +231,15 @@ class Floor extends Tile {
                     this.traps.splice(this.traps.indexOf(trap));
                 }
             }
+            if (trap.name == "Pressure plate") {
+                let randomNumber = roll(1, 20);
+                if (randomNumber > 10) {
+                    trap.disarm(this);
+                    addPopups("Trap disarmed!", "white", player);
+                } else {
+                    addPopups("Failed...", "white", player);
+                }
+            }
         }
     }
 

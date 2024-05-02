@@ -182,6 +182,9 @@ function getRandomTrap() {
             shakeAmount = 50;
 
             this.visible = true;
+        },
+        disarm(target) {
+            target.traps.splice(target.traps.indexOf(this));
         }
     };
     traps.push(pressure_plate);
