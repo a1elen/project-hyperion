@@ -202,8 +202,8 @@ function getRandomTrap() {
 
             this.visible = true;
 
-            if (roll(1, 20) > 10) {
-                disarm(monster.tile);
+            if (roll(1, 20) > 15) {
+                this.disarm(monster.tile);
             }
         },
         disarm(target) {

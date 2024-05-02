@@ -264,6 +264,8 @@ class Monster {
                         addPopups("-"+damage, "white", newTile.monster);
                         newTile.monster.hit(damage, this);
 
+                    } else {
+                        addPopups("Blocked", "white", newTile.monster);
                     }
                 } else {
                     newTile.monster.tryDodge();

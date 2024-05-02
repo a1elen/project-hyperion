@@ -178,14 +178,28 @@ function draw() {
         drawText(`Hunger: ${player.hunger}`, 20, false, 70, 'rgba(229, 156, 89, 0.75', 20);
 
         let player_weapon;
+        let text_color = "white";
         if (player.weapon != undefined) {
             player_weapon = player.weapon.quality+" "+player.weapon.name;
+
+            if (player.weapon.quality != undefined) {
+                switch(player.weapon.quality) {
+                    case "Junk": text_color = "grey"; break;
+                    case "Rusted": text_color = "orange"; break;
+                    case "Normal": text_color = "white"; break;
+                    case "Sharp": text_color = "aqua"; break;
+                    case "Masterpiece": text_color = "violet"; break;
+                }
+            }
+
         } else {
             player_weapon = "Fists";
         }
 
+
+
         drawText(`Right hand:`, 20, false, 100, "white", 20);
-        drawText(`${player_weapon}`, 20, false, 120, "white", 20);
+        drawText(`${player_weapon}`, 20, false, 120, text_color, 20);
 
         drawText(`Damage: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20);
         drawText(`AC/DV: ${player.armorClass}/${player.evasionClass}`, 20, false, 170, "white", 20);
