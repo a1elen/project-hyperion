@@ -34,6 +34,9 @@ class Monster {
         this.weapon;
         this.armor;
 
+        this.inventory = [];
+        this.inventory_space = 9;
+
         this.abilities = [];
         this.mastery = [];
 
@@ -443,6 +446,7 @@ class Player extends Monster {
 
     addSpell() {
         const newSpell = shuffle(Object.keys(spells))[0];
+        addPopups("Learned " + newSpell, "white", player);
         this.spells.push(newSpell);
     }
 

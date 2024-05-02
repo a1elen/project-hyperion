@@ -186,16 +186,28 @@ function draw() {
         if (player.tile.items.length > 0) {
             for (let item of player.tile.items) {
                 let text = item.name;
+                let text_color = "white";
 
                 switch(item.type) {
                     case "weapon": text = item.quality+" "+text + " [" + item.damage_min + "d" + item.damage_max + "]"; break;
-                    case "body_armor": text += " [" + item.av + "/" + item.ev + "]"; break;
+                    case "body_armor": text = item.quality+" "+text + " [" + item.av + "/" + item.ev + "]"; break;
                     case "coin": text = item.amount + " " + item.name; break;
                     case "scroll": break;
                     case "food": break;
                 }
+
+                if (item.quality != undefined) {
+                    switch(item.quality) {
+                        case "Junk": text_color = "grey"; break;
+                        case "Rusted": text_color = "orange"; break;
+                        case "Normal": text_color = "white"; break;
+                        case "Sharp": text_color = "aqua"; break;
+                        case "Masterpiece": text_color = "violet"; break;
+                    }
+                }
+
                 drawText("Here lies: ", 20, false, 500, "white", 20);
-                drawText(text, 20, false, 520 + player.tile.items.indexOf(item)*20, "white", 20);
+                drawText(text, 20, false, 520 + player.tile.items.indexOf(item)*20, text_color, 20);
             }
         }
     }

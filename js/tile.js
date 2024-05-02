@@ -206,21 +206,31 @@ class Floor extends Tile {
     }
 
     use() {
-        if (this.trap && !this.trapWorks && this.visible) {
-            this.trapWorks = true;
+
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1); return;
+        }
+
+        for (let trap of this.traps) {
+            if (trap.name == "Bear Trap") {
+                let randomNumber = roll(1, 20);
+                if (randomNumber > 10) {
+                    trap.disarm(this);
+                    addPopups("Trap disarmed!", "white", player);
+                } else if (randomNumber > 1) {
+                    addPopups("Failed...", "white", player);
+                } else {
+                    addPopups("Trap broken!", "white", player);
+                    this.traps.splice(this.traps.indexOf(trap));
+                }
+            }
         }
     }
 
     get() {
-
-        if (this.trap) {
-            this.trap = false;
-        }
-
         if (this.items.length > 0) {
             if (this.items[0].get()) this.items.splice(0, 1);
         }
-
     }
 }
 
@@ -230,12 +240,22 @@ class Wall extends Tile {
     }
 
     use() {
-        if (roll(1, 20) > 10) {
-            this.replace(Floor);
-            addPopups("Crackle", "brown", player);
-        } else {
-            addPopups("Failed...", "white", player);
+        for (let item of player.inventory) {
+            if (item.name == "Pickaxe") {
+                let randomNumber = roll(1, 20);
+                if (randomNumber > 10) {
+                    this.replace(Floor);
+                    addPopups("Crackle", "brown", player);
+                } else if (randomNumber > 1) {
+                    addPopups("Failed...", "white", player);
+                } else {
+                    addPopups("Pickaxe broke!", "white", player);
+                    player.inventory.splice(player.inventory.indexOf(item));
+                }
+                return;
+            }
         }
+        addPopups("No pickaxe...", "white", player);
     }
 }
 
@@ -278,7 +298,9 @@ class StairsDown extends Tile {
     }
 
     use() {
-
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1); return;
+        }
     }
 
     moveDown(monster) {
@@ -298,7 +320,9 @@ class StairsDown extends Tile {
     }
 
     get() {
-
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1);
+        }
     }
 }
 
@@ -311,7 +335,9 @@ class StairsUp extends Tile {
     }
 
     use() {
-
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1); return;
+        }
     }
 
     moveUp(monster) {
@@ -331,6 +357,8 @@ class StairsUp extends Tile {
     }
 
     get() {
-        
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1);
+        }
     }
 }

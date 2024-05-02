@@ -65,6 +65,8 @@ function getRandomTrap() {
         use(monster) {
             playSound(this.sound);
 
+
+
             addStatus("Bleeding", randomRange(2, 5), monster);
             addStatus("Stunned", randomRange(2, 5), monster);
             addPopups("Skirr!", "white", monster);
@@ -80,6 +82,22 @@ function getRandomTrap() {
             }
 
             this.visible = true;
+
+            this.disarm(monster.tile);
+
+        },
+        disarm(target) {
+            beartrap_item = {
+                name: "Bear Trap",
+                type: "trap",
+                sprite: 29,
+                get() {
+                    player.inventory.push(this);
+                    return true;
+                }
+            }
+            target.items.push(beartrap_item)
+            target.traps.splice(target.traps.indexOf(this));
         }
     };
 
@@ -136,6 +154,108 @@ function getQuality(item) {
             case 5: item.damage_max+=2; return "Masterpiece"; break;
         }
     }
+
+    if (item.type == "body_armor") {
+        let randomNumber = randomRange(1, 5);
+
+        switch (randomNumber) {
+            case 1: item.av-=2; item.ev-=2; return "Junk"; break;
+            case 2: item.av-=1; item.ev-=1; return "Rusted"; break;
+            case 3: return "Normal"; break;
+            case 4: item.av+=1; item.ev+=1; return "Sharp"; break;
+            case 5: item.av+=2; item.ev+=2; return "Masterpiece"; break;
+        }
+    }
+}
+
+function initBodyArmor() {
+    let body_armors = [];
+
+    body_armor = {
+        name: "Copper Chestplate",
+        type: "body_armor",
+        sprite: 58,
+        av: 3,
+        ev: 3,
+        quality: "normal",
+        get() {
+            player.wear(this);
+            return true;
+        }
+    };
+    body_armors.push(body_armor);
+
+    body_armor = {
+        name: "Bronze Chestplate",
+        type: "body_armor",
+        sprite: 59,
+        av: 4,
+        ev: 3,
+        quality: "normal",
+        get() {
+            player.wear(this);
+            return true;
+        }
+    };
+    body_armors.push(body_armor);
+
+    body_armor = {
+        name: "Iron Chestplate",
+        type: "body_armor",
+        sprite: 60,
+        av: 5,
+        ev: 5,
+        quality: "normal",
+        get() {
+            player.wear(this);
+            return true;
+        }
+    };
+    body_armors.push(body_armor);
+
+    body_armor = {
+        name: "Silver Chestplate",
+        type: "body_armor",
+        sprite: 62,
+        av: 6,
+        ev: 5,
+        quality: "normal",
+        get() {
+            player.wear(this);
+            return true;
+        }
+    };
+    body_armors.push(body_armor);
+
+    body_armor = {
+        name: "Gold Chestplate",
+        type: "body_armor",
+        sprite: 61,
+        av: 7,
+        ev: 5,
+        quality: "normal",
+        get() {
+            player.wear(this);
+            return true;
+        }
+    };
+    body_armors.push(body_armor);
+
+    body_armor = {
+        name: "Steel Chestplate",
+        type: "body_armor",
+        sprite: 63,
+        av: 8,
+        ev: 6,
+        quality: "normal",
+        get() {
+            player.wear(this);
+            return true;
+        }
+    };
+    body_armors.push(body_armor);
+
+    return body_armors;
 }
 
 function initSwords() {
@@ -186,7 +306,7 @@ function initSwords() {
     weapon = {
         name: "Silver Sword",
         type: "weapon",
-        sprite: 54,
+        sprite: 55,
         damage_min: 1,
         damage_max: 7,
         quality: "normal",
@@ -200,7 +320,7 @@ function initSwords() {
     weapon = {
         name: "Gold Sword",
         type: "weapon",
-        sprite: 55,
+        sprite: 54,
         damage_min: 2,
         damage_max: 6,
         quality: "normal",
@@ -231,11 +351,16 @@ function initSwords() {
 function getRandomItem() {
 
     // weapon materials: copper, bronze, iron, silver, gold, steel
-    // armor materials, leather, iron, copper, bronze, silver, gold, steel
+    // armor materials, copper, bronze, iron, silver, gold, steel
+
+    let item;
+    let item_pool = [];
 
     weapon = shuffle(initSwords())[0];
 
-    armor = {
+    body_armor = shuffle(initBodyArmor())[0];
+
+    /*body_armor = {
         name: "Leather Chestplate",
         type: "body_armor",
         sprite: 44,
@@ -245,7 +370,7 @@ function getRandomItem() {
             player.wear(this);
             return true;
         }
-    };
+    };*/
 
     gold = {
         name: "Gold",
@@ -260,9 +385,23 @@ function getRandomItem() {
     };
 
     magicScroll = {
-        name: "Scroll",
+        name: "Scroll of ???",
         type: "scroll",
         sprite: 18,
+        get() { 
+            if (player.inventory.length < player.inventory_space) {
+                player.inventory.push(this);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    magicBook = {
+        name: "Magic Book of ???",
+        type: "book",
+        sprite: 57,
         get() { 
             if (player.spells.length < numSpells) {
                 player.addSpell();
@@ -273,20 +412,26 @@ function getRandomItem() {
         }
     }
 
-    weapon.quality = getQuality(weapon);
-
-    let item;
-
-    let randomNumber = randomRange(1,4)
-    if (randomNumber == 1) {
-        item = weapon;
-    } else if (randomNumber == 2) {
-        item = armor;
-    } else if (randomNumber == 3) {
-        item = gold;
-    } else if (randomNumber == 4) {
-        item = magicScroll;
+    pickaxe = {
+        name: "Pickaxe",
+        type: "tool",
+        sprite: 56,
+        get() { 
+            if (player.inventory.length < player.inventory_space) {
+                player.inventory.push(this);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
+
+    weapon.quality = getQuality(weapon);
+    body_armor.quality = getQuality(body_armor);
+
+    item_pool.push(weapon, body_armor, gold, magicScroll, magicBook, pickaxe)
+
+    item = shuffle(item_pool)[0];
 
     return item;
 }
