@@ -196,10 +196,18 @@ function getRandomTrap() {
         //sound: "trapdoor",
         use(monster) {
             addStatus("Stunned", 5, monster);
+            addPopups("Webbed!", "white", monster);
 
             shakeAmount = 10;
 
             this.visible = true;
+
+            if (roll(1, 20) > 10) {
+                disarm(monster.tile);
+            }
+        },
+        disarm(target) {
+            target.traps.splice(target.traps.indexOf(this));
         }
     };
     traps.push(cobweb);

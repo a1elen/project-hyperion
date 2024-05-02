@@ -115,6 +115,8 @@ function initKeyControls() {
                 player.tile.getNeighbour(-1, 1).selected = true;
                 player.tile.getNeighbour(-1, -1).selected = true;
 
+                player.tile.getNeighbour(0, 0).selected = true;
+
             }
             if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
             if (e.key == "r") startLevel(Math.min(maxHp, player.hp-5), player.spells);
@@ -180,6 +182,8 @@ function initKeyControls() {
             if (e.key == "1") player.use(-1, 1);
             if (e.key == "7") player.use(-1, -1);
 
+            if (e.key == "5") player.use(0, 0);
+
             if (e.key == "e") gameState = "running";
 
             player.tile.getNeighbour(0, -1).selected = false;
@@ -191,6 +195,8 @@ function initKeyControls() {
             player.tile.getNeighbour(1, 1).selected = false;
             player.tile.getNeighbour(-1, 1).selected = false;
             player.tile.getNeighbour(-1, -1).selected = false;
+
+            player.tile.getNeighbour(0, 0).selected = false;
         } else if (gameState == "viewmode") {
 
             if (selectedTile != undefined) {
