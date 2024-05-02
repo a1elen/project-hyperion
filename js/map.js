@@ -170,7 +170,7 @@ function getRandomTrap() {
     traps.push(trapdoor);
 
     pressure_plate = {
-        name: "Pressure Plate",
+        name: "Pressure plate",
         sprite: 72,
         visible: false,
         sound: "trapdoor",
