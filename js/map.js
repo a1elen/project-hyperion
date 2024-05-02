@@ -42,6 +42,7 @@ function generateLevel(levelGen) {
     //}
 
     generateItems(randomRange(clamp(Math.floor(level / 2) + 5, 1, 10), 20));
+    generateObjects(randomRange(0, 5));
 }
 
 function generateTraps(numberOfTraps) {
@@ -56,7 +57,48 @@ function generateItems(numberOfItems) {
     }
 }
 
+function generateObjects(numberOfObjects) {
+    for (let i = 0; i < numberOfObjects; i++) {
+        randomPassableTile().objects.push(getRandomObject());
+    }
+}
+
+function getRandomObject() {
+    let objects = []
+    let object;
+
+    barrel = {
+        name: "Barrel",
+        sprite: 64
+    }
+    objects.push(barrel);
+
+    bookshelf = {
+        name: "Bookshelf",
+        sprite: 71
+    }
+    objects.push(bookshelf);
+
+    spider_cocoon = {
+        name: "Spider Cocoon",
+        sprite: 68
+    }
+    objects.push(spider_cocoon);
+
+    coffin = {
+        name: "Coffin",
+        sprite: 69
+    }
+    objects.push(coffin);
+
+    object = shuffle(objects)[0];
+    return object;
+}
+
 function getRandomTrap() {
+
+    let traps = [];
+
     beartrap = {
         name: "Bear Trap",
         sprite: 28,
@@ -100,6 +142,7 @@ function getRandomTrap() {
             target.traps.splice(target.traps.indexOf(this));
         }
     };
+    traps.push(beartrap);
 
     trapdoor = {
         name: "Trapdoor",
@@ -114,6 +157,7 @@ function getRandomTrap() {
                 level++;
                 startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
                 player.hit(10);
+                player.bleed();
             } else {
                 monster.hit(9999);
             }
@@ -123,19 +167,43 @@ function getRandomTrap() {
             this.visible = true;
         }
     };
+    traps.push(trapdoor);
 
-    let trap;
+    pressure_plate = {
+        name: "Pressure Plate",
+        sprite: 72,
+        visible: false,
+        sound: "trapdoor",
+        use(monster) {
+            playSound(this.sound);
 
-    let randomNumber = randomRange(1,4)
-    if (randomNumber == 1) {
-        trap = beartrap;
-    } else if (randomNumber == 2) {
-        trap = beartrap;
-        trap.visible = true;
-    } else if (randomNumber == 3) {
-        trap = trapdoor;
-    } else if (randomNumber == 4) {
-        trap = trapdoor;
+            monster.move(randomPassableTile());
+
+            shakeAmount = 50;
+
+            this.visible = true;
+        }
+    };
+    traps.push(pressure_plate);
+
+    cobweb = {
+        name: "Cobweb",
+        sprite: 67,
+        visible: true,
+        //sound: "trapdoor",
+        use(monster) {
+            addStatus("Stunned", 5, monster);
+
+            shakeAmount = 10;
+
+            this.visible = true;
+        }
+    };
+    traps.push(cobweb);
+
+    let trap = shuffle(traps)[0];
+
+    if (roll(1, 20) > 15) {
         trap.visible = true;
     }
 

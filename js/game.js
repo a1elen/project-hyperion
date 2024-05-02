@@ -124,8 +124,9 @@ function draw() {
     let centerY = canvas.height / 2;
     let centerX = canvas.width / 2;
 
-    drawText(`Depth: ${level}`, 30, false, 40, "violet", 20);
-    drawText(`Gold: ${score}`, 30, false, 70, "violet", 20);
+    // Top-Center text
+    drawText("Caves", 30, false, 30, "violet", 400, "center")
+    drawText("["+level+"]", 30, false, 60, "white", 400, "center");
 
     //console.log("x is ", mouseX-300);
     //console.log("y is ", mouseY-50);
@@ -169,10 +170,25 @@ function draw() {
             }
         }
 
-        drawText(`Level: ${player.level} ${player.xp}/${player.xpToLevel}`, 20, false, 100, "yellow", 20)
-        drawText(`Health: ${player.hp}`, 20, false, 120, "red", 20)
-        drawText(`Weapon: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20)
-        drawText(`AV / EV: ${player.armorClass}/${player.evasionClass}`, 20, false, 170, "white", 20)
+        drawText(`Level: ${player.level}`, 20, false, 30, 'rgba(244, 230, 62, 0.75)', 670, "right");
+        drawText(`XP: ${player.xp}/${player.xpToLevel}`, 20, false, 50, 'rgba(237, 227, 103, 0.75)', 670, "right");
+
+        drawText(`Health: ${player.hp}`, 20, false, 30, 'rgba(255, 74, 83, 0.75)', 20);
+        drawText(`Mana: ${player.mana}`, 20, false, 50, 'rgba(97, 143, 252, 0.75', 20);
+        drawText(`Hunger: ${player.hunger}`, 20, false, 70, 'rgba(229, 156, 89, 0.75', 20);
+
+        let player_weapon;
+        if (player.weapon != undefined) {
+            player_weapon = player.weapon.quality+" "+player.weapon.name;
+        } else {
+            player_weapon = "Fists";
+        }
+
+        drawText(`Right hand:`, 20, false, 100, "white", 20);
+        drawText(`${player_weapon}`, 20, false, 120, "white", 20);
+
+        drawText(`Damage: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20);
+        drawText(`AC/DV: ${player.armorClass}/${player.evasionClass}`, 20, false, 170, "white", 20);
 
         drawText("Status:", 30, false, 200, "violet", 20);
 
@@ -219,6 +235,10 @@ function draw() {
             const spellText = `${i + 1}) ${player.spells[i] || "--- "}`;
             drawText(spellText, 20, false, 230 + i * 40, "aqua", 20);
         }
+    }
+
+    if (gameState == "inventory") {
+        drawText(`Gold: ${score}`, 30, false, 200, "violet", 20);
     }
 
     if (gameState == "stats") {

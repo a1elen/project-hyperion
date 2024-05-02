@@ -19,8 +19,9 @@ class Tile {
 
         this.selected = false;
 
-        this.items = [];
+        this.objects = [];
         this.traps = [];
+        this.items = [];
     }
 
     replace(newTileType, sprite) {
@@ -93,6 +94,12 @@ class Tile {
         if (this.traps.length > 0) {
             for (let trap of this.traps) {
                 drawSprite(trap.sprite, this.x, this.y);
+            }
+        }
+
+        if (this.objects.length > 0) {
+            for (let object of this.objects) {
+                drawSprite(object.sprite, this.x, this.y);
             }
         }
 

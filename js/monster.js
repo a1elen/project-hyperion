@@ -4,7 +4,10 @@ class Monster {
         this.sprite = sprite;
         this.maxHealth = 10;
         this.hp = hp;
-        this.mana = 200;
+        
+        this.maxMana = 10;
+        this.mana = 10;
+
         this.hunger = 100;
 
         this.angry = false;
@@ -67,6 +70,14 @@ class Monster {
             this.hp = Math.min(this.maxHealth, this.hp+damage);
             playSound("healthUp");
             addPopups("+"+damage, "green", this);
+        }
+    }
+
+    healMana(damage) {
+        if (this.mana < this.maxMana) {
+            this.mana = Math.min(this.maxMana, this.mana+damage);
+            playSound("healthUp");
+            addPopups("+"+damage, "aqua", this);
         }
     }
 
@@ -181,7 +192,7 @@ class Monster {
     }
 
     drawHp() {
-        const healthBarWidth = 60;
+        const healthBarWidth = 64;
         const healthBarHeight = 5;
 
         const width = (this.hp / this.maxHealth) * healthBarWidth;
@@ -193,16 +204,16 @@ class Monster {
         ctx.fillRect(x, y - 2.5, width, healthBarHeight);
 
         // Draw health/attack/armor text
-        drawText(`Lvl: ${this.level}`,
-        10, false, y + 10 - tileSize, "white", x)
+        drawText(`lvl:${this.level}`,
+        10, false, y + 10 - tileSize-8, "white", x+tileSize/2, "center")
 
-        drawText(`${this.weaponDamage[0]}d${this.weaponDamage[1]}`
+        /*drawText(`${this.weaponDamage[0]}d${this.weaponDamage[1]}`
         + " #" + this.armorClass
         + " E" + this.evasionClass,
-        10, false, y - 5, "white", x)
+        10, false, y - 5, "white", x)*/
 
         drawText(`${this.hp}/${this.maxHealth}`,
-        10, false, y + 2.5, "white", x)
+        10, false, y + 2.5, "white", x+tileSize/2, "center")
     }
 
     drawStun() {
@@ -245,8 +256,7 @@ class Monster {
                     if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                         if (roll(1, 20) >= 20) {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
-                            newTile.monster.tile.liquid = "Blood";
-                            newTile.monster.tile.liquidVolume += randomRange(0, 200);
+                            newTile.monster.bleed();
                             addPopups("-"+damage, "red", newTile.monster);
                         } else {
                             damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
@@ -301,10 +311,25 @@ class Monster {
         }
     }
 
+    bleed() {
+        this.tile.liquid = "Blood";
+        this.tile.liquidVolume += randomRange(50, 200);
+    }
+
+    drop(item) {
+        this.tile.items.push(item);
+    }
+
     die() {
         this.dead = true;
         this.tile.monster = null;
         this.sprite = 1;
+        this.bleed();
+        if (this.inventory.length > 0) {
+            for (let item of this.inventory) {
+                this.drop(item);
+            }
+        }
         check_dead();
     }
 
@@ -389,6 +414,9 @@ class Player extends Monster {
 
             this.initMainStats(5, 5, 5, 5, 5, 5);
             this.initSkills(0, 0, 0, 0, 4);
+            
+            this.maxMana = 50;
+            this.mana = 50;
             numSpells = 9;
         }
         this.hp = this.constitution * 5;
@@ -451,13 +479,19 @@ class Player extends Monster {
     }
 
     castSpell(index) {
-        const spellName = this.spells[index];
-        if (!spellName) {
-            return;
+        if (this.mana >= 5) {
+            const spellName = this.spells[index];
+            if (!spellName) {
+                return;
+            }
+            //this.spells.splice(index, 1);
+            spells[spellName]();
+            playSound("spell");
+            this.mana -= 5;
+        } else {
+            addPopups("Not enough mana!", "aqua", player);
         }
-        this.spells.splice(index, 1);
-        spells[spellName]();
-        playSound("spell");
+
         gameState = "running";
     }
 
