@@ -107,7 +107,7 @@ function initKeyControls() {
             }
 
             if (e.key == "w") {
-                gameState = "running";
+                gameState = "wield";
             }
 
             if (e.key == "e") {
