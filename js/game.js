@@ -257,7 +257,7 @@ function draw() {
         drawText("Items:", 30, false, 200, "violet", 20);
 
         for (let item of player.inventory) {
-            drawText(item.name, 20, false, 230 + i * 40, "aqua", 20);
+            drawText(item.name, 20, false, 230 + player.inventory.indexOf(item) * 40, "aqua", 20);
         }
 
 
