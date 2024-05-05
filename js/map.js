@@ -130,7 +130,8 @@ function generateTraps(numberOfTraps) {
 function fillRect(x1, y1, x2, y2) {
     for (let i = x1; i <= x2; i++) {
         for (let j = y1; j >= y2; j--) {
-            tiles[i][j] = new Floor(i, j, 32);
+            //tiles[i][j] = new Floor(i, j, 32);
+            tiles[i][j].replace(Floor, 32);
         }
     }
 }
