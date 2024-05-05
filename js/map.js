@@ -118,18 +118,20 @@ function generateDirectional() {
 
     }
 
-    function fillRect(x1, y1, x2, y2) {
-        for (let i = x1; i < x2; i++) {
-            for (let j = y1; j < y2; j++) {
-                tiles[i][j] = new Floor(i, j, 32);
-            }
-        }
-    }
+
 }
 
 function generateTraps(numberOfTraps) {
     for (let i = 0; i < numberOfTraps; i++) {
         randomPassableTile().traps.push(getRandomTrap());
+    }
+}
+
+function fillRect(x1, y1, x2, y2) {
+    for (let i = x1; i < x2; i++) {
+        for (let j = y1; j < y2; j--) {
+            tiles[i][j] = new Floor(i, j, 32);
+        }
     }
 }
 
