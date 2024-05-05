@@ -509,7 +509,8 @@ function initSwords() {
         damage_max: 3,
         quality: "normal",
         get() {
-            player.wield(this);
+            //player.wield(this);
+            player.inventory.push(this);
             return true;
         }
     };
@@ -523,7 +524,8 @@ function initSwords() {
         damage_max: 5,
         quality: "normal",
         get() {
-            player.wield(this);
+            //player.wield(this);
+            player.inventory.push(this);
             return true;
         }
     };
@@ -537,7 +539,8 @@ function initSwords() {
         damage_max: 5,
         quality: "normal",
         get() {
-            player.wield(this);
+            //player.wield(this);
+            player.inventory.push(this);
             return true;
         }
     };
@@ -551,7 +554,8 @@ function initSwords() {
         damage_max: 7,
         quality: "normal",
         get() {
-            player.wield(this);
+            //player.wield(this);
+            player.inventory.push(this);
             return true;
         }
     };
@@ -565,7 +569,8 @@ function initSwords() {
         damage_max: 6,
         quality: "normal",
         get() {
-            player.wield(this);
+            //player.wield(this);
+            player.inventory.push(this);
             return true;
         }
     };
@@ -579,7 +584,8 @@ function initSwords() {
         damage_max: 7,
         quality: "normal",
         get() {
-            player.wield(this);
+            //player.wield(this);
+            player.inventory.push(this);
             return true;
         }
     };

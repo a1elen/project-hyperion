@@ -360,11 +360,31 @@ class Monster {
 
     }
 
-    wield(weapon) {
+    /*wield(weapon) {
         if (this.weapon != undefined) {
             this.drop(this.weapon)
         }
         this.weapon = weapon;
+        this.weaponDamage[0] = this.weapon.damage_min;
+        this.weaponDamage[1] = this.weapon.damage_max;
+    }*/
+
+    wield(index) {
+        if (this.weapon != undefined) {
+            this.drop(this.weapon)
+        }
+
+        let l;
+        for (let i = 0; i > this.inventory.length; i++) {
+            if (this.inventory[i].type == "weapon") {
+                l++;
+                if (l == index) {
+                    this.weapon = this.inventory[i];
+                    this.inventory.splice(i, 1);
+                }
+            }
+        } 
+
         this.weaponDamage[0] = this.weapon.damage_min;
         this.weaponDamage[1] = this.weapon.damage_max;
     }

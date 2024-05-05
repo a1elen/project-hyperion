@@ -43,7 +43,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -261,6 +261,30 @@ function draw() {
         }
 
 
+    }
+
+    if (gameState == "wield") {
+        drawText("Weapons:", 30, false, 200, "violet", 20);
+
+        let wieldable_weapons;
+        for (let item of player.inventory) {
+            if (item.type != undefined) {
+                if (item.type == "weapon") {
+                    wieldable_weapons.push(item);
+                }
+            }
+        }
+
+        if (wieldable_weapons == undefined) return;
+
+        for (let i = 0; i < wieldable_weapons.length; i++) {
+            let weaponText = `${i + 1}) ${wieldable_weapons[i]}`;
+            drawText(weaponText, 20, false, 230 + i * 40, "aqua", 20);
+        }
+
+        for (let ww of wieldable_weapons) {
+            drawText(ww.name, 20, false, 230+wieldable_weapons.indexOf(ww)*40, "aqua", 20);
+        }
     }
 
     if (gameState == "stats") {
