@@ -1,8 +1,19 @@
+underground = {
+    levelGen = generateCellular(),
+    monsters = []
+}
+
+caves = {
+    levelGen = generateDirectional(),
+    monster = []
+}
+
 function generateLevel(levelGen) {
     let wallChance = 0.3;
     if (levelGen == 0) {
         wallChance = 0.3;
-        tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
+        underground.levelGen;
+        //tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
     } else if (levelGen == 1 || levelGen == 2) {
         wallChance = 0.45
         tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
