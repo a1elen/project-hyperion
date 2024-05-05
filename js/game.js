@@ -479,7 +479,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
     if (level <= 5) {
         levelType = 0;
     } else if (level <= 10) {
-        levelType = 1;
+        levelType = 4;
     } else {
         levelType = 2;
     }
