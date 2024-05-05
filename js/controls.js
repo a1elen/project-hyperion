@@ -102,6 +102,10 @@ function initKeyControls() {
                 selectedTile.selected = true;
             }
 
+            if (e.key == "i") {
+                gameState = "inventory";
+            }
+
             if (e.key == "e") {
                 gameState = "useSelect";
 
@@ -171,6 +175,11 @@ function initKeyControls() {
             if (e.key == "0") gameState = "running";
         } else if (gameState == "stats") {
             if (e.key == "@") gameState = "running";
+        } else if (gameState == "inventory") {
+            if (e.key == "i") {
+                gameState = "inventory";
+            }
+
         } else if (gameState == "useSelect") {
             if (e.key == "w" || e.key == "8") player.use(0, -1);
             if (e.key == "s" || e.key == "2") player.use(0, 1);

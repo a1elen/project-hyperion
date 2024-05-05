@@ -43,7 +43,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -248,6 +248,14 @@ function draw() {
         for (let i = 0; i < numSpells; i++) {
             const spellText = `${i + 1}) ${player.spells[i] || "--- "}`;
             drawText(spellText, 20, false, 230 + i * 40, "aqua", 20);
+        }
+    }
+
+    if (gameState == "inventory") {
+        drawText("Items:", 30, false, 200, "violet", 20);
+
+        for (let item of player.inventory) {
+            drawText(item.name, 20, false, 230 + i * 40, "aqua", 20);
         }
     }
 
