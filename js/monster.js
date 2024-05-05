@@ -378,13 +378,13 @@ class Monster {
         let l = 0;
         for (let i = 0; i < this.inventory.length; i++) {
             if (this.inventory[i].type == "weapon") {
-                l++;
                 if (l == index) {
                     this.weapon = this.inventory[i];
                     this.weaponDamage[0] = this.weapon.damage_min;
                     this.weaponDamage[1] = this.weapon.damage_max;
                     this.inventory.splice(i, 1);
                 }
+                l++;
             }
         } 
     }
