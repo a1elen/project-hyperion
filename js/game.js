@@ -266,7 +266,7 @@ function draw() {
     if (gameState == "wield") {
         drawText("Weapons:", 30, false, 200, "violet", 20);
 
-        let wieldable_weapons;
+        let wieldable_weapons = [];
         for (let item of player.inventory) {
             if (item.type != undefined) {
                 if (item.type == "weapon") {
