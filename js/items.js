@@ -17,3 +17,7 @@ items.food.get = function() {
 items.food.apple = Object.create(items.food);
 items.food.apple.name = "Apple";
 items.food.apple.sprite = 73;
+
+items.food.meat = Object.create(items.food);
+items.food.apple.name = "Meat";
+items.food.apple.sprite = 50;

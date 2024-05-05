@@ -394,17 +394,7 @@ function check_dead() {
 }
 
 function dropItems(monster) {
-    food = {
-        name: "Meat",
-        type: "food",
-        sprite: 50,
-        get() {
-            player.hunger = Math.min(100, player.hunger + randomRange(50, 100));
-            return true;
-        }
-    };
-
-    monster.tile.items.push(food);
+    monster.tile.items.push(items.food.meat);
 }
 
 function check_for_tick() {    
