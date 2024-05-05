@@ -79,7 +79,7 @@ function generateDirectional() {
     let width = startWidth;
     let maxWidth = 10;
 
-    if (startY - y != length) {
+    while (startY - y != length) {
         y--;
 
         let randomRoughness;
