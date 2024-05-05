@@ -47,7 +47,7 @@ function generateLevel(levelGen) {
     generateObjects(randomRange(0, 5));
 }
 
-function generateDirectional() {
+function generateDirectional(length, roughness, windyness) {
     let passableTiles=0;
 
     let length = 20;
