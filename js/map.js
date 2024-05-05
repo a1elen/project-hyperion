@@ -64,7 +64,7 @@ function generateDirectional() {
     let passableTiles=0;
 
     let numberOfYCaves = randomRange(1, 3);
-    let numberofXCaves = randomRange(0, 3);
+    let numberOfXCaves = randomRange(0, 3);
 
     // clean level
     tiles = [];
