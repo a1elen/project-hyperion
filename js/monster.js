@@ -42,6 +42,7 @@ class Monster {
 
         this.abilities = [];
         this.mastery = [];
+        this.resistances = [];
 
         // main stats
         this.initMainStats(1, 1, 1, 1, 1, 1);
@@ -287,7 +288,7 @@ class Monster {
         let newTile = this.tile.getAdjacentPassableNeighbours();
         newTile = newTile.filter((tile) => !tile.monster)
 
-        if (!newTile) {
+        if (newTile == undefined) {
             return;
         }
         const newTileChosen = shuffle(newTile)[0];
