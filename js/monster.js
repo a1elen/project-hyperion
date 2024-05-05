@@ -34,6 +34,19 @@ class Monster {
         this.armorClass = 1;
         this.evasionClass = 1;
 
+        this.rightHand;
+        this.leftHand;
+        
+        this.headwear;
+        this.bodyarmor;
+        this.gloves;
+        this.legwear;
+        this.boots;
+
+        this.necklace;
+        this.rightFinger;
+        this.leftFinger;
+
         this.weapon;
         this.armor;
 
@@ -256,11 +269,19 @@ class Monster {
                 if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge || newTile.monster.stunned) {
                     if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                         if (roll(1, 20) >= 20) {
-                            damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
+                            if (this.weapon != undefined) {
+                                damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides) * 2;
+                            } else {
+                                damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) * 2;
+                            }
                             newTile.monster.bleed();
                             addPopups("-"+damage, "red", newTile.monster);
                         } else {
-                            damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
+                            if (this.weapon != undefined) {
+                                damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides);
+                            } else {
+                                damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]);
+                            }
                         }
                         addPopups("-"+damage, "white", newTile.monster);
                         newTile.monster.hit(damage, this);

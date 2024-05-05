@@ -180,7 +180,7 @@ function draw() {
         let player_weapon;
         let text_color = "white";
         if (player.weapon != undefined) {
-            player_weapon = player.weapon.quality+" "+player.weapon.name;
+            player_weapon = player.weapon.fullName();
 
             if (player.weapon.quality != undefined) {
                 switch(player.weapon.quality) {
@@ -201,7 +201,12 @@ function draw() {
         drawText(`Right hand:`, 20, false, 100, "white", 20);
         drawText(`${player_weapon}`, 20, false, 120, text_color, 20);
 
-        drawText(`Damage: ${player.weaponDamage[0]}d${player.weaponDamage[1]}`, 20, false, 150, "white", 20);
+        if (player.weapon != undefined) {
+            drawText(`Damage: ${player.weapon.diceRolls}d${player.weapon.diceSides}`, 20, false, 150, "white", 20);
+        } else {
+            drawText(`Damage: 1d2`, 20, false, 150, "white", 20);
+        }
+
         drawText(`AC/DV: ${player.armorClass}/${player.evasionClass}`, 20, false, 170, "white", 20);
 
         drawText("Status:", 30, false, 200, "violet", 20);
@@ -219,7 +224,7 @@ function draw() {
                 let text_color = "white";
 
                 switch(item.type) {
-                    case "weapon": text = item.quality+" "+text + " [" + item.damage_min + "d" + item.damage_max + "]"; break;
+                    case "weapon": text = item.fullName(); break;
                     case "body_armor": text = item.quality+" "+text + " [" + item.av + "/" + item.ev + "]"; break;
                     case "coin": text = item.amount + " " + item.name; break;
                     case "scroll": break;
@@ -257,7 +262,12 @@ function draw() {
         drawText("Items:", 30, false, 200, "violet", 20);
 
         for (let item of player.inventory) {
-            drawText(item.name, 20, false, 230 + player.inventory.indexOf(item) * 40, "aqua", 20);
+            if (item.fullName != undefined) {
+                drawText(item.fullName(), 20, false, 230 + player.inventory.indexOf(item) * 40, "aqua", 20);
+            } else {
+                drawText(item.name, 20, false, 230 + player.inventory.indexOf(item) * 40, "aqua", 20);
+            }
+
         }
 
 
@@ -278,7 +288,7 @@ function draw() {
         if (wieldable_weapons == undefined) return;
 
         for (let i = 0; i < wieldable_weapons.length; i++) {
-            let weaponText = `${i + 1}) ${wieldable_weapons[i].name}`;
+            let weaponText = `${i + 1}) ${wieldable_weapons[i].fullName()}`;
             drawText(weaponText, 20, false, 230 + i * 40, "aqua", 20);
         }
     }
