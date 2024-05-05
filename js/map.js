@@ -139,7 +139,7 @@ function generateDirectional() {
         let roughness = randomRange(1, 100); // 1 to 100
         let windyness = randomRange(1, 100); // 1 to 100
 
-        let startX = numTiles+2;
+        let startX = 0+2;
         let startY = randomRange(3, numTiles-3);
         let startWidth = 3;
 
@@ -203,7 +203,10 @@ function fillRect(x1, y1, x2, y2) {
         for (let j = y1; j >= y2; j--) {
             //tiles[i][j] = new Floor(i, j, 32);
             if (tiles[i] != undefined) {
-                tiles[i][j].replace(Floor, 32);
+                if (tiles[i][j] != undefined) {
+                    tiles[i][j].replace(Floor, 32);
+                }
+
             }
         }
     }
