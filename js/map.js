@@ -1,14 +1,6 @@
-underground = {
-    levelGen = generateCellular(),
-    monsters = []
-}
-
-caves = {
-    levelGen = generateDirectional(),
-    monster = []
-}
-
 function generateLevel(levelGen) {
+    initBiomes();
+
     let wallChance = 0.3;
     if (levelGen == 0) {
         wallChance = 0.3;
@@ -56,6 +48,18 @@ function generateLevel(levelGen) {
 
     generateItems(randomRange(clamp(Math.floor(level / 2) + 5, 1, 10), 20));
     generateObjects(randomRange(0, 5));
+}
+
+function initBiomes() {
+    underground = {
+        levelGen = generateCellular(),
+        monsters = []
+    }
+
+    caves = {
+        levelGen = generateDirectional(),
+        monster = []
+    }
 }
 
 function generateDirectional(length, roughness, windyness) {
