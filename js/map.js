@@ -62,7 +62,7 @@ function initBiomes() {
     }
 }
 
-function generateDirectional(length, roughness, windyness) {
+function generateDirectional() {
     let passableTiles=0;
 
     let numberOfYCaves = randomRange(1, 3);
