@@ -77,10 +77,10 @@ function initKeyControls() {
             showTitle();
         } else if (gameState == "running") {
             // Four-side movement
-            if (e.key == "w" || e.key == "8") player.tryMove(0, -1);
-            if (e.key == "s" || e.key == "2") player.tryMove(0, 1);
-            if (e.key == "a" || e.key == "4") player.tryMove(-1, 0);
-            if (e.key == "d" || e.key == "6") player.tryMove(1, 0);
+            if (e.key == "8") player.tryMove(0, -1);
+            if (e.key == "2") player.tryMove(0, 1);
+            if (e.key == "4") player.tryMove(-1, 0);
+            if (e.key == "6") player.tryMove(1, 0);
 
             // Diagonal Movement
             if (e.key == "9") player.tryMove(1, -1);
