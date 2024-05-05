@@ -14,6 +14,6 @@ items.food.get = function() {
     return true;
 };
 
-items.food.apple = Object.create(food);
+items.food.apple = Object.create(items.food);
 items.food.apple.name = "Apple";
 items.food.apple.sprite = 73;
