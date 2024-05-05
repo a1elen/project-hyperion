@@ -177,7 +177,7 @@ function initKeyControls() {
             if (e.key == "@") gameState = "running";
         } else if (gameState == "inventory") {
             if (e.key == "i") {
-                gameState = "inventory";
+                gameState = "running";
             }
 
         } else if (gameState == "useSelect") {

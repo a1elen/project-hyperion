@@ -252,15 +252,15 @@ function draw() {
     }
 
     if (gameState == "inventory") {
+        drawText(`Gold: ${score}`, 30, false, 30, "violet", 20);
+
         drawText("Items:", 30, false, 200, "violet", 20);
 
         for (let item of player.inventory) {
             drawText(item.name, 20, false, 230 + i * 40, "aqua", 20);
         }
-    }
 
-    if (gameState == "inventory") {
-        drawText(`Gold: ${score}`, 30, false, 200, "violet", 20);
+
     }
 
     if (gameState == "stats") {
