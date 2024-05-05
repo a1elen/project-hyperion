@@ -52,12 +52,12 @@ function generateLevel(levelGen) {
 
 function initBiomes() {
     underground = {
-        levelGen: generateCellular(),
+        levelGen: function() {generateCellular();},
         monsters: []
     }
 
     caves = {
-        levelGen: generateDirectional(),
+        levelGen: function() {generateDirectional();},
         monsters: []
     }
 }
@@ -65,20 +65,15 @@ function initBiomes() {
 function generateDirectional(length, roughness, windyness) {
     let passableTiles=0;
 
-    let length = 20;
-    let roughness = 50; // 1 to 100
-    let windyness = 50; // 1 to 100
-
-    let startX = numTiles/2;
-    let startY = numTiles-2;
-    let startWidth = 3;
+    let numberOfYCaves = randomRange(1, 3);
+    let numberofXCaves = randomRange(0, 3);
 
     // clean level
     tiles = [];
     for (let i = 0; i < numTiles; i++) {
         tiles[i] = [];
     }
-
+    
     //tiles = [];
     for (let i = 0; i < numTiles; i++) {
         //tiles[i] = [];
@@ -86,6 +81,15 @@ function generateDirectional(length, roughness, windyness) {
             tiles[i][j] = new Wall(i, j, 33);
         }
     }
+
+    let length = randomRange(10, 20);
+    let roughness = randomRange(1, 100); // 1 to 100
+    let windyness = randomRange(1, 100); // 1 to 100
+
+    let startX = randomRange(3, numTiles-3);
+    let startY = numTiles-2;
+    let startWidth = 3;
+
 
     fillRect(startX-1, startY+1, startX+1, startY-1);
 
