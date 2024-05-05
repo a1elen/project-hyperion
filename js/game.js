@@ -278,12 +278,8 @@ function draw() {
         if (wieldable_weapons == undefined) return;
 
         for (let i = 0; i < wieldable_weapons.length; i++) {
-            let weaponText = `${i + 1}) ${wieldable_weapons[i]}`;
+            let weaponText = `${i + 1}) ${wieldable_weapons[i].name}`;
             drawText(weaponText, 20, false, 230 + i * 40, "aqua", 20);
-        }
-
-        for (let ww of wieldable_weapons) {
-            drawText(ww.name, 20, false, 230+wieldable_weapons.indexOf(ww)*40, "aqua", 20);
         }
     }
 

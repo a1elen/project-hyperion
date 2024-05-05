@@ -187,7 +187,10 @@ function initKeyControls() {
             if (e.key == "w") {
                 gameState = "running";
             }
-            if (e.key >= 1 && e.key <= 9) player.wield(e.key-1);
+            if (e.key >= 1 && e.key <= 9) {
+                player.wield(e.key-1);
+                gameState = "running";
+            }
         } else if (gameState == "useSelect") {
             if (e.key == "w" || e.key == "8") player.use(0, -1);
             if (e.key == "s" || e.key == "2") player.use(0, 1);

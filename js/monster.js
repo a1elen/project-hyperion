@@ -372,21 +372,21 @@ class Monster {
     wield(index) {
         if (this.weapon != undefined) {
             this.drop(this.weapon)
+            this.weapon = undefined;
         }
 
-        let l;
-        for (let i = 0; i > this.inventory.length; i++) {
+        let l = 0;
+        for (let i = 0; i < this.inventory.length; i++) {
             if (this.inventory[i].type == "weapon") {
                 l++;
                 if (l == index) {
                     this.weapon = this.inventory[i];
+                    this.weaponDamage[0] = this.weapon.damage_min;
+                    this.weaponDamage[1] = this.weapon.damage_max;
                     this.inventory.splice(i, 1);
                 }
             }
         } 
-
-        this.weaponDamage[0] = this.weapon.damage_min;
-        this.weaponDamage[1] = this.weapon.damage_max;
     }
 
     wear(armor) {
