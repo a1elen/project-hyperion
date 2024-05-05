@@ -52,13 +52,13 @@ function generateLevel(levelGen) {
 
 function initBiomes() {
     underground = {
-        levelGen = generateCellular(),
-        monsters = []
+        levelGen: generateCellular(),
+        monsters: []
     }
 
     caves = {
-        levelGen = generateDirectional(),
-        monster = []
+        levelGen: generateDirectional(),
+        monsters: []
     }
 }
 
