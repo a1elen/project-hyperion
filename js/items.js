@@ -19,5 +19,5 @@ items.food.apple.name = "Apple";
 items.food.apple.sprite = 73;
 
 items.food.meat = Object.create(items.food);
-items.food.apple.name = "Meat";
-items.food.apple.sprite = 50;
+items.food.meat.name = "Meat";
+items.food.meat.sprite = 50;
