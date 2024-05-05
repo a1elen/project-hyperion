@@ -1,11 +1,9 @@
 function generateLevel(levelGen) {
-    initBiomes();
 
     let wallChance = 0.3;
     if (levelGen == 0) {
         wallChance = 0.3;
-        underground.levelGen;
-        //tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
+        tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
     } else if (levelGen == 1 || levelGen == 2) {
         wallChance = 0.45
         tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
