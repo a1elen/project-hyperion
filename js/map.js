@@ -3,7 +3,7 @@ function generateLevel(levelGen) {
     if (levelGen == 0) {
         wallChance = 0.3;
         tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
-    } else {
+    } else if (levelGen == 1 || levelGen == 2) {
         wallChance = 0.45
         tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
         /*tryTo('generate map', () => {
@@ -28,6 +28,8 @@ function generateLevel(levelGen) {
 
             return passableTilesCount == passables.length;
         })*/
+    } else {
+        generateDirectional();
     }
 
     generateMonsters();
@@ -43,6 +45,86 @@ function generateLevel(levelGen) {
 
     generateItems(randomRange(clamp(Math.floor(level / 2) + 5, 1, 10), 20));
     generateObjects(randomRange(0, 5));
+}
+
+function generateDirectional() {
+    let passableTiles=0;
+
+    let length = 20;
+    let roughness = 50; // 1 to 100
+    let windyness = 50; // 1 to 100
+
+    let startX = numTiles/2;
+    let startY = numTiles-2;
+    let startWidth = 3;
+
+    // clean level
+    tiles = [];
+    for (let i = 0; i < numTiles; i++) {
+        tiles[i] = [];
+    }
+
+    //tiles = [];
+    for (let i = 0; i < numTiles; i++) {
+        //tiles[i] = [];
+        for (let j = 0; j < numTiles; j++) {
+            tiles[i][j] = new Wall(i, j, 33);
+        }
+    }
+
+    fillRect(startX-1, startY+1, startX+1, startY-1);
+
+    let x = startX;
+    let y = startY;
+    let width = startWidth;
+    let maxWidth = 10;
+
+    if (startY - y != length) {
+        y--;
+
+        let randomRoughness;
+        if (randomRange(1, 100) < roughness) {
+            switch(roll(1, 4)) {
+                case 1: randomRoughness = -2; break;
+                case 2: randomRoughness = -1; break;
+                case 3: randomRoughness =  1; break;
+                case 4: randomRoughness =  2; break;
+            }
+            width += randomRoughness;
+            if (width < 3) {
+                width = 3;
+            } else if (width > maxWidth) {
+                width = maxWidth;
+            }
+        }
+
+        let randomWindyness;
+        if (randomRange(1, 100) < windyness) {
+            switch(roll(1, 4)) {
+                case 1: randomWindyness = -2; break;
+                case 2: randomWindyness = -1; break;
+                case 3: randomWindyness =  1; break;
+                case 4: randomWindyness =  2; break;
+            }
+            x += randomWindyness;
+            if (x < 0) {
+                x = 0;
+            } else if (x > numTiles - 3) {
+                x = numTiles - 3;
+            }
+        }
+
+        fillRect(x, y, x+width, y);
+
+    }
+
+    function fillRect(x1, y1, x2, y2) {
+        for (let i = x1; i < x2; i++) {
+            for (let j = y1; j < y2; j++) {
+                tiles[i][j] = new Floor(i, j, 32);
+            }
+        }
+    }
 }
 
 function generateTraps(numberOfTraps) {
