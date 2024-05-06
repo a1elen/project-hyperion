@@ -34,7 +34,7 @@ items.weapons.diceRolls = 1;
 items.weapons.diceSides = 1;
 items.weapons.quality = "Normal";
 items.weapons.material = "Iron";
-items.weapons.accuracy = 1;
+items.weapons.accuracy = 80;
 items.weapons.attackSpeed = 1;
 items.weapons.get = function() {
     player.inventory.push(this);

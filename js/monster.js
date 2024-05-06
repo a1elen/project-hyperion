@@ -266,7 +266,7 @@ class Monster {
 
                 let damage = 0;
 
-                if (roll(1, 20) + this.fighting + this.weaponSkill > newTile.monster.evasionClass + newTile.monster.dodge || newTile.monster.stunned) {
+                /*if (roll(1, 20) + this.fighting + this.weaponSkill > newTile.monster.evasionClass + newTile.monster.dodge || newTile.monster.stunned) {
                     if (roll(1, 20) + this.fighting + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                         if (roll(1, 20) >= 20) {
                             if (this.weapon != undefined) {
@@ -289,6 +289,32 @@ class Monster {
                     } else {
                         addPopups("Blocked", "white", newTile.monster);
                     }
+                } else {
+                    newTile.monster.tryDodge();
+                }*/
+
+                let hitChance;
+                
+                if (this.weapon != undefined) {
+                    hitChance = (this.fighting + this.weapon.accuracy) / 2;
+                } else {
+                    hitChance = (this.fighting + 100) / 2;
+                }
+
+                if (this.weapon != undefined) {
+                    damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides) + this.strength/2;
+                } else {
+                    damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength/2;
+                }
+                damage = damage - newTile.monster.armorClass;
+
+                let dodgeChance;
+
+                dodgeChance = (newTile.monster.dodge+newTile.monster.agility+newTile.monster.evasionClass)/2;
+
+                let randomNumber = randomRange(1, 100);
+                if (randomNumber <= hitChance && randomNumber >= dodgeChance) {
+                    newTile.monster.hit(damage, this);
                 } else {
                     newTile.monster.tryDodge();
                 }
@@ -342,6 +368,7 @@ class Monster {
 
     drop(item) {
         this.tile.items.push(item);
+        this.inventory.splice(this.inventory.indexOf(item), 1);
     }
 
     die() {
@@ -392,7 +419,7 @@ class Monster {
 
     wield(index) {
         if (this.weapon != undefined) {
-            this.drop(this.weapon)
+            this.inventory.push(this.weapon);
             this.weapon = undefined;
         }
 
