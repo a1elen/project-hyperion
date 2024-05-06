@@ -261,13 +261,9 @@ function draw() {
 
         drawText("Items:", 30, false, 200, "violet", 20);
 
-        for (let item of player.inventory) {
-            if (item.fullName != undefined) {
-                drawText(item.fullName(), 20, false, 230 + player.inventory.indexOf(item) * 40, "aqua", 20);
-            } else {
-                drawText(item.name, 20, false, 230 + player.inventory.indexOf(item) * 40, "aqua", 20);
-            }
-
+        for (let i = 0; i < player.inventory.length; i++) {
+            let itemText = `${i + 1}) ${player.inventory[i].fullName()}`;
+            drawText(itemText, 20, false, 230 + i * 40, "aqua", 20);
         }
 
 
