@@ -107,9 +107,9 @@ class Tile {
 
         if (this.items.length > 0) {
             for(let item of this.items) {
-                if (item != undefined) [
+                if (item != undefined) {
                     drawSprite(item.sprite, this.x, this.y);
-                ]
+                }
 
             }
         }
