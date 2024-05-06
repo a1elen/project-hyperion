@@ -50,11 +50,6 @@ items.weapons.quality = "Normal";
 items.weapons.material = "Iron";
 items.weapons.accuracy = 80;
 items.weapons.attackSpeed = 1;
-items.weapons.get = function() {
-    player.inventory.push(this);
-    addPopups("Picked up " + this.fullName(), "white", player);
-    return true;
-};
 items.weapons.fullName = function() {
     return this.quality+" "+this.material+" "+this.name+" ["+this.diceRolls+"d"+this.diceSides+"]";
 };
@@ -65,6 +60,54 @@ items.weapons.pickaxe.type = "weapon";
 items.weapons.pickaxe.diceRolls = 1;
 items.weapons.pickaxe.diceSides = 4;
 items.weapons.pickaxe.sprite = 56;
+
+// Armor
+items.armor = Object.create(item);
+items.armor.type = "armor";
+items.armor.ac = 1;
+items.armor.ec = 1;
+items.armor.quality = "Normal";
+items.armor.material = "Iron";
+items.armor.fullName = function() {
+    return this.quality+" "+this.material+" "+this.name+" ["+this.ac+"/"+this.ec+"]";
+};
+
+// Armor Generators
+
+function makeBodyarmor() {
+    return makeChestplate();
+}
+
+function makeChestplate() {
+    let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
+
+    let matMap = new Map();
+    matMap.set(materials[0], 58);
+    matMap.set(materials[1], 59);
+    matMap.set(materials[2], 60);
+    matMap.set(materials[3], 62);
+    matMap.set(materials[4], 61);
+    matMap.set(materials[5], 63);
+
+    let qualities = ["Junk", "Rusted", "Normal", "Reinforced", "Masterpiece"];
+
+    let quaMap = new Map();
+    quaMap.set(qualities[0], -2);
+    quaMap.set(qualities[1], -1);
+    quaMap.set(qualities[2], 0);
+    quaMap.set(qualities[3], 1);
+    quaMap.set(qualities[4], 2);
+
+    items.armor.chestplate = Object.create(items.armor);
+    items.armor.chestplate.name = "Chestplate"
+    items.armor.chestplate.quality = shuffle(qualities)[0];
+    items.armor.chestplate.material = shuffle(materials)[0];
+    items.armor.chestplate.ac = randomRange(3, 7)+quaMap.get(items.armor.chestplate.quality);
+    items.armor.chestplate.ec = randomRange(-5, 0)+quaMap.get(items.armor.chestplate.quality);
+    items.armor.chestplate.sprite = matMap.get(items.armor.chestplate.material);
+
+    return items.armor.chestplate;
+}
 
 // Weapon Generators
 
