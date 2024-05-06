@@ -306,7 +306,7 @@ class Monster {
                 } else {
                     damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength/2;
                 }
-                damage = damage - newTile.monster.armorClass;
+                damage = Math.max(0, damage - newTile.monster.armorClass);
 
                 let dodgeChance;
 
@@ -338,7 +338,13 @@ class Monster {
         if (newTile == undefined) {
             return;
         }
+
         const newTileChosen = shuffle(newTile)[0];
+
+        if (newTileChosen == undefined) {
+            return;
+        }
+
         const dx = newTileChosen.x - this.tile.x;
         const dy = newTileChosen.y - this.tile.y;
         //this.tryMove(dx, dy);
