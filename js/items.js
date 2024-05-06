@@ -7,7 +7,7 @@ item = {
 }
 
 item.get = function() {
-    if (player.inventory < player.inventory_space) {
+    if (player.inventory.length < player.inventory_space) {
         player.inventory.push(this);
         addPopups("Picked up " + this.fullName(), "white", player);
         return true;
