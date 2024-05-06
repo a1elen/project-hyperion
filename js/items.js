@@ -144,7 +144,7 @@ function makeHammer() {
 }
 
 function makeStaff() {
-    let materials = ["Wood", "Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
+    let materials = ["Wooden", "Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
     matMap.set(materials[0], 78);
