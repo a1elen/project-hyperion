@@ -169,7 +169,7 @@ function makeStaff() {
     items.weapons.staff.quality = shuffle(qualities)[0];
     items.weapons.staff.material = materials[0];
     items.weapons.staff.diceRolls = 1;
-    items.weapons.staff.diceSides = randomRange(4, 11)-quaMap.get(items.weapons.staff.quality);
+    items.weapons.staff.diceSides = randomRange(3, 6)-quaMap.get(items.weapons.staff.quality);
     items.weapons.staff.sprite = matMap.get(items.weapons.staff.material);
 
     return items.weapons.staff;
