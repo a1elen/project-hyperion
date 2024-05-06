@@ -4,17 +4,18 @@ item = {
     name: "Item",
     type: "item",
     sprite: 0,
-    get = function() {
-        if (player.inventory < player.inventory_space) {
-            player.inventory.push(this);
-            addPopups("Picked up " + this.fullName(), "white", player);
-            return true;
-        }
-    },
-    fullName = function() {
-        return this.name;
-    }
 }
+
+item.get = function() {
+    if (player.inventory < player.inventory_space) {
+        player.inventory.push(this);
+        addPopups("Picked up " + this.fullName(), "white", player);
+        return true;
+    }
+};
+item.fullName = function() {
+    return this.name;
+};
 
 // Food
 items.food = Object.create(item);
