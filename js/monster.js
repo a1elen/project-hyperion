@@ -602,9 +602,12 @@ class Worm extends Monster {
 
                 if (this.hp >= this.maxHealth) {
                     const spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
-                    const monster = new Worm(spawnTile);
-                    monsters.push(monster);
-                    this.hp = Math.floor(this.hp / 2);
+                    if (spawnTile != undefined) {
+                        const monster = new Worm(spawnTile);
+                        monsters.push(monster);
+                        this.hp = Math.floor(this.hp / 2);
+                    }
+
                 } else {
                     this.heal(Math.max(1, Math.floor(this.maxHealth / 10)));
                 }
