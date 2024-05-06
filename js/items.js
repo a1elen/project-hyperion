@@ -59,7 +59,14 @@ items.weapons.fullName = function() {
     return this.quality+" "+this.material+" "+this.name+" ["+this.diceRolls+"d"+this.diceSides+"]";
 };
 
+items.weapons.pickaxe = Object.create(items.weapons);
+items.weapons.pickaxe.name = "Pickaxe"
+items.weapons.pickaxe.type = "weapon";
+items.weapons.pickaxe.diceRolls = 1;
+items.weapons.pickaxe.diceSides = 4;
+items.weapons.pickaxe.sprite = 56;
 
+// Weapon Generators
 
 function makeSword() {
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];

@@ -306,7 +306,7 @@ class Monster {
                 } else {
                     damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength/2;
                 }
-                damage = Math.max(0, damage - newTile.monster.armorClass);
+                damage = Math.max(0, Math.floor(damage - newTile.monster.armorClass));
 
                 let dodgeChance;
 
