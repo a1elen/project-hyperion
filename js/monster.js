@@ -266,8 +266,8 @@ class Monster {
 
                 let damage = 0;
 
-                if (roll(1, 20) + this.fighting > newTile.monster.evasionClass + newTile.monster.dodge || newTile.monster.stunned) {
-                    if (roll(1, 20) + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
+                if (roll(1, 20) + this.fighting + this.weaponSkill > newTile.monster.evasionClass + newTile.monster.dodge || newTile.monster.stunned) {
+                    if (roll(1, 20) + this.fighting + this.weaponSkill > newTile.monster.armorClass + newTile.monster.endurance) {
                         if (roll(1, 20) >= 20) {
                             if (this.weapon != undefined) {
                                 damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides) * 2;

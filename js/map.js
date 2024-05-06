@@ -827,7 +827,7 @@ function spawnMonster(rare) {
     
     const monster = new monsterType(randomPassableTile());
     if (rare) {
-        const amount = (Math.floor(level / 5)+1) * randomRange(10, 30);
+        const amount = (Math.floor(level / 5)+1) * randomRange(5, 10);
         for (let i = 0; i < amount; i++) {
             monster.levelUp();
             monster.rare = true;
