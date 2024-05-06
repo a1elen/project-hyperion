@@ -443,6 +443,19 @@ class Monster {
         } 
     }
 
+    eat(index) {
+        let l = 0;
+        for (let i = 0; i < this.inventory.length; i++) {
+            if (this.inventory[i].type == "food") {
+                if (l == index) {
+                    this.inventory[i].eat();
+                    this.inventory.splice(i, 1);
+                }
+                l++;
+            }
+        } 
+    }
+
     wear(armor) {
         if (this.armor != undefined) {
             this.drop(this.armor)
@@ -453,8 +466,9 @@ class Monster {
         this.evasionClass = this.armor.ev;
     }
 
-    drop(item) {
-        this.tile.items.push(item);
+    drop(index) {
+        this.tile.items.push(this.inventory[index]);
+        this.inventory.splice(index, 1);
     }
 
     levelUp() {

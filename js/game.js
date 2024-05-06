@@ -43,7 +43,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield" || gameState == "eat" || gameState == "drop")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -290,6 +290,37 @@ function draw() {
         for (let i = 0; i < wieldable_weapons.length; i++) {
             let weaponText = `${i + 1}) ${wieldable_weapons[i].fullName()}`;
             drawText(weaponText, 20, false, 230 + i * 40, "aqua", 20);
+        }
+    }
+
+    if (gameState == "eat") {
+        drawText("Food:", 30, false, 200, "violet", 20);
+
+        let eatable_items = [];
+        for (let item of player.inventory) {
+            if (item.type != undefined) {
+                if (item.type == "food") {
+                    eatable_items.push(item);
+                }
+            }
+        }
+
+        if (eatable_items == undefined) return;
+
+        for (let i = 0; i < eatable_items.length; i++) {
+            let foodText = `${i + 1}) ${eatable_items[i].fullName()}`;
+            drawText(foodText, 20, false, 230 + i * 40, "aqua", 20);
+        }
+    }
+
+    if (gameState == "drop") {
+        drawText("What to drop:", 30, false, 200, "violet", 20);
+
+        if (player.inventory == undefined) return;
+
+        for (let i = 0; i < player.inventory.length; i++) {
+            let itemText = `${i + 1}) ${player.inventory[i].fullName()}`;
+            drawText(itemText, 20, false, 230 + i * 40, "aqua", 20);
         }
     }
 
@@ -639,6 +670,8 @@ function savePlayer() {
     playerWeapon = player.weapon;
     playerArmor = player.armor;
 
+    playerInventory = player.inventory;
+
 }
 
 function restorePlayer() {
@@ -665,6 +698,8 @@ function restorePlayer() {
     player.weapon = playerWeapon;
     player.armor = playerArmor;
     player.rearm();
+
+    player.inventory = playerInventory;
     
 }
 

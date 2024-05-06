@@ -110,6 +110,14 @@ function initKeyControls() {
                 gameState = "wield";
             }
 
+            if (e.key == "E") {
+                gameState = "eat";
+            }
+
+            if (e.key == "d") {
+                gameState = "drop";
+            }
+
             if (e.key == "e") {
                 gameState = "useSelect";
 
@@ -189,6 +197,25 @@ function initKeyControls() {
             }
             if (e.key >= 1 && e.key <= 9) {
                 player.wield(e.key-1);
+                tick();
+                gameState = "running";
+            }
+        } else if (gameState == "eat") {
+            if (e.key == "E") {
+                gameState = "running";
+            }
+            if (e.key >= 1 && e.key <= 9) {
+                player.eat(e.key-1);
+                tick();
+                gameState = "running";
+            }
+        } else if (gameState == "drop") {
+            if (e.key == "d") {
+                gameState = "running";
+            }
+            if (e.key >= 1 && e.key <= 9) {
+                player.drop(e.key-1);
+                tick();
                 gameState = "running";
             }
         } else if (gameState == "useSelect") {

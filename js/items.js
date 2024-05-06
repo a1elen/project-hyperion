@@ -3,14 +3,24 @@ items = {}
 item = {
     name: "Item",
     type: "item",
-    sprite: 0
+    sprite: 0,
+    get = function() {
+        if (player.inventory < player.inventory_space) {
+            player.inventory.push(this);
+            addPopups("Picked up " + this.fullName(), "white", player);
+            return true;
+        }
+    },
+    fullName = function() {
+        return this.name;
+    }
 }
 
 // Food
 items.food = Object.create(item);
 items.food.type = "food";
 items.food.hunger = 10;
-items.food.get = function() {
+items.food.eat = function() {
     player.hunger = Math.min(100, player.hunger + this.hunger);
     return true;
 };
@@ -18,14 +28,17 @@ items.food.get = function() {
 items.food.apple = Object.create(items.food);
 items.food.apple.name = "Apple";
 items.food.apple.sprite = 73;
+items.food.apple.hunger = 10;
 
 items.food.meat = Object.create(items.food);
 items.food.meat.name = "Meat";
 items.food.meat.sprite = 50;
+items.food.meat.hunger = 50;
 
 items.food.bread = Object.create(items.food);
 items.food.bread.name = "Bread";
 items.food.bread.sprite = 74;
+items.food.bread.hunger = 30;
 
 // Weapons
 items.weapons = Object.create(item);
