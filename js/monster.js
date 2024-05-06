@@ -408,8 +408,8 @@ class Monster {
         }
 
         if (this.armor != undefined) {
-            this.armorClass = this.armor.av;
-            this.evasionClass = this.armor.ev;
+            this.armorClass = this.bodyarmor.av;
+            this.evasionClass = this.bodyarmor.ev;
         }
 
     }
