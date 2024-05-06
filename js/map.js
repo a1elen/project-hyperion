@@ -675,7 +675,7 @@ function getRandomItem() {
     weapon.quality = getQuality(weapon);
     body_armor.quality = getQuality(body_armor);
     
-    item_pool.push(makeSword(), makeAxe(), makeHammer(), body_armor, gold, magicScroll, magicBook, pickaxe, items.food.apple)
+    item_pool.push(makeSword(), makeAxe(), makeHammer(), makeStaff(), body_armor, gold, magicScroll, magicBook, pickaxe, items.food.apple)
 
     item = shuffle(item_pool)[0];
 

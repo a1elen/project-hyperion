@@ -142,3 +142,35 @@ function makeHammer() {
 
     return items.weapons.hammer;
 }
+
+function makeStaff() {
+    let materials = ["Wood", "Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
+
+    let matMap = new Map();
+    matMap.set(materials[0], 78);
+    matMap.set(materials[1], 52);
+    matMap.set(materials[2], 77);
+    matMap.set(materials[3], 55);
+    matMap.set(materials[4], 54);
+    matMap.set(materials[5], 43);
+
+    let qualities = ["Broken", "Scratched", "Normal", "Hardened", "Masterpiece"];
+
+    let quaMap = new Map();
+    quaMap.set(qualities[0], -2);
+    quaMap.set(qualities[1], -1);
+    quaMap.set(qualities[2], 0);
+    quaMap.set(qualities[3], 1);
+    quaMap.set(qualities[4], 2);
+
+    items.weapons.staff = Object.create(items.weapons);
+    items.weapons.staff.name = "Quaterstaff"
+    items.weapons.staff.damageType = "blunt";
+    items.weapons.staff.quality = shuffle(qualities)[0];
+    items.weapons.staff.material = materials[0];
+    items.weapons.staff.diceRolls = 1;
+    items.weapons.staff.diceSides = randomRange(4, 11)-quaMap.get(items.weapons.staff.quality);
+    items.weapons.staff.sprite = matMap.get(items.weapons.staff.material);
+
+    return items.weapons.staff;
+}
