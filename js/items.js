@@ -99,7 +99,8 @@ function makeChestplate() {
     quaMap.set(qualities[4], 2);
 
     items.armor.chestplate = Object.create(items.armor);
-    items.armor.chestplate.name = "Chestplate"
+    items.armor.chestplate.name = "Chestplate";
+    items.armor.chestplate.slot = "bodyarmor";
     items.armor.chestplate.quality = shuffle(qualities)[0];
     items.armor.chestplate.material = shuffle(materials)[0];
     items.armor.chestplate.ac = randomRange(3, 7)+quaMap.get(items.armor.chestplate.quality);

@@ -148,7 +148,7 @@ class Monster {
         this.maxHealth = this.constitution * 5;
         this.evasion = this.agiity;
         this.defense = Math.floor((this.constitution + this.agiity) / 2);
-        this.evasionClass = this.agility;
+        //this.evasionClass = this.agility;
     }
 
     moveToPlayer() {
@@ -456,7 +456,7 @@ class Monster {
         } 
     }
 
-    wear(armor) {
+    /*wear(armor) {
         if (this.armor != undefined) {
             this.drop(this.armor)
         }
@@ -464,6 +464,29 @@ class Monster {
         this.armor = armor;
         this.armorClass = this.armor.av;
         this.evasionClass = this.armor.ev;
+    }*/
+
+    wear(index) {
+        let l = 0;
+        for (let i = 0; i < this.inventory.length; i++) {
+            if (this.inventory[i].type == "armor") {
+                if (l == index) {
+                    switch(this.inventory[i].slot) {
+                        case "bodyarmor": 
+                        if (this.bodyarmor != undefined) {
+                            this.inventory.push(this.bodyarmor);
+                            this.bodyarmor = undefined;
+                        }
+
+                        this.bodyarmor = this.inventory[i];
+                        this.rearm();
+                        this.inventory.splice(i, 1);
+                        break;
+                    }
+                }
+                l++;
+            }
+        } 
     }
 
     drop(index) {

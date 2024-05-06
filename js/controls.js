@@ -110,6 +110,10 @@ function initKeyControls() {
                 gameState = "wield";
             }
 
+            if (e.key == "W") {
+                gameState = "wear";
+            }
+
             if (e.key == "E") {
                 gameState = "eat";
             }
@@ -197,6 +201,15 @@ function initKeyControls() {
             }
             if (e.key >= 1 && e.key <= 9) {
                 player.wield(e.key-1);
+                tick();
+                gameState = "running";
+            }
+        } else if (gameState == "wear") {
+            if (e.key == "W") {
+                gameState = "running";
+            }
+            if (e.key >= 1 && e.key <= 9) {
+                player.wear(e.key-1);
                 tick();
                 gameState = "running";
             }
