@@ -36,6 +36,7 @@ class Monster {
 
         this.rightHand;
         this.leftHand;
+        this.rangedWeapon;
         
         this.headwear;
         this.bodyarmor;
