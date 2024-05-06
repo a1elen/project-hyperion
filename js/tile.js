@@ -93,7 +93,9 @@ class Tile {
 
         if (this.traps.length > 0) {
             for (let trap of this.traps) {
-                drawSprite(trap.sprite, this.x, this.y);
+                if (trap.visible) {
+                    drawSprite(trap.sprite, this.x, this.y);
+                }
             }
         }
 
