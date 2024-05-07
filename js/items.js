@@ -11,6 +11,8 @@ item.get = function() {
         player.inventory.push(this);
         addPopups("Picked up " + this.fullName(), "white", player);
         return true;
+    } else {
+        addPopups("Not enough space", "white", player);
     }
 };
 item.fullName = function() {
@@ -149,12 +151,12 @@ function makeAxe() {
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
-    matMap.set(materials[0], 51);
-    matMap.set(materials[1], 52);
+    matMap.set(materials[0], 82);
+    matMap.set(materials[1], 83);
     matMap.set(materials[2], 76);
-    matMap.set(materials[3], 55);
-    matMap.set(materials[4], 54);
-    matMap.set(materials[5], 43);
+    matMap.set(materials[3], 85);
+    matMap.set(materials[4], 84);
+    matMap.set(materials[5], 86);
 
     let qualities = ["Junk", "Rusted", "Normal", "Sharpened", "Masterpiece"];
 
@@ -169,7 +171,7 @@ function makeAxe() {
     items.weapons.axe.name = "Axe"
     items.weapons.axe.damageType = "slash";
     items.weapons.axe.quality = shuffle(qualities)[0];
-    items.weapons.axe.material = materials[2];
+    items.weapons.axe.material = shuffle(materials)[0];
     items.weapons.axe.diceRolls = 1;
     items.weapons.axe.diceSides = randomRange(5, 12)+quaMap.get(items.weapons.axe.quality);
     items.weapons.accuracy = randomRange(60, 70);
@@ -182,12 +184,12 @@ function makeHammer() {
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
-    matMap.set(materials[0], 51);
-    matMap.set(materials[1], 52);
+    matMap.set(materials[0], 87);
+    matMap.set(materials[1], 88);
     matMap.set(materials[2], 77);
-    matMap.set(materials[3], 55);
-    matMap.set(materials[4], 54);
-    matMap.set(materials[5], 43);
+    matMap.set(materials[3], 90);
+    matMap.set(materials[4], 89);
+    matMap.set(materials[5], 91);
 
     let qualities = ["Junk", "Rusted", "Normal", "Sharpened", "Masterpiece"];
 
@@ -202,7 +204,7 @@ function makeHammer() {
     items.weapons.hammer.name = "Hammer"
     items.weapons.hammer.damageType = "blunt";
     items.weapons.hammer.quality = shuffle(qualities)[0];
-    items.weapons.hammer.material = materials[2];
+    items.weapons.hammer.material = shuffle(materials)[0];
     items.weapons.hammer.diceRolls = 1;
     items.weapons.hammer.diceSides = randomRange(4, 11)+quaMap.get(items.weapons.hammer.quality);
     items.weapons.accuracy = randomRange(60, 70);

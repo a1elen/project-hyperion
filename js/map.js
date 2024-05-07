@@ -81,7 +81,7 @@ function generateDirectional() {
     }
 
     for (let i = 0; i < numberOfYCaves; i++) {
-        let length = randomRange(10, 20);
+        let length = randomRange(10, numTiles-4);
         let roughness = randomRange(1, 100); // 1 to 100
         let windyness = randomRange(1, 100); // 1 to 100
 
@@ -135,7 +135,7 @@ function generateDirectional() {
     }
     
     for (let i = 0; i < numberOfXCaves; i++) {
-        let length = randomRange(10, 20);
+        let length = randomRange(10, numTiles-4);
         let roughness = randomRange(1, 100); // 1 to 100
         let windyness = randomRange(1, 100); // 1 to 100
 
@@ -225,10 +225,9 @@ function generateObjects(numberOfObjects) {
 }
 
 function getRandomObject() {
-    let objects = []
-    let object;
+    let objectsPool = []
 
-    barrel = {
+    /*barrel = {
         name: "Barrel",
         sprite: 64
     }
@@ -252,8 +251,21 @@ function getRandomObject() {
     }
     objects.push(coffin);
 
-    object = shuffle(objects)[0];
-    return object;
+    gravel = {
+        name: "Gravel",
+        sprite: 93
+    }
+    objects.push(gravel);
+
+    campfire = {
+        name: "Campfire",
+        sprite: 98
+    }
+    objects.push(campfire);*/
+
+    objectsPool.push(objects.usable.barrel, objects.usable.bookshelf, objects.usable.spiderCocoon, objects.usable.coffin, objects.usable.campfire, objects.usable.gravel)
+    
+    return shuffle(objectsPool)[0];
 }
 
 function getRandomTrap() {

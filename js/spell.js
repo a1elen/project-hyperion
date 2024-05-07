@@ -75,10 +75,11 @@ spells = {
         let k = 0;
         for (let i = 0; i <= monsters.length; i++) {
             if (!monsters[k].isPlayer) {
+                addPopups("Chink", "yellow", monsters[k]);
                 monsters[k].tile.treasure = true;
                 monsters[k].die();
                 k--;
-                addPopups("Chink", "yellow", monsters[k]);
+
             }
             k++;
         }

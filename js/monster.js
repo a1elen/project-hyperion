@@ -623,9 +623,21 @@ class Player extends Monster {
     }
 
     use(dx, dy) {
-        this.tile.getNeighbour(dx, dy).use();
-        tick();
-        gameState = "running";
+        if (this.tile.getNeighbour(dx, dy).objects.length > 0) {
+            for (let obj of this.tile.getNeighbour(dx, dy).objects) {
+                if (obj.type == "active-object") {
+                    obj.use();
+                    tick();
+                    gameState = "running";
+                }
+            }
+        } else {
+            this.tile.getNeighbour(dx, dy).use();
+            tick();
+            gameState = "running";
+        }
+
+
 
         player.tile.getNeighbour(0, -1).selected = false;
         player.tile.getNeighbour(0, 1).selected = false;
@@ -672,12 +684,12 @@ class Worm extends Monster {
                 addPopups("Munch!", "brown", this);
 
                 if (this.hp >= this.maxHealth) {
-                    const spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
+                    /*const spawnTile = shuffle(this.tile.getAdjacentPassableNeighbours().filter(t => !t.monster))[0];
                     if (spawnTile != undefined) {
                         const monster = new Worm(spawnTile);
                         monsters.push(monster);
                         this.hp = Math.floor(this.hp / 2);
-                    }
+                    }*/
 
                 } else {
                     this.heal(Math.max(1, Math.floor(this.maxHealth / 10)));

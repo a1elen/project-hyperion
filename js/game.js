@@ -262,7 +262,12 @@ function draw() {
         drawText("Items:", 30, false, 200, "violet", 20);
 
         for (let i = 0; i < player.inventory.length; i++) {
-            let itemText = `${i + 1}) ${player.inventory[i].fullName()}`;
+            let itemText;
+            if (player.inventory[i].fullName != undefined) {
+                itemText = `${i + 1}) ${player.inventory[i].fullName()}`;
+            } else {
+                itemText = `${i + 1}) ${player.inventory[i].name}`;
+            }
             drawText(itemText, 20, false, 230 + i * 40, "aqua", 20);
         }
 
@@ -335,7 +340,12 @@ function draw() {
         if (player.inventory == undefined) return;
 
         for (let i = 0; i < player.inventory.length; i++) {
-            let itemText = `${i + 1}) ${player.inventory[i].fullName()}`;
+            let itemText;
+            if (player.inventory[i].fullName != undefined) {
+                itemText = `${i + 1}) ${player.inventory[i].fullName()}`;
+            } else {
+                itemText = `${i + 1}) ${player.inventory[i].name}`;
+            }
             drawText(itemText, 20, false, 230 + i * 40, "aqua", 20);
         }
     }
