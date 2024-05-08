@@ -626,7 +626,7 @@ class Player extends Monster {
         if (this.tile.getNeighbour(dx, dy).objects.length > 0) {
             for (let obj of this.tile.getNeighbour(dx, dy).objects) {
                 if (obj.type == "active-object") {
-                    obj.use();
+                    obj.use(this.tile.getNeighbour(dx, dy));
                     tick();
                     gameState = "running";
                 }

@@ -150,7 +150,7 @@ class Tile {
 
     setEffect(effectSprite) {
         this.effect = effectSprite;
-        this.effectCounter = 30;
+        this.effectCounter = 200;
     }
 }
 
@@ -164,7 +164,7 @@ class Floor extends Tile {
     stepOn(monster) {
         if (this.traps.length > 0) {
             for (let trap of this.traps) {
-                trap.use(monster);
+                trap.action(monster);
             }
         }
 
@@ -236,7 +236,7 @@ class Floor extends Tile {
                     this.traps.splice(this.traps.indexOf(trap));
                 }
             }
-            if (trap.name == "Pressure plate") {
+            if (trap.name == "Pressure Plate") {
                 let randomNumber = roll(1, 20);
                 if (randomNumber > 10) {
                     trap.disarm(this);
@@ -272,6 +272,7 @@ class Wall extends Tile {
                 } else {
                     addPopups("Pickaxe broke!", "white", player);
                     player.inventory.splice(player.inventory.indexOf(item));
+                    return;
                 }
                 return;
             }

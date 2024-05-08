@@ -263,16 +263,14 @@ function getRandomObject() {
     }
     objects.push(campfire);*/
 
-    objectsPool.push(objects.usable.barrel, objects.usable.bookshelf, objects.usable.spiderCocoon, objects.usable.coffin, objects.usable.campfire, objects.usable.gravel)
+    objectsPool.push(objects.usable.barrel, objects.usable.bookshelf, objects.usable.spiderCocoon, objects.usable.coffin, objects.usable.campfire, objects.decorative.gravel)
     
     return shuffle(objectsPool)[0];
 }
 
 function getRandomTrap() {
 
-    let traps = [];
-
-    beartrap = {
+    /*beartrap = {
         name: "Bear Trap",
         sprite: 28,
         visible: false,
@@ -383,15 +381,16 @@ function getRandomTrap() {
             target.traps.splice(target.traps.indexOf(this));
         }
     };
-    traps.push(cobweb);
+    traps.push(cobweb);*/
 
-    let trap = shuffle(traps)[0];
+    let trapsPool = [traps.beartrap, traps.trapdoor, traps.pressurePlate, traps.cobweb];
+    let chosenTrap = shuffle(trapsPool)[0];
 
     if (roll(1, 20) > 15) {
-        trap.visible = true;
+        chosenTrap.visible = true;
     }
 
-    return trap;
+    return chosenTrap;
 }
 
 function getQuality(item) {
@@ -687,7 +686,7 @@ function getRandomItem() {
     weapon.quality = getQuality(weapon);
     body_armor.quality = getQuality(body_armor);
     
-    item_pool.push(makeSword(), makeAxe(), makeHammer(), makeStaff(), makeBodyarmor(), gold, magicScroll, magicBook, items.weapons.pickaxe, items.food.apple, items.food.bread)
+    item_pool.push(makeSword(), makeAxe(), makeHammer(), makeStaff(), makeBodyarmor(), gold, magicScroll, magicBook, items.weapons.pickaxe)
 
     item = shuffle(item_pool)[0];
 

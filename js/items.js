@@ -74,6 +74,12 @@ items.armor.fullName = function() {
     return this.quality+" "+this.material+" "+this.name+" ["+this.ac+"/"+this.ec+"]";
 };
 
+items.tools = Object.create(item);
+
+items.tools.beartrap = Object.create(items.tools);
+items.tools.beartrap.name = "Bear Trap";
+items.tools.beartrap.sprite = 29;
+
 // Armor Generators
 
 function makeBodyarmor() {
