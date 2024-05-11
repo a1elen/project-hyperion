@@ -304,9 +304,9 @@ class Monster {
                 }
 
                 if (this.weapon != undefined) {
-                    damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides) + this.strength*this.fighting;
+                    damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides) + this.strength*(this.fighting/100+0.5)
                 } else {
-                    damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength*this.fighting;
+                    damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength*(this.fighting/100+0.5);
                 }
                 damage = Math.max(0, Math.floor(damage - newTile.monster.armorClass));
 
