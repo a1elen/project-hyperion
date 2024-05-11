@@ -426,7 +426,7 @@ class Monster {
             this.weaponDamage[1] = this.weapon.damage_max;
         }
 
-        if (this.armor != undefined) {
+        if (this.bodyarmor != undefined) {
             this.armorClass = this.bodyarmor.av;
             this.evasionClass = this.bodyarmor.ev;
         }
