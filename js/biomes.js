@@ -175,3 +175,43 @@ biome.caves.levelgen = function() {
     
     }
 }
+
+biome.dungeon = Object.create(biome);
+biome.dungeon.name = "Dungeon";
+biome.dungeon.levelgen = function() {
+    let wallChance = 0.45;
+    let levelType = 2;
+        let passableTiles=0;
+    
+        // clean level
+        tiles = [];
+        for (let i = 0; i < numTiles; i++) {
+            tiles[i] = [];
+        }
+    
+        //tiles = [];
+        for (let i = 0; i < numTiles; i++) {
+            //tiles[i] = [];
+            for (let j = 0; j < numTiles; j++) {
+                if (Math.random() < wallChance || !inBounds(i, j)) {
+                    if (levelType == 0) {
+                        tiles[i][j] = new Wall(i, j, 3);
+                    } else if (levelType == 1) {
+                        tiles[i][j] = new Wall(i, j, 33);
+                    } else if(levelType == 2) {
+                        tiles[i][j] = new Wall(i, j, 35);
+                    }
+                } else {
+                    if (levelType == 0) {
+                        tiles[i][j] = new Floor(i, j, 2);
+                    } else if (levelType == 1) {
+                        tiles[i][j] = new Floor(i, j, 32);
+                    } else if (levelType == 2) {
+                        tiles[i][j] = new Floor(i, j, 34);
+                    }
+                    passableTiles++;
+                }
+            }
+        }
+        return passableTiles;
+}

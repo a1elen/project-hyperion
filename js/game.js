@@ -546,12 +546,17 @@ function startGame() {
 }
 
 function initLevelPool() {
-    levelPool.push(biome.underground);
-    levelPool.push(biome.underground);
-    levelPool.push(biome.underground);
-    levelPool.push(biome.caves);
-    levelPool.push(biome.caves);
-    levelPool.push(biome.caves);
+    for (let i = 0; i < randomRange(3, 6); i++) {
+        levelPool.push(biome.underground);
+    }
+
+    for (let i = 0; i < randomRange(3, 6); i++) {
+        levelPool.push(biome.caves);
+    }
+
+    for (let i = 0; i < randomRange(3, 6); i++) {
+        levelPool.push(biome.dungeon);
+    }
 }
 
 function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
