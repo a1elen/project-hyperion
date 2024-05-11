@@ -336,6 +336,8 @@ class Monster {
         let newTile = this.tile.getAdjacentPassableNeighbours();
         newTile = newTile.filter((tile) => !tile.monster)
 
+        addPopups("Dodged!", "white", this);
+
         if (newTile == undefined) {
             return;
         }
@@ -354,7 +356,7 @@ class Monster {
         const dy = newTileChosen.y - this.tile.y;
         //this.tryMove(dx, dy);
         this.move(this.tile.getNeighbour(dx, dy));
-        addPopups("Dodged!", "white", this);
+
     }
 
     hit(damage, attacker) {
