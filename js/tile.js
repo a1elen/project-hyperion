@@ -261,23 +261,30 @@ class Wall extends Tile {
     }
 
     use() {
+        let pickaxeToUse;
         for (let item of player.inventory) {
             if (item.name == "Pickaxe") {
-                let randomNumber = roll(1, 20);
-                if (randomNumber > 10) {
-                    this.replace(Floor);
-                    addPopups("Crackle", "brown", player);
-                } else if (randomNumber > 1) {
-                    addPopups("Failed...", "white", player);
-                } else {
-                    addPopups("Pickaxe broke!", "white", player);
-                    player.inventory.splice(player.inventory.indexOf(item));
-                    return;
-                }
-                return;
+                pickaxeToUse = item;
             }
         }
-        addPopups("No pickaxe...", "white", player);
+
+        if (pickaxeToUse == undefined) {
+            addPopups("No pickaxe...", "white", player);
+            return;
+        }
+
+        let randomNumber = roll(1, 20);
+        if (randomNumber > 10) {
+            this.replace(Floor);
+            addPopups("Crackle", "brown", player);
+        } else if (randomNumber > 1) {
+            addPopups("Failed...", "white", player);
+        } else {
+            addPopups("Pickaxe broke!", "white", player);
+            player.inventory.splice(player.inventory.indexOf(pickaxeToUse), 1);
+        }
+
+
     }
 }
 
