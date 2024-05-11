@@ -298,28 +298,38 @@ class Monster {
                 let hitChance;
                 
                 if (this.weapon != undefined) {
-                    hitChance = (this.fighting + this.weapon.accuracy) / 2;
+                    hitChance = this.weapon.accuracy /*+ this.dexterity * (this.fighting/100 + 0.5)*/;
                 } else {
-                    hitChance = (this.fighting + 100) / 2;
+                    hitChance = 90/*+ this.dexterity * (this.fighting/100 + 0.5)*/;
                 }
 
                 if (this.weapon != undefined) {
-                    damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides) + this.strength/2;
+                    damage = rollSum(this.weapon.diceRolls, this.weapon.diceSides) + this.strength*this.fighting;
                 } else {
-                    damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength/2;
+                    damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength*this.fighting;
                 }
                 damage = Math.max(0, Math.floor(damage - newTile.monster.armorClass));
 
-                let dodgeChance;
-
-                dodgeChance = (newTile.monster.dodge+newTile.monster.agility+newTile.monster.evasionClass)/2;
-
-                let randomNumber = randomRange(1, 100);
-                if (randomNumber <= hitChance && randomNumber >= dodgeChance) {
-                    newTile.monster.hit(damage, this);
-                } else {
-                    newTile.monster.tryDodge();
+                if (randomRange(1, 100) < 5) {
+                    damage = damage*2; // CRIT
                 }
+
+                let dodgeChance;
+                let enemy = newTile.monster;
+
+                dodgeChance = enemy.evasionClass + enemy.agility*(enemy.dodge+0.5);
+
+                if (randomRange(1, 100) > hitChance) {
+                    addPopups("Missed!", "gray", enemy);
+                    return;
+                }
+
+                if (randomRange(1, 100) <= dodgeChance) {
+                    enemy.tryDodge();
+                    return;
+                }
+
+                newTile.monster.hit(damage, this);
 
                 damage += this.bonusAttack;
 
