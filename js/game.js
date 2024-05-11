@@ -550,9 +550,16 @@ function startGame() {
 }
 
 function initLevelPool() {
-    for (let i = 0; i < randomRange(3, 6); i++) {
-        levelPool.push(biome.underground);
+    if (randomRange(1, 2) == 1) {
+        for (let i = 0; i < randomRange(3, 6); i++) {
+            levelPool.push(biome.underground);
+        }
+    } else {
+        for (let i = 0; i < randomRange(3, 6); i++) {
+            levelPool.push(biome.chasm);
+        }
     }
+
 
     for (let i = 0; i < randomRange(3, 6); i++) {
         levelPool.push(biome.caves);

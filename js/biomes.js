@@ -45,6 +45,53 @@ biome.underground.levelgen = function() {
         return passableTiles;
 }
 
+biome.chasm = Object.create(biome);
+biome.chasm.name = "Chasm";
+biome.chasm.monsterPool = [Spider, Snake, GreenSlime, Mouse];
+biome.chasm.objPool = [objects.usable.barrel, objects.usable.campfire];
+biome.chasm.trapsPool = [traps.beartrap, traps.trapdoor];
+biome.chasm.levelgen = function() {
+    tiles = [];
+    for (let i = 0; i < numTiles; i++) {
+        tiles[i] = [];
+    }
+
+
+    let wallChance = 0.45;
+
+    // Spawn walls randomly
+    for (let i = 0; i < numTiles; i++) {
+        for (let j = 0; j < numTiles; j++) {
+            if (Math.random() < wallChance || !inBounds(i, j)) {
+                tiles[i][j] = new Wall(i, j, 3);
+            } else {
+                tiles[i][j] = new Floor(i, j, 2);
+
+            }
+        }
+    }
+
+    // iterate
+    let iterations = 4;
+    for (let i = 0; i < iterations; i++) {
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                let neighbours = tiles[i][j].getAdjacentNeighbours().filter(t => !t.passable);
+                if (tiles[i][j].passable) { // if its a floor
+                    if (neighbours.length >= 5) {
+                        tiles[i][j].replace(Wall, 3);
+                    }
+                } else { // if its a wall
+                    if (neighbours.length < 4) {
+                        tiles[i][j].replace(Floor, 2);
+                    }
+                }
+                
+            }
+        }
+    }
+}
+
 biome.caves = Object.create(biome);
 biome.caves.name = "Caves";
 biome.caves.monsterPool = [StoneGolem, Zombie, Skeleton, Worm];
