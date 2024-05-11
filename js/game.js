@@ -442,7 +442,7 @@ function check_dead() {
     for (let k = monsters.length - 1; k >= 0; k--) {
         if (monsters[k].dead) {
             // Xp gain
-            if (monster[k].level >= player.level) {
+            if (monsters[k].level >= player.level) {
                 player.xp = monsters[k].rare ? player.xp + monsters[k].xpPoints : player.xp + monsters[k].xpPoints + randomRange(0, 3);
                 if (player.xp >= player.xpToLevel) {
                     player.levelUp();
@@ -450,7 +450,7 @@ function check_dead() {
                     player.xpToLevel = Math.floor(player.xpToLevel*1.25);
                 }
             }
-            
+
             if (randomRange(1, 100) > 75) {
                 dropItems(monsters[k]);
             }
