@@ -125,7 +125,7 @@ function draw() {
     let centerX = canvas.width / 2;
 
     // Top-Center text
-    drawText("Caves", 30, false, 30, "violet", 400, "center")
+    drawText(levelPool[level-1].name, 30, false, 30, "violet", 400, "center")
     drawText("["+level+"]", 30, false, 60, "white", 400, "center");
 
     //console.log("x is ", mouseX-300);
@@ -535,12 +535,23 @@ function startGame() {
     score = 0;
     numSpells = 1;
 
+    levelPool = [];
     levelTiles = [];
     levelMonsters = [];
+    initLevelPool();
     startLevel(startingHp);
     gameStarted = true;
 
     gameState = "running";
+}
+
+function initLevelPool() {
+    levelPool.push(biome.underground);
+    levelPool.push(biome.underground);
+    levelPool.push(biome.underground);
+    levelPool.push(biome.caves);
+    levelPool.push(biome.caves);
+    levelPool.push(biome.caves);
 }
 
 function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {

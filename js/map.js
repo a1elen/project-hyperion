@@ -1,6 +1,8 @@
 function generateLevel(levelGen) {
 
-    let wallChance = 0.3;
+    levelPool[level-1].levelgen();
+
+    /*let wallChance = 0.3;
     if (levelGen == 0) {
         wallChance = 0.3;
         tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
@@ -28,10 +30,10 @@ function generateLevel(levelGen) {
             }
 
             return passableTilesCount == passables.length;
-        })*/
+        })
     } else {
         generateDirectional();
-    }
+    }*/
 
     generateMonsters();
 
