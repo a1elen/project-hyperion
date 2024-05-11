@@ -180,7 +180,7 @@ biome.caves.levelgen = function() {
 
 biome.dungeon = Object.create(biome);
 biome.dungeon.name = "Dungeon";
-biome.caves.monsterPool = [GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby];
+biome.dungeon.monsterPool = [GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby];
 biome.dungeon.levelgen = function() {
     let wallChance = 0.45;
     let levelType = 2;
