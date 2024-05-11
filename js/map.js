@@ -265,7 +265,7 @@ function getRandomObject() {
     }
     objects.push(campfire);*/
 
-    objectsPool.push(objects.usable.barrel, objects.usable.bookshelf, objects.usable.spiderCocoon, objects.usable.coffin, objects.usable.campfire, objects.decorative.gravel)
+    objectsPool = levelPool[level-1].objPool;
     
     return shuffle(objectsPool)[0];
 }
@@ -385,7 +385,7 @@ function getRandomTrap() {
     };
     traps.push(cobweb);*/
 
-    let trapsPool = [traps.beartrap, traps.trapdoor, traps.pressurePlate, traps.cobweb];
+    let trapsPool = levelPool[level-1].trapsPool;
     let chosenTrap = shuffle(trapsPool)[0];
 
     if (roll(1, 20) > 15) {
