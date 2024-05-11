@@ -330,6 +330,7 @@ class Monster {
                 }
 
                 newTile.monster.hit(damage, this);
+                addPopups("("+damage+")", "white", enemy);
 
                 damage += this.bonusAttack;
 
