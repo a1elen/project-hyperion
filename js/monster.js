@@ -317,7 +317,7 @@ class Monster {
                 let dodgeChance;
                 let enemy = newTile.monster;
 
-                dodgeChance = enemy.evasionClass + enemy.agility*(enemy.dodge+0.5);
+                dodgeChance = enemy.evasionClass + enemy.agility*(enemy.dodge/100+0.5);
 
                 if (randomRange(1, 100) > hitChance) {
                     addPopups("Missed!", "gray", enemy);
