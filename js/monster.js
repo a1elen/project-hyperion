@@ -346,6 +346,10 @@ class Monster {
             return;
         }
 
+        if (randomRange(1, 100) > 10) {
+            return;
+        }
+
         const dx = newTileChosen.x - this.tile.x;
         const dy = newTileChosen.y - this.tile.y;
         //this.tryMove(dx, dy);
