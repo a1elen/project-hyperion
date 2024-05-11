@@ -427,8 +427,8 @@ class Monster {
         }
 
         if (this.bodyarmor != undefined) {
-            this.armorClass = this.bodyarmor.av;
-            this.evasionClass = this.bodyarmor.ev;
+            this.armorClass = this.bodyarmor.ac;
+            this.evasionClass = this.bodyarmor.ec;
         }
 
     }
