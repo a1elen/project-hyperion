@@ -219,6 +219,7 @@ function draw() {
         }
 
         if (player.tile.items.length > 0) {
+            drawText("Here lies: ", 20, false, 500, "white", 20);
             for (let i = 0; i < player.tile.items.length; i++) {
                 let item = player.tile.items[i];
                 let text = item.name;
@@ -242,7 +243,7 @@ function draw() {
                     }
                 }
 
-                drawText("Here lies: ", 20, false, 500, "white", 20);
+
                 drawText(text, 20, false, 520 + i*20, text_color, 20);
             }
         }
