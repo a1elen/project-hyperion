@@ -149,6 +149,7 @@ class Monster {
         this.maxHealth = this.constitution * 5;
         this.evasion = this.agiity;
         this.defense = Math.floor((this.constitution + this.agiity) / 2);
+        this.rearm();
         //this.evasionClass = this.agility;
     }
 

@@ -4,6 +4,7 @@ biome = {
 
 biome.underground = Object.create(biome);
 biome.underground.name = "Underground";
+biome.underground.monsterPool = [Spider, Snake, GreenSlime, Mouse];
 biome.underground.levelgen = function() {
     let wallChance = 0.3;
     let levelType = 0;
@@ -44,6 +45,7 @@ biome.underground.levelgen = function() {
 
 biome.caves = Object.create(biome);
 biome.caves.name = "Caves";
+biome.caves.monsterPool = [StoneGolem, Zombie, Skeleton, Worm];
 biome.caves.levelgen = function() {
         let passableTiles=0;
     
@@ -178,6 +180,7 @@ biome.caves.levelgen = function() {
 
 biome.dungeon = Object.create(biome);
 biome.dungeon.name = "Dungeon";
+biome.caves.monsterPool = [GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby];
 biome.dungeon.levelgen = function() {
     let wallChance = 0.45;
     let levelType = 2;
