@@ -6,6 +6,7 @@ biome.underground = Object.create(biome);
 biome.underground.name = "Underground";
 biome.underground.levelgen = function() {
     let wallChance = 0.3;
+    let levelType = 0;
         let passableTiles=0;
     
         // clean level
