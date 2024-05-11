@@ -486,16 +486,17 @@ class Monster {
     }*/
 
     wear(index) {
+        if (this.bodyarmor != undefined) {
+            this.inventory.push(this.bodyarmor);
+            this.bodyarmor = undefined;
+        }
+
         let l = 0;
         for (let i = 0; i < this.inventory.length; i++) {
             if (this.inventory[i].type == "armor") {
                 if (l == index) {
                     switch(this.inventory[i].slot) {
                         case "bodyarmor": 
-                        if (this.bodyarmor != undefined) {
-                            this.inventory.push(this.bodyarmor);
-                            this.bodyarmor = undefined;
-                        }
 
                         this.bodyarmor = this.inventory[i];
                         this.rearm();

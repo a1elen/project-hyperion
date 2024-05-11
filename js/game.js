@@ -710,7 +710,7 @@ function savePlayer() {
     playerStatuses = player.statuses;
 
     playerWeapon = player.weapon;
-    playerArmor = player.armor;
+    playerArmor = player.bodyarmor;
 
     playerInventory = player.inventory;
 
@@ -738,7 +738,7 @@ function restorePlayer() {
     playerStatuses = player.statuses;
 
     player.weapon = playerWeapon;
-    player.armor = playerArmor;
+    player.bodyarmor = playerArmor;
     player.rearm();
 
     player.inventory = playerInventory;
