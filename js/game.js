@@ -631,7 +631,8 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
         placeStairs();
         placeDoors();
     }
- 
+}
+
 
     function placeDoors() {
         let doorsNumber = randomRange(0, 5);
@@ -660,7 +661,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
             }
         }
         
-    }
+    
 
     function placePlayer(upOrDown) {
         let playerRandomTile;
