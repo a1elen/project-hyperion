@@ -230,6 +230,7 @@ function draw() {
                     case "armor": text = item.fullName(); break;
                     case "coin": text = item.amount + " " + item.name; break;
                     case "scroll": text = item.fullName(); break;
+                    case "book": text = item.fullName(); break;
                     case "food": break;
                 }
 
