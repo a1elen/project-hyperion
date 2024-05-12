@@ -645,7 +645,7 @@ function getRandomItem() {
 
     magicScroll = {
         spell: shuffle(Object.keys(spells))[0],
-        name: "Scroll of " + spell,
+        name: "Scroll of " + this.spell,
         type: "scroll",
         sprite: 18,
         get() { 
@@ -663,7 +663,7 @@ function getRandomItem() {
 
     magicBook = {
         spell: shuffle(Object.keys(spells))[0],
-        name: "Magic Book of " + spell,
+        name: "Magic Book of " + this.spell,
         type: "book",
         sprite: 57,
         get() { 
