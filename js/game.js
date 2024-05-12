@@ -634,11 +634,29 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
  
 
     function placeDoors() {
-        let doorsNumber = randomRange(0, 5); 
-        for (let x = 0; x < doorsNumber; x++) {
-            let doorTile = randomPassableTile();
+        let doorsNumber = randomRange(0, 5);
+        let possibleTiles = [];
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                if (!tiles[i][j].getNeighbour(1, 0).passable && !tiles[i][j].getNeighbour(-1, 0).passable) {
+                    if (tiles[i][j].getNeighbour(0, 1).passable && !tiles[i][j].getNeighbour(0, -1).passable) {
+                        possibleTiles.push(tiles[i][j]);
+                    }
+                } else if (!tiles[i][j].getNeighbour(0, 1).passable && !tiles[i][j].getNeighbour(0, -1).passable) {
+                    if (tiles[i][j].getNeighbour(1, 0).passable && !tiles[i][j].getNeighbour(-1, 0).passable) {
+                        possibleTiles.push(tiles[i][j]);
+                    }
+                }
+            }
+        }
+
+            //let doorTile = randomPassableTile();
+
+            let doorTile = shuffle(possibleTiles)[0];
+
             if (doorTile.constructor.name != "StairsUp" && doorTile.constructor.name != "StairsDown" && doorTile.monster == undefined) {
                 doorTile.replace(ClosedDoor);
+                possibleTiles.splice(possibleTiles.indexOf(doorTile), 1);
             }
         }
         
@@ -718,7 +736,7 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
  
         })*/
     }
-}
+
 
 function savePlayer() {
     playerMaxHealth = player.maxHealth;
