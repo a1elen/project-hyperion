@@ -497,17 +497,19 @@ function tick() {
 
     for (let i = 0; i < tiles.length; i++) {
         for (let j = 0; j < tiles.length; j++) {
-            if (tiles[i][j].liquid == "Blood") {
-                if (tiles[i][j].liquidVolume > tiles[i][j].liquidVolumeCapacity-100) {
+            if (tiles[i][j] != undefined) {
+                if (tiles[i][j].liquid == "Blood") {
+                    if (tiles[i][j].liquidVolume > tiles[i][j].liquidVolumeCapacity-100) {
 
-                    if (roll(1, 100) > 50) {
-                        let bloodToFlow = randomRange(Math.floor((tiles[i][j].liquidVolume - (tiles[i][j].liquidVolumeCapacity-100))/2), tiles[i][j].liquidVolume - (tiles[i][j].liquidVolumeCapacity-100));
-                        let neigbours = shuffle(tiles[i][j].getAdjacentPassableNeighbours());
-                        neigbours[0].liquid = tiles[i][j].liquid;
-                        tiles[i][j].liquidVolume -= bloodToFlow;
-                        neigbours[0].liquidVolume += bloodToFlow;
+                        if (roll(1, 100) > 50) {
+                            let bloodToFlow = randomRange(Math.floor((tiles[i][j].liquidVolume - (tiles[i][j].liquidVolumeCapacity-100))/2), tiles[i][j].liquidVolume - (tiles[i][j].liquidVolumeCapacity-100));
+                            let neigbours = shuffle(tiles[i][j].getAdjacentPassableNeighbours());
+                            neigbours[0].liquid = tiles[i][j].liquid;
+                            tiles[i][j].liquidVolume -= bloodToFlow;
+                            neigbours[0].liquidVolume += bloodToFlow;
+                        }
+
                     }
-
                 }
             }
         }
