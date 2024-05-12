@@ -654,10 +654,12 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
         
         let doorTile = shuffle(possibleTiles)[0];
         for (let i = 0; i < doorsNumber; i++) {
-        if (doorTile.constructor.name != "StairsUp" && doorTile.constructor.name != "StairsDown" && doorTile.monster == undefined) {
-            doorTile.replace(ClosedDoor);
-            possibleTiles.splice(possibleTiles.indexOf(doorTile), 1);
-        }
+            if (doorTile != undefined) {
+                if (doorTile.constructor.name != "StairsUp" && doorTile.constructor.name != "StairsDown" && doorTile.monster == undefined) {
+                    doorTile.replace(ClosedDoor);
+                    possibleTiles.splice(possibleTiles.indexOf(doorTile), 1);
+                }       
+            }
         }
     }
 
