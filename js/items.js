@@ -43,6 +43,11 @@ items.food.bread.name = "Bread";
 items.food.bread.sprite = 74;
 items.food.bread.hunger = 30;
 
+items.food.carcass = Object.create(items.food);
+items.food.carcass.name = "Carcass";
+items.food.carcass.sprite = 65;
+items.food.carcass.hunger = 15;
+
 // Weapons
 items.weapons = Object.create(item);
 items.weapons.type = "weapon";

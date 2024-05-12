@@ -465,7 +465,7 @@ function check_dead() {
 }
 
 function dropItems(monster) {
-    monster.tile.items.push(items.food.meat);
+    monster.tile.items.push(items.food.carcass);
 }
 
 function check_for_tick() {    
