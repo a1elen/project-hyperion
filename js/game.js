@@ -639,11 +639,11 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
                 if (!tiles[i][j].getNeighbour(1, 0).passable && !tiles[i][j].getNeighbour(-1, 0).passable) {
-                    if (tiles[i][j].getNeighbour(0, 1).passable && !tiles[i][j].getNeighbour(0, -1).passable) {
+                    if (tiles[i][j].getNeighbour(0, 1).passable && tiles[i][j].getNeighbour(0, -1).passable) {
                         possibleTiles.push(tiles[i][j]);
                     }
                 } else if (!tiles[i][j].getNeighbour(0, 1).passable && !tiles[i][j].getNeighbour(0, -1).passable) {
-                    if (tiles[i][j].getNeighbour(1, 0).passable && !tiles[i][j].getNeighbour(-1, 0).passable) {
+                    if (tiles[i][j].getNeighbour(1, 0).passable && tiles[i][j].getNeighbour(-1, 0).passable) {
                         possibleTiles.push(tiles[i][j]);
                     }
                 }
