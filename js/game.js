@@ -43,7 +43,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield" || gameState == "eat" || gameState == "drop" || gameState == "wear")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield" || gameState == "eat" || gameState == "drop" || gameState == "wear" || gameState == "read")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -293,6 +293,26 @@ function draw() {
         for (let i = 0; i < wieldable_weapons.length; i++) {
             let weaponText = `${i + 1}) ${wieldable_weapons[i].fullName()}`;
             drawText(weaponText, 20, false, 230 + i * 40, "aqua", 20);
+        }
+    }
+
+    if (gameState == "read") {
+        drawText("Scrolls:", 30, false, 200, "violet", 20);
+
+        let readable_scrolls = [];
+        for (let item of player.inventory) {
+            if (item.type != undefined) {
+                if (item.type == "scroll") {
+                    readable_scrolls.push(item);
+                }
+            }
+        }
+
+        if (readable_scrolls == undefined) return;
+
+        for (let i = 0; i < readable_scrolls.length; i++) {
+            let scrollText = `${i + 1}) ${readable_scrolls[i].fullName()}`;
+            drawText(scrollText, 20, false, 230 + i * 40, "aqua", 20);
         }
     }
 

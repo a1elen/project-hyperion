@@ -606,8 +606,8 @@ class Player extends Monster {
         }
     }
 
-    addSpell() {
-        const newSpell = shuffle(Object.keys(spells))[0];
+    addSpell(spell) {
+        const newSpell = spell;
         addPopups("Learned " + newSpell, "white", player);
         this.spells.push(newSpell);
     }
@@ -627,6 +627,20 @@ class Player extends Monster {
         }
 
         gameState = "running";
+    }
+
+    castScroll(index) {
+        let l = 0;
+        for (let i = 0; i < this.inventory.length; i++) {
+            if (this.inventory[i].type == "scroll") {
+                if (l == index) {
+                    spells[this.inventory[i].spell]();
+                    playSound("spell");
+                    this.inventory.splice(i, 1);
+                }
+                l++;
+            }
+        } 
     }
 
     pickUp() {

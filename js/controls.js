@@ -122,6 +122,10 @@ function initKeyControls() {
                 gameState = "drop";
             }
 
+            if (e.key == "r") {
+                gameState = "read";
+            }
+
             if (e.key == "e") {
                 gameState = "useSelect";
 
@@ -219,6 +223,15 @@ function initKeyControls() {
             }
             if (e.key >= 1 && e.key <= 9) {
                 player.eat(e.key-1);
+                tick();
+                gameState = "running";
+            }
+        } else if (gameState =="read") {
+            if (e.key == "r") {
+                gameState = "running";
+            }
+            if (e.key >= 1 && e.key <= 9) {
+                player.castScroll(e.key-1);
                 tick();
                 gameState = "running";
             }

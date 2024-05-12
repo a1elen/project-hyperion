@@ -644,7 +644,8 @@ function getRandomItem() {
     };
 
     magicScroll = {
-        name: "Scroll of ???",
+        spell: shuffle(Object.keys(spells))[0],
+        name: "Scroll of " + spell,
         type: "scroll",
         sprite: 18,
         get() { 
@@ -654,20 +655,27 @@ function getRandomItem() {
             } else {
                 return false;
             }
+        },
+        fullName() {
+            return this.name;
         }
     }
 
     magicBook = {
-        name: "Magic Book of ???",
+        spell: shuffle(Object.keys(spells))[0],
+        name: "Magic Book of " + spell,
         type: "book",
         sprite: 57,
         get() { 
             if (player.spells.length < numSpells) {
-                player.addSpell();
+                player.addSpell(this.spell);
                 return true;
             } else {
                 return false;
             }
+        },
+        fullName() {
+            return this.name;
         }
     }
 
