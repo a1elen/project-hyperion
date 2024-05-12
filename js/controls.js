@@ -143,7 +143,7 @@ function initKeyControls() {
 
             }
             if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
-            if (e.key == "r") startLevel(Math.min(maxHp, player.hp-5), player.spells);
+            if (e.key == "o") startLevel(Math.min(maxHp, player.hp-5), player.spells);
             if (e.key == "p") {
                 level++;
                 startLevel(Math.min(maxHp, player.hp+1), player.spells);
