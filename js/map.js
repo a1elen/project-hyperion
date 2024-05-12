@@ -657,6 +657,7 @@ function getRandomItem() {
             }
         },
         fullName() {
+            this.name = "Scroll of " + this.spell;
             return this.name;
         }
     }
@@ -675,6 +676,7 @@ function getRandomItem() {
             }
         },
         fullName() {
+            this.name = "Magic Book of " + this.spell;
             return this.name;
         }
     }
