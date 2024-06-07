@@ -11,6 +11,7 @@ function setupCanvas() {
 
     let mouseX;
     let mouseY;
+    let mouseOut = true;
 
     scaleX = 1;
     scaleY = 1;
@@ -125,7 +126,7 @@ function draw() {
     let centerX = canvas.width / 2;
 
     // Top-Center text
-    drawText(levelPool[level-1].name, 30, false, 30, "violet", 400, "center")
+    drawText(levelPool[level-1].name, 30, false, 30, "violet", 400, "center");
     drawText("["+level+"]", 30, false, 60, "white", 400, "center");
 
     //console.log("x is ", mouseX-300);
@@ -134,22 +135,57 @@ function draw() {
     //drawText(`Mouse X is: ${mouseX}`, 20, false, mouseY, "white", mouseX+20);
     //drawText(`Mouse Y is ${mouseY}`, 20, false, mouseY+20, "white", mouseX+20);
 
-    //let xTile = Math.floor((mouseX)/64)
-    //let yTile = Math.floor((mouseY)/64)
+    if (typeof mouseX != 'undefined' || typeof mouseY != 'undefined') {
 
-    //let tileName = tiles[xTile][yTile].constructor.name;
+        if (mouseOut == false) {
+            let xTile = Math.floor((mouseX)/64-translateX/tileSize);
+            let yTile = Math.floor((mouseY)/64-translateY/tileSize);
+        
+            
 
-    //drawText(`Tile name is ${tileName}`, 20, false, mouseY+40, "white", mouseX+20);
+            if (typeof tiles[xTile] != 'undefined') {
+                if (typeof tiles[xTile][yTile] != 'undefined') {
+                    let selectedTile = tiles[xTile][yTile];
+
+                    if (seenTiles.includes(selectedTile)) {
+                        let tileName = selectedTile.constructor.name;
+            
+                        if (selectedTile.items.length > 0) {
+                            if (selectedTile.items[0].fullName != undefined) {
+                                drawText(selectedTile.items[0].fullName(), 20, false, mouseY+40, "white", mouseX+20);
+                            } else {
+                                drawText(selectedTile.items[0].name, 20, false, mouseY+40, "white", mouseX+20);
+                            }
+                        } else if (selectedTile.traps.length > 0) {
+                            drawText(selectedTile.traps[0].name, 20, false, mouseY+40, "white", mouseX+20);
+                        } else if (selectedTile.objects.length > 0) {
+                            drawText(selectedTile.objects[0].name, 20, false, mouseY+40, "white", mouseX+20);
+                        } else {
+                            drawText(tileName, 20, false, mouseY+40, "white", mouseX+20);
+                        }
+            
+                        drawSprite(37, xTile+translateX/tileSize, yTile+translateY/tileSize);
+                    }
+                }
+            }
+        }
+    }
+    
+    
 
     //drawText(`Tile x ${xTile}`, 20, false, mouseY+60, "white", mouseX+20);
     //drawText(`Tile y ${yTile}`, 20, false, mouseY+80, "white", mouseX+20);
+
+    //let selectedTile;
 
     //if (selectedTile != undefined) {
         //selectedTile.selected = false;
     //}
 
-    //let selectedTile = player.tile.getNeighbour(Math.round(mouseX/64-6), Math.round(mouseY/64-6));
+    //selectedTile = tiles[xTile][yTile];
     //selectedTile.selected = true;
+
+    
 
     if (gameState == "running") {
 
@@ -433,6 +469,14 @@ function addPopups(txt, clr, target) {
 function mouseCoords(event) {
     mouseX = event.offsetX;
     mouseY = event.offsetY;
+}
+
+function mouseEnter(event) {
+    mouseOut = false;
+}
+
+function mouseLeave(event) {
+    mouseOut = true;
 }
 
 function drawMainStats(target, x, y) {
