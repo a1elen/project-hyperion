@@ -196,7 +196,7 @@ function draw() {
 
                 for (let popup of popupText) {
                     let drawX = popup.x+tileSize/2-(popup.startTranslateX-translateX);
-                    let drawY = popup.y+popupText.indexOf(popup)*20-popup.timeout-(popup.startTranslateY-translateY);
+                    let drawY = popup.y/*+popupText.indexOf(popup)*20*/-popup.timeout-(popup.startTranslateY-translateY);
                     drawText(popup.text, 20, false, drawY*scaleY, popup.color, drawX*scaleX, "center");
                     popup.timeout++;
                     if (popup.timeout >= 100) {
@@ -437,33 +437,23 @@ function draw() {
 
 function addPopups(txt, clr, target) {
 
+    let textPopup = { 
+        text: txt,
+        color: clr,
+        timeout: 0,
+        x: target.tile.x * tileSize + translateX,
+        y: target.tile.y * tileSize + translateY + popupText.length*20,
+        startTranslateX: translateX,
+        startTranslateY: translateY
+    };
+
     if (target.constructor.name == "Player") {
-        let textPopup = { 
-            text: txt,
-            color: clr,
-            timeout: 0,
-            x: target.tile.x * tileSize + translateX,
-            y: target.tile.y * tileSize + translateY,
-            startTranslateX: translateX,
-            startTranslateY: translateY
-        };
-        popupText.push(textPopup);
-    } else {
-        let textPopup = { 
-            text: txt,
-            color: "grey"/*clr*/,
-            timeout: 0,
-            x: target.tile.x * tileSize + translateX,
-            y: target.tile.y * tileSize + translateY,
-            startTranslateX: translateX,
-            startTranslateY: translateY
-        };
-        if (target.tile.dist(player.tile) < 6) {
-            popupText.push(textPopup);
-        }
+        textPopup.color = "grey"
     }
-
-
+    
+    if (target.tile.dist(player.tile) < 6) {
+        popupText.push(textPopup);
+    }
 }
 
 function mouseCoords(event) {
