@@ -60,6 +60,12 @@ function draw() {
     translateX = -player.getDisplayX() * tileSize + (canvas.width / scaleX / 2) - (tileSize/2);
     translateY = -player.getDisplayY() * tileSize + (canvas.height / scaleY / 2) - (tileSize/2);
     
+    if (translateX > 48) translateX = 48;
+    if (translateY > 12) translateY = 12;
+
+    if (translateX < -784) translateX = -784;
+    if (translateY < -948) translateY = -948;
+
     ctx.save();
     ctx.scale(scaleX, scaleY);
     ctx.translate(translateX, translateY);
