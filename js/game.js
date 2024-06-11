@@ -814,6 +814,7 @@ function savePlayer() {
     playerArmor = player.bodyarmor;
 
     playerInventory = player.inventory;
+    playerHunger = player.hunger;
 
 }
 
@@ -843,6 +844,7 @@ function restorePlayer() {
     player.rearm();
 
     player.inventory = playerInventory;
+    player.hunger = playerHunger;
     
 }
 
