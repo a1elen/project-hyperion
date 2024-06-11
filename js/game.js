@@ -60,6 +60,7 @@ function draw() {
     translateX = -player.getDisplayX() * tileSize + (canvas.width / scaleX / 2) - (tileSize/2);
     translateY = -player.getDisplayY() * tileSize + (canvas.height / scaleY / 2) - (tileSize/2);
     
+    // Camera lock (arbitrary numbers)
     if (translateX > 48) translateX = 48;
     if (translateY > 12) translateY = 12;
 
