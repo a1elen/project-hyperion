@@ -292,7 +292,7 @@ biome = {
     name: "level"
 }
 
-biome.underground.prototype = Object.create(biome.prototype);
+biome.underground = Object.create(biome);
 biome.underground.name = "Underground";
 biome.underground.monsterPool = [Spider, Snake, GreenSlime, Mouse];
 biome.underground.objPool = [objects.usable.barrel, objects.usable.campfire];
@@ -335,7 +335,7 @@ biome.underground.levelgen = function() {
         return passableTiles;
 }
 
-biome.chasm.prototype = Object.create(biome.prototype);
+biome.chasm = Object.create(biome);
 biome.chasm.name = "Chasm";
 biome.chasm.monsterPool = [Spider, Snake, GreenSlime, Mouse];
 biome.chasm.objPool = [objects.usable.barrel, objects.usable.campfire];
