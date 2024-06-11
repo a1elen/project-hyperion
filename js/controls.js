@@ -180,7 +180,7 @@ function initKeyControls() {
                 if (randomRange(1, 20) > 10 && player.hunger > 0) {
                     player.heal(1);
                     player.healMana(1);
-                    player.hunger = Math.max(0, player.hunger - randomRange(1, 3)) ;
+                    player.hunger = Math.max(0, player.hunger - randomRange(5, 10)) ;
                 }
                 tick();
             }
