@@ -687,7 +687,7 @@ class Player extends Monster {
 class Spider extends Monster {
     constructor (tile) {
         super(tile, 4, 2);
-        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.initMainStats(2, 3, 5, 5, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -700,7 +700,7 @@ class Spider extends Monster {
 class Worm extends Monster {
     constructor (tile) {
         super(tile, 5, 1);
-        this.initMainStats(1, 1, 1, 2, 1, 1);
+        this.initMainStats(1, 4, 1, 3, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = Math.floor(this.maxHealth / 2);
@@ -737,7 +737,7 @@ class Worm extends Monster {
 class Snake extends Monster {
     constructor (tile) {
         super(tile, 6, 1);
-        this.initMainStats(1, 1, 2, 2, 1, 1);
+        this.initMainStats(2, 2, 2, 6, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -752,7 +752,7 @@ class Snake extends Monster {
 class Zombie extends Monster {
     constructor (tile) {
         super(tile, 7, 3);
-        this.initMainStats(2, 3, 1, 1, 1, 1);
+        this.initMainStats(6, 4, 1, 1, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -766,7 +766,7 @@ class Zombie extends Monster {
 class Skeleton extends Monster {
     constructor (tile) {
         super(tile, 30, 2);
-        this.initMainStats(2, 2, 1, 1, 1, 1);
+        this.initMainStats(3, 3, 2, 1, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -787,7 +787,7 @@ class Skeleton extends Monster {
 class RedDragonBaby extends Monster {
     constructor (tile) {
         super(tile, 21, 2);
-        this.initMainStats(4, 5, 4, 4, 2, 2);
+        this.initMainStats(7, 7, 4, 4, 2, 2);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -800,7 +800,7 @@ class RedDragonBaby extends Monster {
 class GreenSlime extends Monster {
     constructor (tile) {
         super(tile, 22, 2);
-        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.initMainStats(2, 1, 1, 1, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -814,7 +814,7 @@ class GreenSlime extends Monster {
 class Mouse extends Monster {
     constructor (tile) {
         super(tile, 46, 2);
-        this.initMainStats(1, 1, 1, 1, 1, 1);
+        this.initMainStats(1, 1, 1, 5, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -828,7 +828,7 @@ class Mouse extends Monster {
 class StoneGolem extends Monster {
     constructor (tile) {
         super(tile, 45, 2);
-        this.initMainStats(4, 4, 1, 1, 1, 1);
+        this.initMainStats(7, 9, 3, 2, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
         this.hp = this.maxHealth;
@@ -842,9 +842,9 @@ class StoneGolem extends Monster {
 class GoblinRanger extends Monster {
     constructor (tile) {
         super(tile, 48, 2);
-        this.initMainStats(2, 1, 3, 4, 1, 1);
+        this.initMainStats(5, 3, 3, 4, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(5, 4, 3, 4, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
         this.moveSpeed = 75;
@@ -856,9 +856,9 @@ class GoblinRanger extends Monster {
 class GoblinSpear extends Monster {
     constructor (tile) {
         super(tile, 47, 2);
-        this.initMainStats(2, 2, 2, 2, 1, 1);
+        this.initMainStats(5, 3, 2, 6, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(4, 5, 2, 3, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
         this.moveSpeed = 100;
@@ -870,9 +870,9 @@ class GoblinSpear extends Monster {
 class GoblinSwordsman extends Monster {
     constructor (tile) {
         super(tile, 49, 2);
-        this.initMainStats(4, 3, 2, 1, 1, 1);
+        this.initMainStats(8, 6, 2, 1, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(7, 6, 4, 3, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
         this.moveSpeed = 125;
