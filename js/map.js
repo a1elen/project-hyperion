@@ -46,8 +46,8 @@ function generateLevel(levelGen) {
         //randomPassableTile().trap = true;
     //}
 
-    generateItems(randomRange(clamp(Math.floor(level / 2) + 5, 1, 10), 20));
-    generateObjects(randomRange(0, 5));
+    generateItems(randomRange(3, 6));
+    generateObjects(randomRange(1, 5));
 }
 
 function initBiomes() {
