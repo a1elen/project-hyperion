@@ -410,9 +410,11 @@ function draw() {
     }
 
     if (gameState == "stats") {
-        drawUIBox();
-        drawMainStats(player, centerX-200, centerY);
-        drawSkillStats(player, centerX+100, centerY);
+        var padding = 100;
+        var textPadding = 20;
+        drawUIBox(padding, padding, canvas.width-padding*2, canvas.height-padding*2);
+        drawMainStats(player, padding+textPadding, padding+textPadding);
+        drawSkillStats(player, padding+textPadding+300, padding+textPadding);
     }
 
     if (gameState == "useSelect") {
@@ -490,9 +492,14 @@ function drawSkillStats(target, x, y) {
     drawText(`Magic: ${target.magic}`, 20, false, y + 110, "white", x)
 }
 
-function drawUIBox() {
+function drawUIBox(x, y, width, height) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-    ctx.fillRect(0+100, 0+100, canvas.width-200, canvas.height-200);
+    ctx.fillRect(x, y, width, height);
+    ctx.fillStyle = 'rgba(200, 200, 200, 0.75)';
+    ctx.fillRect(x, y, width, 10);
+    ctx.fillRect(x, y+height, width, 10);
+    ctx.fillRect(x, y, 10, height);
+    ctx.fillRect(x, y+height, 10, height);
 }
 
 function check_dead() {
