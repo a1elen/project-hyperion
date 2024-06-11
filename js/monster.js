@@ -308,7 +308,7 @@ class Monster {
                 } else {
                     damage = rollSum(this.weaponDamage[0], this.weaponDamage[1]) + this.strength*(this.fighting/100+0.5);
                 }
-                damage = Math.max(0, Math.floor(damage - newTile.monster.armorClass));
+                damage = Math.max(1, Math.floor(damage - newTile.monster.armorClass));
 
                 if (randomRange(1, 100) < 5) {
                     damage = damage*2; // CRIT
