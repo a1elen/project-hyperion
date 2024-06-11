@@ -411,7 +411,7 @@ function draw() {
 
     if (gameState == "stats") {
         var padding = 100;
-        var textPadding = 20;
+        var textPadding = 50;
         drawUIBox(padding, padding, canvas.width-padding*2, canvas.height-padding*2);
         drawMainStats(player, padding+textPadding, padding+textPadding);
         drawSkillStats(player, padding+textPadding+300, padding+textPadding);
@@ -472,23 +472,23 @@ function mouseLeave(event) {
 }
 
 function drawMainStats(target, x, y) {
-    drawText("Main Stats:", 30, false, y - 140, "violet", x);
+    drawText("Main Stats:", 30, false, y, "violet", x);
 
-    drawText(`Strength: ${target.strength}`, 20, false, y - 10, "white", x)
-    drawText(`Constitution: ${target.constitution}`, 20, false, y + 20, "white", x)
-    drawText(`Perception: ${target.perception}`, 20, false, y + 50, "white", x)
-    drawText(`Agility: ${target.agility}`, 20, false, y + 80, "white", x)
+    drawText(`Strength: ${target.strength}`, 20, false, y + 30, "white", x)
+    drawText(`Constitution: ${target.constitution}`, 20, false, y + 50, "white", x)
+    drawText(`Perception: ${target.perception}`, 20, false, y + 70, "white", x)
+    drawText(`Agility: ${target.agility}`, 20, false, y + 90, "white", x)
     drawText(`Arcane: ${target.arcane}`, 20, false, y + 110, "white", x)
-    drawText(`Will: ${target.will}`, 20, false, y + 140, "white", x)
+    drawText(`Will: ${target.will}`, 20, false, y + 130, "white", x)
 }
 
 function drawSkillStats(target, x, y) {
-    drawText("Skills:", 30, false, y - 140, "violet", x);
+    drawText("Skills:", 30, false, y, "violet", x);
 
-    drawText(`Fighting: ${target.fighting}`, 20, false, y - 10, "white", x)
-    drawText(`Endurance: ${target.endurance}`, 20, false, y + 20, "white", x)
-    drawText(`Dodge: ${target.dodge}`, 20, false, y + 50, "white", x)
-    drawText(`Weapon Skill: ${target.weaponSkill}`, 20, false, y + 80, "white", x)
+    drawText(`Fighting: ${target.fighting}`, 20, false, y + 30, "white", x)
+    drawText(`Endurance: ${target.endurance}`, 20, false, y + 50, "white", x)
+    drawText(`Dodge: ${target.dodge}`, 20, false, y + 70, "white", x)
+    drawText(`Weapon Skill: ${target.weaponSkill}`, 20, false, y + 90, "white", x)
     drawText(`Magic: ${target.magic}`, 20, false, y + 110, "white", x)
 }
 
@@ -496,10 +496,10 @@ function drawUIBox(x, y, width, height) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
     ctx.fillRect(x, y, width, height);
     ctx.fillStyle = 'rgba(200, 200, 200, 0.75)';
-    ctx.fillRect(x, y, width, 10);
+    ctx.fillRect(x+10, y, width, 10);
     ctx.fillRect(x, y+height, width, 10);
     ctx.fillRect(x, y, 10, height);
-    ctx.fillRect(x, y+height, 10, height);
+    ctx.fillRect(x+width, y+10, 10, height);
 }
 
 function check_dead() {
