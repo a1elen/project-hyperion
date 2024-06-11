@@ -50,8 +50,6 @@ traps.trapdoor.name = "Trapdoor";
 traps.trapdoor.sprite = 31;
 traps.trapdoor.sound = "trapdoor"
 traps.trapdoor.action = function(monster) {
-    playSound(this.sound);
-
     if (monster == player) {
         saveLevel();
         level++;
@@ -62,7 +60,12 @@ traps.trapdoor.action = function(monster) {
         monster.hit(9999);
     }
 
-    shakeAmount = 50;
+    if (monster.tile.dist(player.tile) < 6) {
+        playSound(this.sound);
+        shakeAmount = 50;
+    }
+
+
     this.visible = true;
 };
 
@@ -71,11 +74,12 @@ traps.pressurePlate.name = "Pressure Plate";
 traps.pressurePlate.sprite = 72;
 traps.pressurePlate.sound = "trapdoor"
 traps.pressurePlate.action = function(monster) {
-    playSound(this.sound);
-
     monster.move(randomPassableTile());
 
-    shakeAmount = 50;
+    if (monster.tile.dist(player.tile) < 6) {
+        shakeAmount = 50;
+        playSound(this.sound);
+    }
 
     this.visible = true;
 }
@@ -87,7 +91,10 @@ traps.cobweb.action = function(monster) {
     addStatus("Stunned", 5, monster);
     addPopups("Webbed!", "white", monster);
 
-    shakeAmount = 10;
+    if (monster.tile.dist(player.tile) < 6) {
+        shakeAmount = 10;
+    
+    }
 
     this.visible = true;
 
@@ -104,8 +111,11 @@ traps.tripwire.action = function(monster) {
     monster.hit(5);
     monster.tile.setEffect(14);
 
-    playSound(this.sound);
-    shakeAmount = 10;
+    if (monster.tile.dist(player.tile) < 6) {
+        shakeAmount = 10;
+        playSound(this.sound);
+    }
+
     this.visible = true;
     this.disarm(monster.tile);
 }
