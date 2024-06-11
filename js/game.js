@@ -609,21 +609,21 @@ function startGame() {
 function initLevelPool() {
     if (randomRange(1, 2) == 1) {
         for (let i = 0; i < randomRange(3, 6); i++) {
-            levelPool.push(biome.underground);
+            levelPool.push(BIOMES.underground);
         }
     } else {
         for (let i = 0; i < randomRange(3, 6); i++) {
-            levelPool.push(biome.chasm);
+            levelPool.push(BIOMES.chasm);
         }
     }
 
 
     for (let i = 0; i < randomRange(3, 6); i++) {
-        levelPool.push(biome.caves);
+        levelPool.push(BIOMES.caves);
     }
 
     for (let i = 0; i < randomRange(3, 6); i++) {
-        levelPool.push(biome.dungeon);
+        levelPool.push(BIOMES.dungeon);
     }
 }
 

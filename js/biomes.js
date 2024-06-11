@@ -292,12 +292,14 @@ biome = {
     name: "level"
 }
 
-biome.underground = Object.create(biome);
-biome.underground.name = "Underground";
-biome.underground.monsterPool = [Spider, Snake, GreenSlime, Mouse];
-biome.underground.objPool = [objects.usable.barrel, objects.usable.campfire];
-biome.underground.trapsPool = [traps.beartrap, traps.trapdoor];
-biome.underground.levelgen = function() {
+BIOMES = {};
+
+BIOMES.underground = Object.create(biome);
+BIOMES.underground.name = "Underground";
+BIOMES.underground.monsterPool = [Spider, Snake, GreenSlime, Mouse];
+BIOMES.underground.objPool = [objects.usable.barrel, objects.usable.campfire];
+BIOMES.underground.trapsPool = [traps.beartrap, traps.trapdoor];
+BIOMES.underground.levelgen = function() {
     let wallChance = 0.3;
     let levelType = 0;
         let passableTiles=0;
@@ -335,12 +337,12 @@ biome.underground.levelgen = function() {
         return passableTiles;
 }
 
-biome.chasm = Object.create(biome);
-biome.chasm.name = "Chasm";
-biome.chasm.monsterPool = [Spider, Snake, GreenSlime, Mouse];
-biome.chasm.objPool = [objects.usable.barrel, objects.usable.campfire];
-biome.chasm.trapsPool = [traps.beartrap, traps.trapdoor];
-biome.chasm.levelgen = function() {
+BIOMES.chasm = Object.create(biome);
+BIOMES.chasm.name = "Chasm";
+BIOMES.chasm.monsterPool = [Spider, Snake, GreenSlime, Mouse];
+BIOMES.chasm.objPool = [objects.usable.barrel, objects.usable.campfire];
+BIOMES.chasm.trapsPool = [traps.beartrap, traps.trapdoor];
+BIOMES.chasm.levelgen = function() {
     tiles = [];
     for (let i = 0; i < numTiles; i++) {
         tiles[i] = [];
@@ -382,12 +384,12 @@ biome.chasm.levelgen = function() {
     }
 }
 
-biome.caves = Object.create(biome);
-biome.caves.name = "Caves";
-biome.caves.monsterPool = [StoneGolem, Zombie, Skeleton, Worm];
-biome.caves.objPool = [objects.usable.spiderCocoon];
-biome.caves.trapsPool = [traps.cobweb];
-biome.caves.levelgen = function() {
+BIOMES.caves = Object.create(biome);
+BIOMES.caves.name = "Caves";
+BIOMES.caves.monsterPool = [StoneGolem, Zombie, Skeleton, Worm];
+BIOMES.caves.objPool = [objects.usable.spiderCocoon];
+BIOMES.caves.trapsPool = [traps.cobweb];
+BIOMES.caves.levelgen = function() {
         let passableTiles=0;
     
         let numberOfYCaves = randomRange(1, 3);
@@ -519,12 +521,12 @@ biome.caves.levelgen = function() {
     }
 }
 
-biome.dungeon = Object.create(biome);
-biome.dungeon.name = "Dungeon";
-biome.dungeon.monsterPool = [GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby];
-biome.dungeon.objPool = [objects.usable.bookshelf, objects.usable.coffin];
-biome.dungeon.trapsPool = [traps.pressurePlate, traps.trapdoor];
-biome.dungeon.levelgen = function() {
+BIOMES.dungeon = Object.create(biome);
+BIOMES.dungeon.name = "Dungeon";
+BIOMES.dungeon.monsterPool = [GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby];
+BIOMES.dungeon.objPool = [objects.usable.bookshelf, objects.usable.coffin];
+BIOMES.dungeon.trapsPool = [traps.pressurePlate, traps.trapdoor];
+BIOMES.dungeon.levelgen = function() {
     let wallChance = 0.45;
     let levelType = 2;
         let passableTiles=0;
