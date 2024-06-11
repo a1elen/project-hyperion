@@ -689,7 +689,7 @@ class Spider extends Monster {
         super(tile, 4, 2);
         this.initMainStats(2, 3, 5, 5, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(1, 2, 1, 1, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
         this.weaponDamage[0] = 1;
@@ -702,7 +702,7 @@ class Worm extends Monster {
         super(tile, 5, 1);
         this.initMainStats(1, 4, 1, 3, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(2, 2, 2, 2, 0);
         this.hp = Math.floor(this.maxHealth / 2);
         this.xpPoints = 2;
         this.weaponDamage[0] = 1;
@@ -739,7 +739,7 @@ class Snake extends Monster {
         super(tile, 6, 1);
         this.initMainStats(2, 2, 2, 6, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(2, 3, 2, 1, 0);
         this.hp = this.maxHealth;
         this.moveSpeed = 75;
         this.xpPoints = 2;
@@ -754,7 +754,7 @@ class Zombie extends Monster {
         super(tile, 7, 3);
         this.initMainStats(6, 4, 1, 1, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(3, 4, 1, 3, 0);
         this.hp = this.maxHealth;
         this.moveSpeed = 150;
         this.xpPoints = 3;
@@ -768,7 +768,7 @@ class Skeleton extends Monster {
         super(tile, 30, 2);
         this.initMainStats(3, 3, 2, 1, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(3, 4, 2, 2, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
         this.angry = false;
@@ -789,7 +789,7 @@ class RedDragonBaby extends Monster {
         super(tile, 21, 2);
         this.initMainStats(7, 7, 4, 4, 2, 2);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(5, 5, 5, 5, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 10;
         this.weaponDamage[0] = 2;
@@ -830,7 +830,7 @@ class StoneGolem extends Monster {
         super(tile, 45, 2);
         this.initMainStats(7, 9, 3, 2, 1, 1);
         this.updateStats();
-        this.initSkills(0, 0, 0, 0, 0);
+        this.initSkills(4, 5, 3, 4, 0);
         this.hp = this.maxHealth;
         this.xpPoints = 1;
         this.moveSpeed = 200;
