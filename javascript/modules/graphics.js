@@ -1,5 +1,5 @@
-draw = {
-    sprite = function (sprite, x, y) {
+graphics = {
+    drawSprite = function (sprite, x, y) {
         ctx.drawImage(
             spritesheet,
             (sprite-(Math.floor(sprite/50)*50))*16,
@@ -10,8 +10,8 @@ draw = {
             y*tileSize + shakeY,
             tileSize,
             tileSize
-        )
+        );
     }
-}
+};
 
 export {draw};

@@ -21,20 +21,6 @@
 <canvas onmousemove="mouseCoords(event)" onmouseenter="mouseEnter(event)" onmouseout="mouseLeave(event)"></canvas>
 <script src = "js/game.js"></script>
 <script>
-    tileSize = 64;
-    numTiles = 32;
-
-    spritesheet = new Image();
-    spritesheet.src = 'spritesheet.png';
-    spritesheet.onload = showTitle;
-
-    gameState = "loading";
-
-    initKeyControls();
-
     setInterval(draw, 15);
-
-    setupCanvas();
-
-    initSounds();
+    setup();
 </script>
