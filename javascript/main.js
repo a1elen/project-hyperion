@@ -1,4 +1,4 @@
-import {graphics} from "./modules/draw.js"
+import {graphics} from "./modules/graphics.js"
 
 function initCanvas() {
     canvas = document.querySelector("canvas");
@@ -31,7 +31,7 @@ function init() {
 
     for (x = 0; x < numTiles; x++) {
         for (y = 0; y < numTiles; y++) {
-            graphics.drawSprite(2, x, y);
+            //graphics.drawSprite(2, x, y);
         }
     }
 
@@ -43,5 +43,9 @@ function update() {
 }
 
 function draw() {
-
+    for (x = 0; x < numTiles; x++) {
+        for (y = 0; y < numTiles; y++) {
+            graphics.drawSprite(2, x, y);
+        }
+    }
 }
