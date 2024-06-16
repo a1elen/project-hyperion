@@ -1,5 +1,3 @@
-import {graphics} from "./modules/graphics.js"
-
 function initCanvas() {
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");

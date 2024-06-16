@@ -13,5 +13,3 @@ graphics = {
         );
     }
 };
-
-export {graphics};
