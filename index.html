@@ -20,24 +20,9 @@
 
 <canvas onmousemove="mouseCoords(event)" onmouseenter="mouseEnter(event)" onmouseout="mouseLeave(event)"></canvas>
 <script src = "js/game.js"></script>
-<script src = "js/map.js"></script>
-<script src = "js/tile.js"></script>
-<script src = "js/monster.js"></script>
-<script src = "js/util.js"></script>
-<script src = "js/items.js"></script>
-<script src = "js/objects.js"></script>
-<script src = "js/traps.js"></script>
-<script src = "js/biomes.js"></script>
-<script src = "js/spell.js"></script>
-<script src = "js/status.js"></script>
-<script src = "js/controls.js"></script>
 <script>
     tileSize = 64;
-    numTiles = 24;
-    uiWidth = 4;
-    level = 1;
-    maxHp = 999;
-    levelPool = [];
+    numTiles = 32;
 
     spritesheet = new Image();
     spritesheet.src = 'spritesheet.png';
@@ -45,15 +30,6 @@
 
     gameState = "loading";
 
-    playerClass = 0;
-    startingHp = 10;
-    numLevels = 15;
-
-    shakeAmount = 0;
-    shakeX = 0;
-    shakeY = 0;
-
-    initTouchControls();
     initKeyControls();
 
     setInterval(draw, 15);
