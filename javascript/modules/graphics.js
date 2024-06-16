@@ -1,5 +1,5 @@
 graphics = {
-    drawSprite = function (sprite, x, y) {
+    drawSprite: function (sprite, x, y) {
         ctx.drawImage(
             spritesheet,
             (sprite-(Math.floor(sprite/50)*50))*16,
