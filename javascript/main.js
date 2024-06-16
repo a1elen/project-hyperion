@@ -1,7 +1,6 @@
 import {graphics} from "./modules/draw.js"
 
-function setup() {
-    // Canvas Setup
+function initCanvas() {
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
 
@@ -11,6 +10,15 @@ function setup() {
     canvas.style.height = `${canvas.height}px`;
 
     ctx.imageSmoothingEnabled = false;
+}
+
+function initSounds() {
+
+}
+
+function init() {
+    // Canvas Setup
+    initCanvas();
 
     // Load spritesheet
     spritesheet = new Image();
@@ -35,9 +43,5 @@ function update() {
 }
 
 function draw() {
-
-}
-
-function initSounds() {
 
 }
