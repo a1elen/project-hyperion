@@ -14,4 +14,4 @@ graphics = {
     }
 };
 
-export {draw};
+export {graphics};
