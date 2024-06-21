@@ -50,6 +50,12 @@ traps.trapdoor.name = "Trapdoor";
 traps.trapdoor.sprite = 31;
 traps.trapdoor.sound = "trapdoor"
 traps.trapdoor.action = function(monster) {
+    
+    if (monster.tile.dist(player.tile) < 6) {
+        playSound(this.sound);
+        shakeAmount = 50;
+    }
+
     if (monster == player) {
         saveLevel();
         level++;
@@ -60,10 +66,7 @@ traps.trapdoor.action = function(monster) {
         monster.hit(9999);
     }
 
-    if (monster.tile.dist(player.tile) < 6) {
-        playSound(this.sound);
-        shakeAmount = 50;
-    }
+
 
 
     this.visible = true;
