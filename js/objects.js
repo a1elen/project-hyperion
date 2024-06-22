@@ -57,7 +57,21 @@ objects.usable.coffin.use = function(target) {
 
     let numberOfLoot = randomRange(0, 3);
     for (let i = 0; i < numberOfLoot; i++) {
-        let lootTable = [makeSword(randomRange(2, 3), randomRange(0, 2))]
+        let lootTable = [makeSword(randomRange(2, 3), randomRange(1, 2))]
+        target.items.push(shuffle(lootTable)[0]);
+    }
+};
+
+objects.usable.weaponStand = Object.create(objects.usable)
+objects.usable.weaponStand.name = "Weapon Stand";
+objects.usable.weaponStand.sprite = 20;
+objects.usable.weaponStand.use = function(target) {
+    target.objects.splice(target.objects.indexOf(this));
+    target.objects.push(objects.decorative.woodscraps);
+
+    let numberOfLoot = randomRange(0, 3);
+    for (let i = 0; i < numberOfLoot; i++) {
+        let lootTable = [makeSword(randomRange(0, 4), randomRange(2, 4))]
         target.items.push(shuffle(lootTable)[0]);
     }
 };
@@ -87,3 +101,11 @@ objects.decorative.gravel.sprite = 93;
 objects.decorative.woodscraps = Object.create(objects.decorative)
 objects.decorative.woodscraps.name = "Woodscraps";
 objects.decorative.woodscraps.sprite = 101;
+
+objects.decorative.skull = Object.create(objects.decorative)
+objects.decorative.skull.name = "Skull";
+objects.decorative.skull.sprite = 75;
+
+objects.decorative.bone = Object.create(objects.decorative)
+objects.decorative.bone.name = "Bone";
+objects.decorative.bone.sprite = 81;

@@ -151,8 +151,8 @@ function makeSword(material, quality) {
     items.weapons.sword.damageType = "slash";
     //items.weapons.sword.quality = shuffle(qualities)[0];
     //items.weapons.sword.material = shuffle(materials)[0];
-    items.weapons.sword.diceRolls = randomRange(1, 2);
-    items.weapons.sword.diceSides = randomRange(3, 7)+quaMap.get(items.weapons.sword.quality);
+    items.weapons.sword.diceRolls = 1;
+    items.weapons.sword.diceSides = 5+quaMap.get(items.weapons.sword.quality);
     items.weapons.accuracy = randomRange(80, 90);
     items.weapons.sword.sprite = matMap.get(items.weapons.sword.material);
 
@@ -197,7 +197,7 @@ function makeAxe() {
     items.weapons.axe.quality = shuffle(qualities)[0];
     items.weapons.axe.material = shuffle(materials)[0];
     items.weapons.axe.diceRolls = 1;
-    items.weapons.axe.diceSides = randomRange(5, 12)+quaMap.get(items.weapons.axe.quality);
+    items.weapons.axe.diceSides = 7+quaMap.get(items.weapons.axe.quality);
     items.weapons.accuracy = randomRange(60, 70);
     items.weapons.axe.sprite = matMap.get(items.weapons.axe.material);
 
@@ -230,7 +230,7 @@ function makeHammer() {
     items.weapons.hammer.quality = shuffle(qualities)[0];
     items.weapons.hammer.material = shuffle(materials)[0];
     items.weapons.hammer.diceRolls = 1;
-    items.weapons.hammer.diceSides = randomRange(4, 11)+quaMap.get(items.weapons.hammer.quality);
+    items.weapons.hammer.diceSides = 7+quaMap.get(items.weapons.hammer.quality);
     items.weapons.accuracy = randomRange(60, 70);
     items.weapons.hammer.sprite = matMap.get(items.weapons.hammer.material);
 

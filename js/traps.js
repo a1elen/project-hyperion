@@ -122,3 +122,33 @@ traps.tripwire.action = function(monster) {
     this.visible = true;
     this.disarm(monster.tile);
 }
+
+traps.spiketrap = Object.create(trap);
+traps.spiketrap.name = "Spiketrap";
+traps.spiketrap.sprite = 95;
+traps.spiketrap.loaded = true;
+traps.spiketrap.action = function(monster) {
+    if (!this.loaded) {
+        return;
+    }
+    addStatus("Stunned", randomRange(4, 8), monster);
+    addStatus("Bledding", randomRange(4, 8), monster);
+    monster.hit(5);
+    
+    this.blood = true;
+    const neighbours = monster.tile.getAdjacentNeighbours();
+    for (const neighbour of neighbours) {
+        if (!neighbour.passable && randomRange(1, 3) == 3) {
+            neighbour.wallBlood = true;
+        }
+    }
+
+    if (monster.tile.dist(player.tile) < 6) {
+        shakeAmount = 10;
+        playSound(this.sound);
+    }
+
+    this.visible = true;
+    this.loaded = false;
+    //this.disarm(monster.tile);
+}
