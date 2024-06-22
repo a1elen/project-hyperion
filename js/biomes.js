@@ -586,21 +586,21 @@ BIOMES.maze.levelgen = function() {
             }
         }
 
-        tiles[0][0].replace(Floor, 34);
+        tiles[1][1].replace(Floor, 34);
         carvePassage(1, 1);
 
         function carvePassage(x, y) {
-            let checks = [checkRight(), checkLeft(), checkDown(), checkUp()];
+            let checks = [checkRight, checkLeft, checkDown, checkUp];
 
             checks = shuffle(checks);
-            
+
             for (i = 0; i < checks.length; i++) {
-                checks[i];
+                checks[i](x, y);
             }
 
         }
 
-        function checkRight() {
+        function checkRight(x, y) {
             if (inBounds(x+2, y) && !tiles[x+2][y].passable) {
                 tiles[x+1][y].replace(Floor, 34);
                 tiles[x+2][y].replace(Floor, 34);
@@ -609,7 +609,7 @@ BIOMES.maze.levelgen = function() {
 
         }
 
-        function checkLeft() {
+        function checkLeft(x, y) {
             if (inBounds(x-2, y) && !tiles[x-2][y].passable) {
                 tiles[x-1][y].replace(Floor, 34);
                 tiles[x-2][y].replace(Floor, 34);
@@ -617,7 +617,7 @@ BIOMES.maze.levelgen = function() {
             }
         }
 
-        function checkDown() {
+        function checkDown(x, y) {
             if (inBounds(x, y+2) && !tiles[x][y+2].passable) {
                 tiles[x][y+1].replace(Floor, 34);
                 tiles[x][y+2].replace(Floor, 34);
@@ -625,7 +625,7 @@ BIOMES.maze.levelgen = function() {
             }
         }
 
-        function checkUp() {
+        function checkUp(x, y) {
             if (inBounds(x, y-2) && !tiles[x][y-2].passable) {
                 tiles[x][y-1].replace(Floor, 34);
                 tiles[x][y-2].replace(Floor, 34);
