@@ -1,7 +1,5 @@
 DEBUG = false;
 
-chosenLevels;
-
 function setupCanvas() {
 
     canvas = document.querySelector("canvas");
