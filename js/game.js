@@ -839,6 +839,7 @@ function savePlayer() {
 
     playerInventory = player.inventory;
     playerHunger = player.hunger;
+    playerAbilities = player.abilities;
 
 }
 
@@ -869,6 +870,7 @@ function restorePlayer() {
 
     player.inventory = playerInventory;
     player.hunger = playerHunger;
+    player.abilities = playerAbilities;
     
 }
 

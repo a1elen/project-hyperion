@@ -397,7 +397,7 @@ class Monster {
     }
 
     useAbility(ability) {
-        this.abilities[ability-1].use(this, this);
+        this.abilities[ability].use(this, this);
         //this.abilities.indexOf(ability)
     }
 
@@ -573,6 +573,8 @@ class Player extends Monster {
         this.attack = this.strength * this.weaponDamage;
         this.cursed = false;
         this.updateStats();
+
+        this.abilities.push(Object.create(ability.forget));
     }
 
     levelUp() {
