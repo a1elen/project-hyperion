@@ -48,6 +48,7 @@ function generateLevel(levelGen) {
 
     generateItems(randomRange(3, 6));
     generateObjects(randomRange(1, 5));
+    generateDecorativeObjects();
 }
 
 function initBiomes() {
