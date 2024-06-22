@@ -1,3 +1,5 @@
+DEBUG = false;
+
 function setupCanvas() {
 
     canvas = document.querySelector("canvas");
@@ -44,6 +46,8 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
+    if (DEBUG) drawText("DEBUG", 30, false, 770, "red", 400, "center");
+    
     if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield" || gameState == "eat" || gameState == "drop" || gameState == "wear" || gameState == "read")) {
         return;
     }

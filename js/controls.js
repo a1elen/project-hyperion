@@ -64,6 +64,8 @@ function checkDirection() {
 
 function initKeyControls() {
     document.querySelector("html").onkeypress = (e) => {
+        if (e.key == "N") DEBUG = !DEBUG;
+
         if (gameState == "title") {
             if (e.key == "1") {
                 playerClass = 1;
