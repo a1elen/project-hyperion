@@ -46,8 +46,6 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (DEBUG) drawText("DEBUG", 30, false, 770, "red", 400, "center");
-    
     if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield" || gameState == "eat" || gameState == "drop" || gameState == "wear" || gameState == "read")) {
         return;
     }
@@ -135,6 +133,8 @@ function draw() {
 
     let centerY = canvas.height / 2;
     let centerX = canvas.width / 2;
+
+    if (DEBUG) drawText("DEBUG", 30, false, 770, "red", 400, "center");
 
     // Top-Center text
     drawText(levelPool[level-1].name, 30, false, 30, "violet", 400, "center");
