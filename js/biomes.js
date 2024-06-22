@@ -590,30 +590,47 @@ BIOMES.maze.levelgen = function() {
         carvePassage(1, 1);
 
         function carvePassage(x, y) {
+            let checks = [checkRight(), checkLeft(), checkDown(), checkUp()];
+
+            checks = shuffle(checks);
+            
+            for (i = 0; i < checks.length; i++) {
+                checks[i];
+            }
+
+        }
+
+        function checkRight() {
             if (inBounds(x+2, y) && !tiles[x+2][y].passable) {
                 tiles[x+1][y].replace(Floor, 34);
                 tiles[x+2][y].replace(Floor, 34);
                 carvePassage(x+2, y);
             }
 
+        }
+
+        function checkLeft() {
             if (inBounds(x-2, y) && !tiles[x-2][y].passable) {
                 tiles[x-1][y].replace(Floor, 34);
                 tiles[x-2][y].replace(Floor, 34);
                 carvePassage(x-2, y);
             }
+        }
 
+        function checkDown() {
             if (inBounds(x, y+2) && !tiles[x][y+2].passable) {
                 tiles[x][y+1].replace(Floor, 34);
                 tiles[x][y+2].replace(Floor, 34);
                 carvePassage(x, y+2);
             }
+        }
 
+        function checkUp() {
             if (inBounds(x, y-2) && !tiles[x][y-2].passable) {
                 tiles[x][y-1].replace(Floor, 34);
                 tiles[x][y-2].replace(Floor, 34);
                 carvePassage(x, y-2);
             }
-
         }
 
         return passableTiles;
