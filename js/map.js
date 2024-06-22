@@ -845,6 +845,8 @@ function generateMonsters() {
     if (randomRange(1, 100) < 10) {
         numberOfRare = randomRange(1, 2);
     }
+    
+    if (randomRange(1, 2) == 1) spawnOODMonster();
 
     for (let i = 0; i < numMonsters; i++) {
         if (i < numberOfRare) {
@@ -852,6 +854,19 @@ function generateMonsters() {
         } else {
             spawnMonster(false);
         }
+    }
+}
+
+function spawnOODMonster() {
+    let ood = level + 3;
+    if (ood > levelPool.length) ood = levelPool.length;
+
+    let monsterType = shuffle(levelPool[ood].monsterPool)[0];
+    const monster = new monsterType(randomPassableTile());
+    const amount = (level + randomRange(5, 10));
+    for (let i = 0; i < amount; i++) {
+        monster.levelUp();
+        monster.rare = true;
     }
 }
 

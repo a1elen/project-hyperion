@@ -1,5 +1,7 @@
 DEBUG = false;
 
+chosenLevels;
+
 function setupCanvas() {
 
     canvas = document.querySelector("canvas");
@@ -634,7 +636,6 @@ function initLevelPool() {
             levelPool.push(BIOMES.chasm);
         }
     }
-
 
     for (let i = 0; i < randomRange(3, 6); i++) {
         levelPool.push(BIOMES.caves);
