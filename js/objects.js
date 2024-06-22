@@ -37,6 +37,16 @@ objects.usable.bookshelf.sprite = 71;
 objects.usable.spiderCocoon = Object.create(objects.usable)
 objects.usable.spiderCocoon.name = "Spider Cocoon";
 objects.usable.spiderCocoon.sprite = 68;
+objects.usable.spiderCocoon.use = function(target) {
+    target.objects.splice(target.objects.indexOf(this));
+    //target.objects.push(objects.decorative.woodscraps);
+
+    let numberOfLoot = randomRange(0, 3);
+    for (let i = 0; i < numberOfLoot; i++) {
+        let lootTable = [makeSword(randomRange(2, 3), randomRange(0, 2))]
+        target.items.push(shuffle(lootTable)[0]);
+    }
+};
 
 objects.usable.coffin = Object.create(objects.usable)
 objects.usable.coffin.name = "Coffin";
