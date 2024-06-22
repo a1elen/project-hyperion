@@ -1,3 +1,7 @@
+// Globals
+tileSize = 0;
+numTiles = 0;
+
 function initCanvas() {
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
@@ -21,7 +25,7 @@ function init() {
     // Load spritesheet
     spritesheet = new Image();
     spritesheet.src = 'spritesheet.png';
-    spritesheet.onload = showTitle;
+    //spritesheet.onload = showTitle;
 
     // Tile grid setup
     tileSize = 64;
