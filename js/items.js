@@ -125,7 +125,8 @@ function makeChestplate() {
 
 // Weapon Generators
 
-function makeSword() {
+function makeSword(material, quality) {
+
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
@@ -154,6 +155,18 @@ function makeSword() {
     items.weapons.sword.diceSides = randomRange(3, 7)+quaMap.get(items.weapons.sword.quality);
     items.weapons.accuracy = randomRange(80, 90);
     items.weapons.sword.sprite = matMap.get(items.weapons.sword.material);
+
+    if (material == undefined || material == null) {
+        items.weapons.sword.material = shuffle(materials)[0];
+    } else {
+        items.weapons.sword.material = materials[material];
+    }
+
+    if (quality == undefined || quality == null) {
+        items.weapons.sword.quality = shuffle(qualities)[0];
+    } else {
+        items.weapons.sword.quality = qualities[quality];
+    }
 
     return items.weapons.sword;
 }

@@ -267,7 +267,7 @@ function getRandomObject() {
 
     objectsPool = levelPool[level-1].objPool;
     
-    return shuffle(objectsPool)[0];
+    return Object.create(shuffle(objectsPool)[0]);
 }
 
 function getRandomTrap() {
