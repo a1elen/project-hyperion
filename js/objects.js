@@ -24,8 +24,15 @@ objects.usable.barrel.use = function(target) {
     target.objects.push(objects.decorative.woodscraps);
 
     let numberOfLoot = randomRange(0, 3);
+    let lootTable;
+    
+    if (randomRange(1, 2) == 1) {
+        lootTable = [items.food.apple, items.food.bread, items.food.meat]
+    } else {
+        lootTable = [makeSword(randomRange(0, 1), randomRange(0, 2))];
+    }
+    
     for (let i = 0; i < numberOfLoot; i++) {
-        let lootTable = [items.food.apple, items.food.bread, items.food.meat]
         target.items.push(shuffle(lootTable)[0]);
     }
 };
