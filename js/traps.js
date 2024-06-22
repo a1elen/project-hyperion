@@ -134,7 +134,7 @@ traps.spiketrap.action = function(monster) {
     addStatus("Stunned", randomRange(4, 8), monster);
     addStatus("Bledding", randomRange(4, 8), monster);
     monster.hit(5);
-    
+
     this.blood = true;
     const neighbours = monster.tile.getAdjacentNeighbours();
     for (const neighbour of neighbours) {
@@ -150,5 +150,6 @@ traps.spiketrap.action = function(monster) {
 
     this.visible = true;
     this.loaded = false;
+    this.sprite = 96;
     //this.disarm(monster.tile);
 }
