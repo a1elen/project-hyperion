@@ -151,8 +151,6 @@ function makeSword(material, quality) {
     items.weapons.sword.damageType = "slash";
     //items.weapons.sword.quality = shuffle(qualities)[0];
     //items.weapons.sword.material = shuffle(materials)[0];
-    items.weapons.sword.diceRolls = 1;
-    items.weapons.sword.diceSides = 5+quaMap.get(items.weapons.sword.quality);
     items.weapons.accuracy = randomRange(80, 90);
     items.weapons.sword.sprite = matMap.get(items.weapons.sword.material);
 
@@ -167,6 +165,9 @@ function makeSword(material, quality) {
     } else {
         items.weapons.sword.quality = qualities[quality];
     }
+
+    items.weapons.sword.diceRolls = 1;
+    items.weapons.sword.diceSides = 5+quaMap.get(items.weapons.sword.quality);
 
     return items.weapons.sword;
 }

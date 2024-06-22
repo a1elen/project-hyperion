@@ -25,7 +25,7 @@ objects.usable.barrel.use = function(target) {
 
     let numberOfLoot = randomRange(0, 3);
     let lootTable;
-    
+
     if (randomRange(1, 2) == 1) {
         lootTable = [items.food.apple, items.food.bread, items.food.meat]
     } else {
@@ -71,7 +71,7 @@ objects.usable.coffin.use = function(target) {
 
 objects.usable.weaponStand = Object.create(objects.usable)
 objects.usable.weaponStand.name = "Weapon Stand";
-objects.usable.weaponStand.sprite = 20;
+objects.usable.weaponStand.sprite = 19;
 objects.usable.weaponStand.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.decorative.woodscraps);
