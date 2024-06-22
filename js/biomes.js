@@ -587,7 +587,7 @@ BIOMES.maze.levelgen = function() {
         }
 
         tiles[0][0].replace(Floor, 34);
-        carvePassage(0, 0);
+        carvePassage(1, 1);
 
         function carvePassage(x, y) {
             if (inBounds(x+2, y) && !tiles[x+2][y].passable) {
