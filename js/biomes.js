@@ -594,44 +594,43 @@ BIOMES.maze.levelgen = function() {
 
             checks = shuffle(checks);
 
-            for (i = 0; i < checks.length; i++) {
-                checks[i](x, y);
+            checks.forEach((direction) => direction(x,y));
+
+            function checkRight(x, y) {
+                if (inBounds(x+2, y) && !tiles[x+2][y].passable) {
+                    tiles[x+1][y].replace(Floor, 34);
+                    tiles[x+2][y].replace(Floor, 34);
+                    carvePassage(x+2, y);
+                }
+    
             }
-
-        }
-
-        function checkRight(x, y) {
-            if (inBounds(x+2, y) && !tiles[x+2][y].passable) {
-                tiles[x+1][y].replace(Floor, 34);
-                tiles[x+2][y].replace(Floor, 34);
-                carvePassage(x+2, y);
+    
+            function checkLeft(x, y) {
+                if (inBounds(x-2, y) && !tiles[x-2][y].passable) {
+                    tiles[x-1][y].replace(Floor, 34);
+                    tiles[x-2][y].replace(Floor, 34);
+                    carvePassage(x-2, y);
+                }
             }
-
-        }
-
-        function checkLeft(x, y) {
-            if (inBounds(x-2, y) && !tiles[x-2][y].passable) {
-                tiles[x-1][y].replace(Floor, 34);
-                tiles[x-2][y].replace(Floor, 34);
-                carvePassage(x-2, y);
+    
+            function checkDown(x, y) {
+                if (inBounds(x, y+2) && !tiles[x][y+2].passable) {
+                    tiles[x][y+1].replace(Floor, 34);
+                    tiles[x][y+2].replace(Floor, 34);
+                    carvePassage(x, y+2);
+                }
             }
-        }
-
-        function checkDown(x, y) {
-            if (inBounds(x, y+2) && !tiles[x][y+2].passable) {
-                tiles[x][y+1].replace(Floor, 34);
-                tiles[x][y+2].replace(Floor, 34);
-                carvePassage(x, y+2);
-            }
-        }
-
-        function checkUp(x, y) {
-            if (inBounds(x, y-2) && !tiles[x][y-2].passable) {
-                tiles[x][y-1].replace(Floor, 34);
-                tiles[x][y-2].replace(Floor, 34);
-                carvePassage(x, y-2);
+    
+            function checkUp(x, y) {
+                if (inBounds(x, y-2) && !tiles[x][y-2].passable) {
+                    tiles[x][y-1].replace(Floor, 34);
+                    tiles[x][y-2].replace(Floor, 34);
+                    carvePassage(x, y-2);
+                }
             }
         }
+
+        
 
         return passableTiles;
 }
