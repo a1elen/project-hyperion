@@ -386,7 +386,7 @@ function getRandomTrap() {
     traps.push(cobweb);*/
 
     let trapsPool = levelPool[level-1].trapsPool;
-    let chosenTrap = shuffle(trapsPool)[0];
+    let chosenTrap = Object.create(shuffle(trapsPool)[0]);
 
     if (roll(1, 20) > 15) {
         chosenTrap.visible = true;
