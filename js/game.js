@@ -134,7 +134,7 @@ function draw() {
     let centerY = canvas.height / 2;
     let centerX = canvas.width / 2;
 
-    if (DEBUG) drawText("DEBUG", 30, false, 770, "red", 400, "center");
+    if (DEBUG) drawText("DEBUG", 50, false, 590, "red", 400, "center");
 
     // Top-Center text
     drawText(levelPool[level-1].name, 30, false, 30, "violet", 400, "center");
