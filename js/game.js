@@ -46,7 +46,7 @@ function drawSprite(sprite, x, y) {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield" || gameState == "eat" || gameState == "drop" || gameState == "wear" || gameState == "read")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "spells" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "inventory" || gameState == "wield" || gameState == "eat" || gameState == "drop" || gameState == "wear" || gameState == "read" || gameState == "abilities")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -417,6 +417,20 @@ function draw() {
                 itemText = `${i + 1}) ${player.inventory[i].name}`;
             }
             drawText(itemText, 20, false, 230 + i * 40, "aqua", 20);
+        }
+    }
+
+    if (gameState == "abilities") {
+        drawText("Ability to use:", 30, false, 200, "violet", 20);
+
+        if (player.abilities == undefined) return;
+
+        for (let i = 0; i < player.abilities.length; i++) {
+            let abilityText;
+            if (player.abilities[i].name != undefined) {
+                abilityText = `${i + 1}) ${player.abilities[i].name}`;
+            drawText(abilityText, 20, false, 230 + i * 40, "aqua", 20);
+            }
         }
     }
 

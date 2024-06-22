@@ -396,6 +396,11 @@ class Monster {
         this.inventory.splice(this.inventory.indexOf(item), 1);
     }
 
+    useAbility(ability) {
+        this.abilities[ability-1].use(this, this);
+        //this.abilities.indexOf(ability)
+    }
+
     die() {
         this.dead = true;
         this.tile.monster = null;

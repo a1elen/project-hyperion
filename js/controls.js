@@ -70,6 +70,8 @@ function initKeyControls() {
                 gameState = "read";
             }
 
+            if (e.key == "a") gameState = "abilities";
+
             if (e.key == "e") {
                 gameState = "useSelect";
 
@@ -167,6 +169,13 @@ function initKeyControls() {
             }
             if (e.key >= 1 && e.key <= 9) {
                 player.drop(e.key-1);
+                tick();
+                gameState = "running";
+            }
+        } else if (gameState == "abilities") {
+            if (e.key = "a") gameState = "running";
+            if (e.key >= 1 && e.key <= 9) {
+                player.useAbility(e.key-1);
                 tick();
                 gameState = "running";
             }
