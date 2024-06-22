@@ -649,8 +649,14 @@ function initLevelPool() {
         }
     }
 
-    for (let i = 0; i < randomRange(3, 6); i++) {
-        levelPool.push(BIOMES.caves);
+    if (randomRange(1, 2) == 1) {
+        for (let i = 0; i < randomRange(3, 6); i++) {
+            levelPool.push(BIOMES.caves);
+        }
+    } else {
+        for (let i = 0; i < randomRange(3, 6); i++) {
+            levelPool.push(BIOMES.tunnel);
+        }
     }
 
     if (randomRange(1, 2) == 1) {
