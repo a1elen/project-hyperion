@@ -149,8 +149,8 @@ function makeSword(material, quality) {
     items.weapons.sword = Object.create(items.weapons);
     items.weapons.sword.name = "Sword"
     items.weapons.sword.damageType = "slash";
-    items.weapons.sword.quality = shuffle(qualities)[0];
-    items.weapons.sword.material = shuffle(materials)[0];
+    //items.weapons.sword.quality = shuffle(qualities)[0];
+    //items.weapons.sword.material = shuffle(materials)[0];
     items.weapons.sword.diceRolls = randomRange(1, 2);
     items.weapons.sword.diceSides = randomRange(3, 7)+quaMap.get(items.weapons.sword.quality);
     items.weapons.accuracy = randomRange(80, 90);
