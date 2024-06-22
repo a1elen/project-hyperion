@@ -1,3 +1,4 @@
+// TRY TO UNTIL
 function tryTo(description, callback) {
     for (let timeout=1000; timeout>0; timeout--) {
         if (callback()) {
@@ -7,6 +8,7 @@ function tryTo(description, callback) {
     throw `Timeout while trying to ${description}`;
 }
 
+// RANDOM HELPERS
 function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -43,6 +45,7 @@ function shuffle(arr) {
     return arr;
 }
 
+// OTHER HELPERS
 function clamp(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
