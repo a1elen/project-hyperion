@@ -225,7 +225,21 @@ function generateObjects(numberOfObjects) {
         randomPassableTile().objects.push(getRandomObject());
     }
 }
+function generateDecorativeObjects() {
+    if (randomRange(1, 2) == 1) return;
 
+    for (let i = 0; i < randomRange(0, 6); i++) {
+        let chosenDecoration;
+
+        if (randomRange(1, 2) == 1) {
+            chosenDecoration = objects.decorative.bone;
+        } else {
+            chosenDecoration = objects.decorative.skull;
+        }
+
+        randomPassableTile().objects.push(Object.create(chosenDecoration));
+    }
+}
 function getRandomObject() {
     let objectsPool = []
 
