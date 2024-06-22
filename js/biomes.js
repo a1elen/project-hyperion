@@ -529,8 +529,8 @@ BIOMES.tunnel.trapsPool = [traps.cobweb, traps.spiketrap];
 BIOMES.tunnel.levelgen = function() {
         let passableTiles=0;
     
-        let numberOfYCaves = randomRange(1);
-        let numberOfXCaves = randomRange(1);
+        let numberOfYCaves = 1;
+        let numberOfXCaves = 1;
     
         // clean level
         tiles = [];
