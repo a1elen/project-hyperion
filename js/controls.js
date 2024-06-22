@@ -1,67 +1,3 @@
-// touch controls VERY DIRTY CODE PLS FIX
-    
-function initTouchControls() {
-    let touchstartX = 0;
-    let touchendX = 0;
-    let touchstartY = 0;    
-    let touchendY = 0;
-
-    let selectedTile;
-
-    document.addEventListener('touchstart', e => {
-        touchstartX = e.changedTouches[0].screenX;
-        touchstartY = e.changedTouches[0].screenY;
-        e.preventDefault();
-    })
-
-    document.addEventListener('touchend', e => {
-        touchendX = e.changedTouches[0].screenX;
-        touchendY = e.changedTouches[0].screenY;
-        checkDirection()
-        e.preventDefault();
-    })
-}
-
-function touchMove(x, y) {
-    if (gameState == "title") {
-            startGame();
-        } else if (gameState == "dead") {
-            showTitle();
-        } else if (gameState == "running") {
-            player.tryMove(x, y);
-        }
-}
-
-function checkDirection() {
-    xDist = Math.floor(Math.abs(touchstartX - touchendX));
-    yDist = Math.floor(Math.abs(touchstartY - touchendY));
-
-    if (xDist < 100 && yDist < 100) {
-        return;
-    }
-
-    if (touchendX < touchstartX && xDist > 100 && yDist < 100) {
-        // left
-        touchMove(-1, 0);
-        return;
-    }
-    if (touchendX > touchstartX && xDist > 100 && yDist < 100) {
-        // right
-        touchMove(1, 0);
-        return;
-    }
-    if (touchendY < touchstartY && yDist > 100 && xDist < 100) {
-        // up
-        touchMove(0, -1);
-        return;
-    }
-    if (touchendY > touchstartY && yDist > 100 && xDist < 100) {
-        // down
-        touchMove(0, 1);
-        return;
-    }
-}
-
 function initKeyControls() {
     document.querySelector("html").onkeypress = (e) => {
         if (e.key == "N") DEBUG = !DEBUG;
@@ -94,8 +30,14 @@ function initKeyControls() {
             if (e.key == ">") player.moveDown();
             if (e.key == "<") player.moveUp();
 
-            if (e.key == "k") {
-                addPopups("Pressed 'k'!", "white", player);
+            if (DEBUG) {
+                if (e.key == "k") addPopups("Pressed 'k'!", "white", player);
+                if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
+                if (e.key == "o") startLevel(Math.min(maxHp, player.hp-5), player.spells);
+                if (e.key == "p") {
+                    level++;
+                    startLevel(Math.min(maxHp, player.hp+1), player.spells);
+                }
             }
 
             if (e.key == "x") {
@@ -144,12 +86,6 @@ function initKeyControls() {
                 player.tile.getNeighbour(0, 0).selected = true;
 
             }
-            if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
-            if (e.key == "o") startLevel(Math.min(maxHp, player.hp-5), player.spells);
-            if (e.key == "p") {
-                level++;
-                startLevel(Math.min(maxHp, player.hp+1), player.spells);
-            }
 
             if (e.key == "z") {
 
@@ -157,12 +93,6 @@ function initKeyControls() {
                     scaleX += 0.25;
                     scaleY += 0.25;
                 }
-
-                /*if (!zoomed) {
-                    zoomed = true;
-                } else {
-                    zoomed = false;
-                }*/
             }
 
             if (e.key == "Z") {
@@ -171,12 +101,6 @@ function initKeyControls() {
                     scaleX -= 0.25;
                     scaleY -= 0.25;
                 }
-
-                /*if (!zoomed) {
-                    zoomed = true;
-                } else {
-                    zoomed = false;
-                }*/
             }
             if (e.key == "5") {
                 if (randomRange(1, 20) > 10 && player.hunger > 0) {
