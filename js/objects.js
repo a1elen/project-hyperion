@@ -40,15 +40,15 @@ objects.usable.barrel.use = function(target) {
 objects.usable.bookshelf = Object.create(objects.usable)
 objects.usable.bookshelf.name = "Bookshelf";
 objects.usable.bookshelf.sprite = 71;
-objects.usable.spiderCocoon.use = function(target) {
+objects.usable.bookshelf.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.decorative.woodscraps);
 
     let numberOfLoot = randomRange(1, 3);
-    for (let i = 0; i < numberOfLoot; i++) {
+    /*for (let i = 0; i < numberOfLoot; i++) {
         let lootTable = []
         target.items.push(shuffle(lootTable)[0]);
-    }
+    }*/
 };
 
 objects.usable.spiderCocoon = Object.create(objects.usable)
