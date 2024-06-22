@@ -564,3 +564,57 @@ BIOMES.dungeon.levelgen = function() {
         return passableTiles;
 }
 
+BIOMES.maze = Object.create(biome);
+BIOMES.maze.name = "Maze";
+BIOMES.maze.monsterPool = [GoblinSpear, GoblinRanger, GoblinSwordsman, RedDragonBaby];
+BIOMES.maze.objPool = [objects.usable.bookshelf, objects.usable.weaponStand];
+BIOMES.maze.trapsPool = [traps.pressurePlate, traps.tripwire, traps.spiketrap];
+BIOMES.maze.levelgen = function() {
+    let wallChance = 0.45;
+    let levelType = 2;
+        let passableTiles=0;
+    
+        // clean level
+        tiles = [];
+        for (let i = 0; i < numTiles; i++) {
+            tiles[i] = [];
+        }
+    
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                tiles[i][j] = new Wall(i, j, 35);
+            }
+        }
+
+        tiles[0][0].replace(Floor, 34);
+        carvePassage(0, 0);
+
+        function carvePassage(x, y) {
+            if (inBounds(x+2, y) && !tiles[x+2][y].passable) {
+                tiles[x+1][y].replace(Floor, 34);
+                tiles[x+2][y].replace(Floor, 34);
+                carvePassage(x+2, y);
+            }
+
+            if (inBounds(x-2, y) && !tiles[x-2][y].passable) {
+                tiles[x-1][y].replace(Floor, 34);
+                tiles[x-2][y].replace(Floor, 34);
+                carvePassage(x-2, y);
+            }
+
+            if (inBounds(x, y+2) && !tiles[x][y+2].passable) {
+                tiles[x][y+1].replace(Floor, 34);
+                tiles[x][y+2].replace(Floor, 34);
+                carvePassage(x, y+2);
+            }
+
+            if (inBounds(x, y-2) && !tiles[x][y-2].passable) {
+                tiles[x][y-1].replace(Floor, 34);
+                tiles[x][y-2].replace(Floor, 34);
+                carvePassage(x, y-2);
+            }
+
+        }
+
+        return passableTiles;
+}

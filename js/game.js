@@ -636,9 +636,16 @@ function initLevelPool() {
         levelPool.push(BIOMES.caves);
     }
 
-    for (let i = 0; i < randomRange(3, 6); i++) {
-        levelPool.push(BIOMES.dungeon);
+    if (randomRange(1, 2) == 1) {
+        for (let i = 0; i < randomRange(3, 6); i++) {
+            levelPool.push(BIOMES.dungeon);
+        }
+    } else {
+        for (let i = 0; i < randomRange(3, 6); i++) {
+            levelPool.push(BIOMES.maze);
+        }
     }
+
 }
 
 function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
