@@ -1,5 +1,8 @@
 DEBUG = false;
 
+translateX = 0;
+translateY = 0;
+
 function setupCanvas() {
 
     canvas = document.querySelector("canvas");
