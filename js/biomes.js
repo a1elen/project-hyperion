@@ -316,19 +316,19 @@ BIOMES.underground.levelgen = function() {
             for (let j = 0; j < numTiles; j++) {
                 if (Math.random() < wallChance || !inBounds(i, j)) {
                     if (levelType == 0) {
-                        tiles[i][j] = new Wall(i, j, 3);
+                        tiles[i][j] = new Wall(i, j, 151);
                     } else if (levelType == 1) {
-                        tiles[i][j] = new Wall(i, j, 33);
+                        tiles[i][j] = new Wall(i, j, 152);
                     } else if(levelType == 2) {
-                        tiles[i][j] = new Wall(i, j, 35);
+                        tiles[i][j] = new Wall(i, j, 153);
                     }
                 } else {
                     if (levelType == 0) {
-                        tiles[i][j] = new Floor(i, j, 2);
+                        tiles[i][j] = new Floor(i, j, 201);
                     } else if (levelType == 1) {
-                        tiles[i][j] = new Floor(i, j, 32);
+                        tiles[i][j] = new Floor(i, j, 202);
                     } else if (levelType == 2) {
-                        tiles[i][j] = new Floor(i, j, 34);
+                        tiles[i][j] = new Floor(i, j, 203);
                     }
                     passableTiles++;
                 }
@@ -355,9 +355,9 @@ BIOMES.chasm.levelgen = function() {
     for (let i = 0; i < numTiles; i++) {
         for (let j = 0; j < numTiles; j++) {
             if (Math.random() < wallChance || !inBounds(i, j)) {
-                tiles[i][j] = new Wall(i, j, 3);
+                tiles[i][j] = new Wall(i, j, 151);
             } else {
-                tiles[i][j] = new Floor(i, j, 2);
+                tiles[i][j] = new Floor(i, j, 201);
 
             }
         }
@@ -371,11 +371,11 @@ BIOMES.chasm.levelgen = function() {
                 let neighbours = tiles[i][j].getAdjacentNeighbours().filter(t => !t.passable);
                 if (tiles[i][j].passable) { // if its a floor
                     if (neighbours.length >= 5) {
-                        tiles[i][j].replace(Wall, 3);
+                        tiles[i][j].replace(Wall, 151);
                     }
                 } else { // if its a wall
                     if (neighbours.length < 4) {
-                        tiles[i][j].replace(Floor, 2);
+                        tiles[i][j].replace(Floor, 201);
                     }
                 }
                 
@@ -405,7 +405,7 @@ BIOMES.caves.levelgen = function() {
         for (let i = 0; i < numTiles; i++) {
             //tiles[i] = [];
             for (let j = 0; j < numTiles; j++) {
-                tiles[i][j] = new Wall(i, j, 33);
+                tiles[i][j] = new Wall(i, j, 152);
             }
         }
     
@@ -542,7 +542,7 @@ BIOMES.tunnel.levelgen = function() {
         for (let i = 0; i < numTiles; i++) {
             //tiles[i] = [];
             for (let j = 0; j < numTiles; j++) {
-                tiles[i][j] = new Wall(i, j, 33);
+                tiles[i][j] = new Wall(i, j, 152);
             }
         }
     
@@ -680,19 +680,19 @@ BIOMES.dungeon.levelgen = function() {
             for (let j = 0; j < numTiles; j++) {
                 if (Math.random() < wallChance || !inBounds(i, j)) {
                     if (levelType == 0) {
-                        tiles[i][j] = new Wall(i, j, 3);
+                        tiles[i][j] = new Wall(i, j, 151);
                     } else if (levelType == 1) {
-                        tiles[i][j] = new Wall(i, j, 33);
+                        tiles[i][j] = new Wall(i, j, 152);
                     } else if(levelType == 2) {
-                        tiles[i][j] = new Wall(i, j, 35);
+                        tiles[i][j] = new Wall(i, j, 153);
                     }
                 } else {
                     if (levelType == 0) {
-                        tiles[i][j] = new Floor(i, j, 2);
+                        tiles[i][j] = new Floor(i, j, 201);
                     } else if (levelType == 1) {
-                        tiles[i][j] = new Floor(i, j, 32);
+                        tiles[i][j] = new Floor(i, j, 202);
                     } else if (levelType == 2) {
-                        tiles[i][j] = new Floor(i, j, 34);
+                        tiles[i][j] = new Floor(i, j, 203);
                     }
                     passableTiles++;
                 }
@@ -719,11 +719,11 @@ BIOMES.maze.levelgen = function() {
     
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
-                tiles[i][j] = new Wall(i, j, 35);
+                tiles[i][j] = new Wall(i, j, 153);
             }
         }
 
-        tiles[1][1].replace(Floor, 34);
+        tiles[1][1].replace(Floor, 153);
         carvePassage(1, 1);
 
         function carvePassage(x, y) {
@@ -735,8 +735,8 @@ BIOMES.maze.levelgen = function() {
 
             function checkRight(x, y) {
                 if (inBounds(x+2, y) && !tiles[x+2][y].passable) {
-                    tiles[x+1][y].replace(Floor, 34);
-                    tiles[x+2][y].replace(Floor, 34);
+                    tiles[x+1][y].replace(Floor, 203);
+                    tiles[x+2][y].replace(Floor, 203);
                     carvePassage(x+2, y);
                 }
     
@@ -744,24 +744,24 @@ BIOMES.maze.levelgen = function() {
     
             function checkLeft(x, y) {
                 if (inBounds(x-2, y) && !tiles[x-2][y].passable) {
-                    tiles[x-1][y].replace(Floor, 34);
-                    tiles[x-2][y].replace(Floor, 34);
+                    tiles[x-1][y].replace(Floor, 203);
+                    tiles[x-2][y].replace(Floor, 203);
                     carvePassage(x-2, y);
                 }
             }
     
             function checkDown(x, y) {
                 if (inBounds(x, y+2) && !tiles[x][y+2].passable) {
-                    tiles[x][y+1].replace(Floor, 34);
-                    tiles[x][y+2].replace(Floor, 34);
+                    tiles[x][y+1].replace(Floor, 203);
+                    tiles[x][y+2].replace(Floor, 203);
                     carvePassage(x, y+2);
                 }
             }
     
             function checkUp(x, y) {
                 if (inBounds(x, y-2) && !tiles[x][y-2].passable) {
-                    tiles[x][y-1].replace(Floor, 34);
-                    tiles[x][y-2].replace(Floor, 34);
+                    tiles[x][y-1].replace(Floor, 203);
+                    tiles[x][y-2].replace(Floor, 203);
                     carvePassage(x, y-2);
                 }
             }

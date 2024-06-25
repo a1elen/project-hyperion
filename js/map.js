@@ -207,7 +207,7 @@ function fillRect(x1, y1, x2, y2) {
             //tiles[i][j] = new Floor(i, j, 32);
             if (tiles[i] != undefined) {
                 if (tiles[i][j] != undefined) {
-                    tiles[i][j].replace(Floor, 32);
+                    tiles[i][j].replace(Floor, 202);
                 }
 
             }
@@ -649,7 +649,7 @@ function getRandomItem() {
     gold = {
         name: "Gold",
         type: "coin",
-        sprite: 12,
+        sprite: 700,
         amount: randomRange(5, 25),
         get() {
             score += randomRange(9, 21);
@@ -662,7 +662,7 @@ function getRandomItem() {
         spell: shuffle(Object.keys(spells))[0],
         name: "Scroll of " + this.spell,
         type: "scroll",
-        sprite: 18,
+        sprite: 800,
         get() { 
             if (player.inventory.length < player.inventory_space) {
                 player.inventory.push(this);
@@ -681,7 +681,7 @@ function getRandomItem() {
         spell: shuffle(Object.keys(spells))[0],
         name: "Magic Book of " + this.spell,
         type: "book",
-        sprite: 57,
+        sprite: 750,
         get() { 
             if (player.spells.length < numSpells) {
                 player.addSpell(this.spell);

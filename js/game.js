@@ -178,7 +178,7 @@ function draw() {
                             drawText(tileName, 20, false, mouseY+40, "white", mouseX+20);
                         }
             
-                        drawSprite(37, xTile+translateX/tileSize, yTile+translateY/tileSize);
+                        drawSprite(102, xTile+translateX/tileSize, yTile+translateY/tileSize);
                     }
                 }
             }

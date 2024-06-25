@@ -18,7 +18,7 @@ objects.decorative.type = "decorative-object";
 // Usable objects
 objects.usable.barrel = Object.create(objects.usable)
 objects.usable.barrel.name = "Barrel";
-objects.usable.barrel.sprite = 64;
+objects.usable.barrel.sprite = 1202;
 objects.usable.barrel.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.decorative.woodscraps);
@@ -39,7 +39,7 @@ objects.usable.barrel.use = function(target) {
 
 objects.usable.bookshelf = Object.create(objects.usable)
 objects.usable.bookshelf.name = "Bookshelf";
-objects.usable.bookshelf.sprite = 71;
+objects.usable.bookshelf.sprite = 1205;
 objects.usable.bookshelf.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.decorative.woodscraps);
@@ -53,7 +53,7 @@ objects.usable.bookshelf.use = function(target) {
 
 objects.usable.spiderCocoon = Object.create(objects.usable)
 objects.usable.spiderCocoon.name = "Spider Cocoon";
-objects.usable.spiderCocoon.sprite = 68;
+objects.usable.spiderCocoon.sprite = 1203;
 objects.usable.spiderCocoon.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     //target.objects.push(objects.decorative.woodscraps);
@@ -67,7 +67,7 @@ objects.usable.spiderCocoon.use = function(target) {
 
 objects.usable.coffin = Object.create(objects.usable)
 objects.usable.coffin.name = "Coffin";
-objects.usable.coffin.sprite = 69;
+objects.usable.coffin.sprite = 1204;
 objects.usable.coffin.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.decorative.woodscraps);
@@ -81,7 +81,7 @@ objects.usable.coffin.use = function(target) {
 
 objects.usable.weaponStand = Object.create(objects.usable)
 objects.usable.weaponStand.name = "Weapon Stand";
-objects.usable.weaponStand.sprite = 19;
+objects.usable.weaponStand.sprite = 100;
 objects.usable.weaponStand.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.decorative.woodscraps);
@@ -95,7 +95,7 @@ objects.usable.weaponStand.use = function(target) {
 
 objects.usable.campfire = Object.create(objects.usable)
 objects.usable.campfire.name = "Campfire";
-objects.usable.campfire.sprite = 98;
+objects.usable.campfire.sprite = 1200;
 objects.usable.campfire.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.usable.campfireLit);
@@ -103,7 +103,7 @@ objects.usable.campfire.use = function(target) {
 
 objects.usable.campfireLit = Object.create(objects.usable)
 objects.usable.campfireLit.name = "Lit Campfire";
-objects.usable.campfireLit.sprite = 99;
+objects.usable.campfireLit.sprite = 1201;
 objects.usable.campfireLit.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.usable.campfire);
@@ -117,12 +117,12 @@ objects.decorative.gravel.sprite = 93;
 
 objects.decorative.woodscraps = Object.create(objects.decorative)
 objects.decorative.woodscraps.name = "Woodscraps";
-objects.decorative.woodscraps.sprite = 101;
+objects.decorative.woodscraps.sprite = 1150;
 
 objects.decorative.skull = Object.create(objects.decorative)
 objects.decorative.skull.name = "Skull";
-objects.decorative.skull.sprite = 75;
+objects.decorative.skull.sprite = 850;
 
 objects.decorative.bone = Object.create(objects.decorative)
 objects.decorative.bone.name = "Bone";
-objects.decorative.bone.sprite = 81;
+objects.decorative.bone.sprite = 851;

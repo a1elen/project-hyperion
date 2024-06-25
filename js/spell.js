@@ -29,12 +29,12 @@ spells = {
     },
     HealingAura() {
         player.tile.getAdjacentNeighbours().forEach((t) => {
-            t.setEffect(13);
+            t.setEffect(400);
             if (t.monster) {
                 t.monster.heal(5 * t.arcane);
             }
         });
-        player.tile.setEffect(13);
+        player.tile.setEffect(400);
         player.heal(5 * player.arcane);
     },
     Dash() {
@@ -54,7 +54,7 @@ spells = {
                 if (!t.monster) {
                     return;
                 }
-                t.setEffect(14);
+                t.setEffect(401);
                 addStatus("Stunned", randomRange(2, 5), t.monster);
                 t.monster.hit(1);
             });
@@ -92,7 +92,7 @@ spells = {
         });
     },
     Berserk() {
-        player.tile.setEffect(13);
+        player.tile.setEffect(400);
         player.heal(5);
 
         player.bonusAttack = 5;
@@ -109,7 +109,7 @@ spells = {
         addStatus("Shielded", randomRange(5, 10), player);
     },
     Bolt() {
-        boltTravel(player.lastMove, 15 + Math.abs(player.lastMove[1]), 5 * player.arcane);
+        boltTravel(player.lastMove, 402 + Math.abs(player.lastMove[1]), 5 * player.arcane);
         playSound("firebolt");
         addPopups("Crack!", "red", player);
     },
@@ -121,7 +121,7 @@ spells = {
             [1, 0]
         ];
         for (const direction of directions) {
-            boltTravel(direction, 15 + Math.abs(direction[1]), 5 * player.arcane);
+            boltTravel(direction, 402 + Math.abs(direction[1]), 5 * player.arcane);
         }
         playSound("firebolt");
         addPopups("Zap!", "green", player);
@@ -134,7 +134,7 @@ spells = {
             [1, 1]
         ];
         for (const direction of directions) {
-            boltTravel(direction, 14, 5 * player.arcane);
+            boltTravel(direction, 401, 5 * player.arcane);
         }
         playSound("firebolt");
     },
@@ -146,14 +146,14 @@ spells = {
         }
     },
     Heal() {
-        player.tile.setEffect(13);
+        player.tile.setEffect(400);
         player.heal(10);
     },
     Pray() {
         const outcome = randomRange(1, 5);
         switch(outcome) {
             case 1:
-                player.tile.setEffect(13);
+                player.tile.setEffect(400);
                 player.heal(randomRange(5, player.maxHealth));
                 break;
             case 2:

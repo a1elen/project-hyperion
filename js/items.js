@@ -30,22 +30,22 @@ items.food.eat = function() {
 
 items.food.apple = Object.create(items.food);
 items.food.apple.name = "Apple";
-items.food.apple.sprite = 73;
+items.food.apple.sprite = 651;
 items.food.apple.hunger = 10;
 
 items.food.meat = Object.create(items.food);
 items.food.meat.name = "Meat";
-items.food.meat.sprite = 50;
+items.food.meat.sprite = 653;
 items.food.meat.hunger = 50;
 
 items.food.bread = Object.create(items.food);
 items.food.bread.name = "Bread";
-items.food.bread.sprite = 74;
+items.food.bread.sprite = 652;
 items.food.bread.hunger = 30;
 
 items.food.carcass = Object.create(items.food);
 items.food.carcass.name = "Carcass";
-items.food.carcass.sprite = 65;
+items.food.carcass.sprite = 650;
 items.food.carcass.hunger = 15;
 
 // Weapons
@@ -66,7 +66,7 @@ items.weapons.pickaxe.name = "Pickaxe"
 items.weapons.pickaxe.type = "weapon";
 items.weapons.pickaxe.diceRolls = 1;
 items.weapons.pickaxe.diceSides = 4;
-items.weapons.pickaxe.sprite = 56;
+items.weapons.pickaxe.sprite = 619;
 
 // Armor
 items.armor = Object.create(item);
@@ -83,7 +83,7 @@ items.tools = Object.create(item);
 
 items.tools.beartrap = Object.create(items.tools);
 items.tools.beartrap.name = "Bear Trap";
-items.tools.beartrap.sprite = 29;
+items.tools.beartrap.sprite = 853;
 
 // Armor Generators
 
@@ -95,12 +95,12 @@ function makeChestplate() {
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
-    matMap.set(materials[0], 58);
-    matMap.set(materials[1], 59);
-    matMap.set(materials[2], 60);
-    matMap.set(materials[3], 62);
-    matMap.set(materials[4], 61);
-    matMap.set(materials[5], 63);
+    matMap.set(materials[0], 900);
+    matMap.set(materials[1], 901);
+    matMap.set(materials[2], 902);
+    matMap.set(materials[3], 903);
+    matMap.set(materials[4], 904);
+    matMap.set(materials[5], 905);
 
     let qualities = ["Junk", "Rusted", "Normal", "Reinforced", "Masterpiece"];
 
@@ -130,12 +130,12 @@ function makeSword(material, quality) {
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
-    matMap.set(materials[0], 51);
-    matMap.set(materials[1], 52);
-    matMap.set(materials[2], 53);
-    matMap.set(materials[3], 55);
-    matMap.set(materials[4], 54);
-    matMap.set(materials[5], 43);
+    matMap.set(materials[0], 606);
+    matMap.set(materials[1], 607);
+    matMap.set(materials[2], 608);
+    matMap.set(materials[3], 609);
+    matMap.set(materials[4], 610);
+    matMap.set(materials[5], 611);
 
     let qualities = ["Junk", "Rusted", "Normal", "Sharpened", "Masterpiece"];
 
@@ -176,12 +176,12 @@ function makeAxe() {
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
-    matMap.set(materials[0], 82);
-    matMap.set(materials[1], 83);
-    matMap.set(materials[2], 76);
-    matMap.set(materials[3], 85);
-    matMap.set(materials[4], 84);
-    matMap.set(materials[5], 86);
+    matMap.set(materials[0], 600);
+    matMap.set(materials[1], 601);
+    matMap.set(materials[2], 602);
+    matMap.set(materials[3], 603);
+    matMap.set(materials[4], 604);
+    matMap.set(materials[5], 605);
 
     let qualities = ["Junk", "Rusted", "Normal", "Sharpened", "Masterpiece"];
 
@@ -209,12 +209,12 @@ function makeHammer() {
     let materials = ["Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
-    matMap.set(materials[0], 87);
-    matMap.set(materials[1], 88);
-    matMap.set(materials[2], 77);
-    matMap.set(materials[3], 90);
-    matMap.set(materials[4], 89);
-    matMap.set(materials[5], 91);
+    matMap.set(materials[0], 612);
+    matMap.set(materials[1], 613);
+    matMap.set(materials[2], 614);
+    matMap.set(materials[3], 615);
+    matMap.set(materials[4], 616);
+    matMap.set(materials[5], 617);
 
     let qualities = ["Junk", "Rusted", "Normal", "Sharpened", "Masterpiece"];
 
@@ -242,7 +242,7 @@ function makeStaff() {
     let materials = ["Wooden", "Copper", "Bronze", "Iron", "Silver", "Gold", "Steel"];
 
     let matMap = new Map();
-    matMap.set(materials[0], 78);
+    matMap.set(materials[0], 618);
     matMap.set(materials[1], 52);
     matMap.set(materials[2], 77);
     matMap.set(materials[3], 55);

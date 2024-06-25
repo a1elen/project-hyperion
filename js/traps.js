@@ -17,7 +17,7 @@ trap.disarm = function(target) {
 
 traps.beartrap = Object.create(trap);
 traps.beartrap.name = "Bear Trap";
-traps.beartrap.sprite = 28;
+traps.beartrap.sprite = 1103;
 traps.beartrap.item = items.tools.beartrap;
 traps.beartrap.action = function(monster) {
     playSound(this.sound);
@@ -47,7 +47,7 @@ traps.beartrap.disarm = function(target) {
 
 traps.trapdoor = Object.create(trap);
 traps.trapdoor.name = "Trapdoor";
-traps.trapdoor.sprite = 31;
+traps.trapdoor.sprite = 252;
 traps.trapdoor.sound = "trapdoor"
 traps.trapdoor.action = function(monster) {
     
@@ -74,7 +74,7 @@ traps.trapdoor.action = function(monster) {
 
 traps.pressurePlate = Object.create(trap);
 traps.pressurePlate.name = "Pressure Plate";
-traps.pressurePlate.sprite = 72;
+traps.pressurePlate.sprite = 1105;
 traps.pressurePlate.sound = "trapdoor"
 traps.pressurePlate.action = function(monster) {
     monster.move(randomPassableTile());
@@ -89,7 +89,7 @@ traps.pressurePlate.action = function(monster) {
 
 traps.cobweb = Object.create(trap);
 traps.cobweb.name = "Cobweb";
-traps.cobweb.sprite = 67;
+traps.cobweb.sprite = 1104;
 traps.cobweb.action = function(monster) {
     addStatus("Stunned", 5, monster);
     addPopups("Webbed!", "white", monster);
@@ -108,11 +108,11 @@ traps.cobweb.action = function(monster) {
 
 traps.tripwire = Object.create(trap);
 traps.tripwire.name = "Tripwire";
-traps.tripwire.sprite = 97;
+traps.tripwire.sprite = 1102;
 traps.tripwire.action = function(monster) {
     addStatus("Stunned", randomRange(4, 8), monster);
     monster.hit(5);
-    monster.tile.setEffect(14);
+    monster.tile.setEffect(401);
 
     if (monster.tile.dist(player.tile) < 6) {
         shakeAmount = 10;
@@ -125,7 +125,7 @@ traps.tripwire.action = function(monster) {
 
 traps.spiketrap = Object.create(trap);
 traps.spiketrap.name = "Spiketrap";
-traps.spiketrap.sprite = 95;
+traps.spiketrap.sprite = 1100;
 traps.spiketrap.loaded = true;
 traps.spiketrap.action = function(monster) {
     if (!this.loaded) {
@@ -150,6 +150,6 @@ traps.spiketrap.action = function(monster) {
 
     this.visible = true;
     this.loaded = false;
-    this.sprite = 96;
+    this.sprite = 1101;
     //this.disarm(monster.tile);
 }

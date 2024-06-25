@@ -190,7 +190,7 @@ class Monster {
 
     draw() {
         if (this.teleportCounter > 1) {
-            drawSprite(10, this.getDisplayX(), this.getDisplayY());
+            drawSprite(500, this.getDisplayX(), this.getDisplayY());
         } else {
             drawSprite(this.sprite, this.getDisplayX(), this.getDisplayY());
             this.drawHp();
@@ -234,7 +234,7 @@ class Monster {
 
     drawStun() {
         drawSprite(
-            17,
+            451,
             this.getDisplayX(),
             this.getDisplayY()
         );
@@ -549,7 +549,7 @@ class Player extends Monster {
             this.initSkills(1, 1, 1, 1, 0);
             numSpells = 3;
         } else {
-            super(tile, 20, 10);
+            super(tile, 7, 10);
 
             this.initMainStats(5, 5, 5, 5, 5, 5);
             this.initSkills(0, 0, 0, 0, 4);
@@ -693,7 +693,7 @@ class Player extends Monster {
 
 class Spider extends Monster {
     constructor (tile) {
-        super(tile, 4, 2);
+        super(tile, 2, 2);
         this.initMainStats(2, 3, 5, 5, 1, 1);
         this.updateStats();
         this.initSkills(1, 2, 1, 1, 0);
@@ -706,7 +706,7 @@ class Spider extends Monster {
 
 class Worm extends Monster {
     constructor (tile) {
-        super(tile, 5, 1);
+        super(tile, 3, 1);
         this.initMainStats(1, 4, 1, 3, 1, 1);
         this.updateStats();
         this.initSkills(2, 2, 2, 2, 0);
@@ -720,7 +720,7 @@ class Worm extends Monster {
         const neighbours = this.tile.getAdjacentNeighbours().filter(t => !t.passable && inBounds(t.x, t.y));
         if (neighbours.length) {
             if (roll(1, 10) > 8) {
-                neighbours[0].replace(Floor);
+                neighbours[0].replace(Floor, 202);
                 addPopups("Munch!", "brown", this);
 
                 if (this.hp >= this.maxHealth) {
@@ -743,7 +743,7 @@ class Worm extends Monster {
 
 class Snake extends Monster {
     constructor (tile) {
-        super(tile, 6, 1);
+        super(tile, 4, 1);
         this.initMainStats(2, 2, 2, 6, 1, 1);
         this.updateStats();
         this.initSkills(2, 3, 2, 1, 0);
@@ -758,7 +758,7 @@ class Snake extends Monster {
 
 class Zombie extends Monster {
     constructor (tile) {
-        super(tile, 7, 3);
+        super(tile, 5, 3);
         this.initMainStats(6, 4, 1, 1, 1, 1);
         this.updateStats();
         this.initSkills(3, 4, 1, 3, 0);
@@ -772,7 +772,7 @@ class Zombie extends Monster {
 
 class Skeleton extends Monster {
     constructor (tile) {
-        super(tile, 30, 2);
+        super(tile, 10, 2);
         this.initMainStats(3, 3, 2, 1, 1, 1);
         this.updateStats();
         this.initSkills(3, 4, 2, 2, 0);
@@ -785,7 +785,7 @@ class Skeleton extends Monster {
 
     update() {
         if (this.angry) {
-            this.sprite = 8;
+            this.sprite = 6;
         }
         super.update();
     }
@@ -793,7 +793,7 @@ class Skeleton extends Monster {
 
 class RedDragonBaby extends Monster {
     constructor (tile) {
-        super(tile, 21, 2);
+        super(tile, 8, 2);
         this.initMainStats(7, 7, 4, 4, 2, 2);
         this.updateStats();
         this.initSkills(5, 5, 5, 5, 0);
@@ -806,7 +806,7 @@ class RedDragonBaby extends Monster {
 
 class GreenSlime extends Monster {
     constructor (tile) {
-        super(tile, 22, 2);
+        super(tile, 9, 2);
         this.initMainStats(2, 1, 1, 1, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
@@ -820,7 +820,7 @@ class GreenSlime extends Monster {
 
 class Mouse extends Monster {
     constructor (tile) {
-        super(tile, 46, 2);
+        super(tile, 12, 2);
         this.initMainStats(1, 1, 1, 5, 1, 1);
         this.updateStats();
         this.initSkills(0, 0, 0, 0, 0);
@@ -834,7 +834,7 @@ class Mouse extends Monster {
 
 class StoneGolem extends Monster {
     constructor (tile) {
-        super(tile, 45, 2);
+        super(tile, 11, 2);
         this.initMainStats(7, 9, 3, 2, 1, 1);
         this.updateStats();
         this.initSkills(4, 5, 3, 4, 0);
@@ -848,7 +848,7 @@ class StoneGolem extends Monster {
 
 class GoblinRanger extends Monster {
     constructor (tile) {
-        super(tile, 48, 2);
+        super(tile, 14, 2);
         this.initMainStats(5, 3, 3, 4, 1, 1);
         this.updateStats();
         this.initSkills(5, 4, 3, 4, 0);
@@ -862,7 +862,7 @@ class GoblinRanger extends Monster {
 
 class GoblinSpear extends Monster {
     constructor (tile) {
-        super(tile, 47, 2);
+        super(tile, 13, 2);
         this.initMainStats(5, 3, 2, 6, 1, 1);
         this.updateStats();
         this.initSkills(4, 5, 2, 3, 0);
@@ -876,7 +876,7 @@ class GoblinSpear extends Monster {
 
 class GoblinSwordsman extends Monster {
     constructor (tile) {
-        super(tile, 49, 2);
+        super(tile, 15, 2);
         this.initMainStats(8, 6, 2, 1, 1, 1);
         this.updateStats();
         this.initSkills(7, 6, 4, 3, 0);

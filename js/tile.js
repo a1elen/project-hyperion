@@ -78,16 +78,16 @@ class Tile {
 
         if (this.liquid == "Blood") {
             if (this.liquidVolume > 400) {
-                drawSprite(40, this.x, this.y);
+                drawSprite(553, this.x, this.y);
             }
             if (this.liquidVolume > 300) {
-                drawSprite(39, this.x, this.y);
+                drawSprite(552, this.x, this.y);
             }
             else if (this.liquidVolume > 150) {
-                drawSprite(25, this.x, this.y);
+                drawSprite(551, this.x, this.y);
             }
             else if (this.liquidVolume > 0) {
-                drawSprite(38, this.x, this.y);
+                drawSprite(550, this.x, this.y);
             }
         }
 
@@ -115,7 +115,7 @@ class Tile {
         }
 
         if (this.wallBlood) {
-            drawSprite(26, this.x, this.y);
+            drawSprite(554, this.x, this.y);
         }
 
         if (this.treasure) {
@@ -135,7 +135,7 @@ class Tile {
         }
 
         if (this.selected) {
-            drawSprite(37, this.x, this.y);
+            drawSprite(102, this.x, this.y);
         }
 
         if (!this.effectCounter) {
@@ -290,7 +290,7 @@ class Wall extends Tile {
 
 class ClosedDoor extends Tile {
     constructor(x, y, sprite) {
-        super(x, y, 41, false);
+        super(x, y, 253, false);
     }
 
     stepOn() {
@@ -305,7 +305,7 @@ class ClosedDoor extends Tile {
 
 class OpenDoor extends Tile {
     constructor(x, y, sprite) {
-        super(x, y, 42, true);
+        super(x, y, 254, true);
     }
 
     stepOn() {
@@ -320,7 +320,7 @@ class OpenDoor extends Tile {
 
 class StairsDown extends Tile {
     constructor(x, y) {
-        super(x, y, 23, true);
+        super(x, y, 250, true);
     }
 
     stepOn(monster) {
@@ -357,7 +357,7 @@ class StairsDown extends Tile {
 
 class StairsUp extends Tile {
     constructor(x, y) {
-        super(x, y, 24, true);
+        super(x, y, 251, true);
     }
 
     stepOn(monster) {
