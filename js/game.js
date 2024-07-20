@@ -30,6 +30,7 @@ function setupCanvas() {
     zoomed = false;
 
     popupText = [];
+    messageLog = [];
 
 }
 
@@ -268,6 +269,7 @@ function draw() {
               
         }
 
+        // Here lies text
         if (player.tile.items.length > 0) {
             drawText("Here lies: ", 20, false, 500, "white", 20);
             for (let i = 0; i < player.tile.items.length; i++) {
@@ -296,6 +298,16 @@ function draw() {
 
 
                 drawText(text, 20, false, 520 + i*20, text_color, 20);
+            }
+        }
+
+        // Message Log
+        if (Array.isArray(messageLog)) {
+            if (messageLog.length == 1) {
+                drawText(messageLog[0], 20, false, 580, "white", 20);
+            } else if (messageLog.length > 1) {
+                drawText(messageLog[0], 20, false, 580, "white", 20);
+                drawText(messageLog[1], 20, false, 560, "gray", 20);
             }
         }
     }
@@ -483,6 +495,14 @@ function addPopups(txt, clr, target) {
     
     if (target.tile.dist(player.tile) < 6) {
         popupText.push(textPopup);
+    }
+}
+
+function addMessageLog(txt) {
+    messageLog.unshift(txt);
+
+    if (messageLog.length > 2) {
+        messageLog.splice(2, messageLog.length-2);
     }
 }
 

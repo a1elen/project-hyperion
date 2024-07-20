@@ -32,6 +32,7 @@ function initKeyControls() {
 
             if (DEBUG) {
                 if (e.key == "k") addPopups("Pressed 'k'!", "white", player);
+                if (e.key == "j") addMessageLog("Pressed 'j'!");
                 if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
                 if (e.key == "o") startLevel(Math.min(maxHp, player.hp-5), player.spells);
                 if (e.key == "p") {

@@ -321,16 +321,25 @@ class Monster {
 
                 if (randomRange(1, 100) > hitChance) {
                     addPopups("Missed!", "gray", enemy);
+                    if (this == player) {
+                        addMessageLog("You missed " + newTile.monster.constructor.name);
+                    }
                     return;
                 }
 
                 if (randomRange(1, 100) <= dodgeChance) {
                     enemy.tryDodge();
+                    if (this == player) {
+                        addMessageLog(newTile.monster.constructor.name + " dodged your attack!");
+                    }
                     return;
                 }
 
-                newTile.monster.hit(damage, this);
                 addPopups("("+damage+")", "white", enemy);
+                if (this == player) {
+                    addMessageLog("You damaged " + newTile.monster.constructor.name + " for " + damage + " damage");
+                }
+                newTile.monster.hit(damage, this);
 
                 damage += this.bonusAttack;
 
