@@ -859,7 +859,7 @@ function generateMonsters() {
 
 function spawnOODMonster() {
     let ood = level + 3;
-    if (ood > levelPool.length) ood = levelPool.length;
+    if (ood > levelPool.length-1) ood = levelPool.length-1;
 
     let monsterType = shuffle(levelPool[ood].monsterPool)[0];
     const monster = new monsterType(randomPassableTile());
