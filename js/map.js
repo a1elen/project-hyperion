@@ -1,50 +1,54 @@
+isLevelXL = false;
+
+function pickLevelDimensions() {
+    if (randomRange(1, 100) <= 10) {
+        isLevelXL = true;
+        levelWidth = randomRange(18, 30) * 2;
+        levelHeight = randomRange(16, 26) * 2;
+    } else {
+        isLevelXL = false;
+        levelWidth = randomRange(18, 30);
+        levelHeight = randomRange(16, 26);
+    }
+}
+
+function levelMinDim() {
+    return Math.min(levelWidth, levelHeight);
+}
+
+function tryAddItemToTile(tile, item) {
+    if (!tile || item == undefined) return false;
+    if (tile.items.length >= tile.itemCapacity) return false;
+    tile.items.push(item);
+    return true;
+}
+
+function scatterRandomHoles() {
+    const count = randomRange(0, 3);
+    for (let k = 0; k < count; k++) {
+        tryTo("scatter hole", () => {
+            const t = randomPassableTile();
+            const n = t.constructor.name;
+            if (n === "StairsUp" || n === "StairsDown" || n === "Hole") return false;
+            if (t.monster) return false;
+            t.replace(Hole);
+            return true;
+        });
+    }
+}
+
 function generateLevel(levelGen) {
 
+    pickLevelDimensions();
     levelPool[level-1].levelgen();
+    scatterRandomHoles();
 
-    /*let wallChance = 0.3;
-    if (levelGen == 0) {
-        wallChance = 0.3;
-        tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
-    } else if (levelGen == 1 || levelGen == 2) {
-        wallChance = 0.45
-        tryTo('generate map', () => generateCellular(wallChance, levelGen) == randomPassableTile().getConnectedTiles().length)
-        /*tryTo('generate map', () => {
-            passableTilesCount = generateCellular(wallChance, levelGen);
-            iterateCellular(5, levelGen);
-            const passables = randomPassableTile().getConnectedTiles();
-
-            for (let i = 0; i < numTiles; i++) {
-                for (let j = 0; j < numTiles; j++) {
-                    if (!passables.includes(tiles[i][j])) {
-                        if (levelGen == 0) {
-                            tiles[i][j].replace(Wall, 3);
-                        } else if (levelGen == 1) {
-                            tiles[i][j].replace(Wall, 33);
-                        } else if (levelGen == 2) {
-                            tiles[i][j].replace(Wall, 35);
-                        }
-                        
-                    }
-                }
-            }
-
-            return passableTilesCount == passables.length;
-        })
-    } else {
-        generateDirectional();
-    }*/
 
     generateMonsters();
 
     const treasureNumber = clamp(Math.floor(level / 2) + 1, 1, randomRange(2, 4));
-    //const scrollNumber = clamp(Math.floor(level / 2) + 1, 0, randomRange(1, 2));
     
     generateTraps(randomRange(1, 5));
-
-    //for (let i = 0; i < scrollNumber; i++) {
-        //randomPassableTile().trap = true;
-    //}
 
     generateItems(randomRange(3, 6));
     generateObjects(randomRange(1, 5));
@@ -71,25 +75,23 @@ function generateDirectional() {
 
     // clean level
     tiles = [];
-    for (let i = 0; i < numTiles; i++) {
+    for (let i = 0; i < levelWidth; i++) {
         tiles[i] = [];
     }
     
-    //tiles = [];
-    for (let i = 0; i < numTiles; i++) {
-        //tiles[i] = [];
-        for (let j = 0; j < numTiles; j++) {
-            tiles[i][j] = new Wall(i, j, 33);
+    for (let i = 0; i < levelWidth; i++) {
+        for (let j = 0; j < levelHeight; j++) {
+            tiles[i][j] = new Wall(i, j, SPRITES.WALL_CHASM);
         }
     }
 
     for (let i = 0; i < numberOfYCaves; i++) {
-        let length = randomRange(10, numTiles-4);
+        let length = randomRange(10, levelMinDim() - 4);
         let roughness = randomRange(1, 100); // 1 to 100
         let windyness = randomRange(1, 100); // 1 to 100
 
-        let startX = randomRange(3, numTiles-3);
-        let startY = numTiles-2;
+        let startX = randomRange(3, levelWidth - 3);
+        let startY = levelHeight - 2;
         let startWidth = 3;
 
         fillRect(startX-1, startY+1, startX+1, startY-1);
@@ -129,21 +131,21 @@ function generateDirectional() {
                 x += randomWindyness;
                 if (x < 0) {
                     x = 0;
-                } else if (x > numTiles - 3) {
-                    x = numTiles - 3;
+                    } else if (x > levelWidth - 3) {
+                        x = levelWidth - 3;
+                    }
                 }
+                fillRect(x, y, x+width, y);
             }
-            fillRect(x, y, x+width, y);
         }
-    }
     
     for (let i = 0; i < numberOfXCaves; i++) {
-        let length = randomRange(10, numTiles-4);
+        let length = randomRange(10, levelMinDim() - 4);
         let roughness = randomRange(1, 100); // 1 to 100
         let windyness = randomRange(1, 100); // 1 to 100
 
         let startX = 0+2;
-        let startY = randomRange(3, numTiles-3);
+        let startY = randomRange(3, levelHeight - 3);
         let startWidth = 3;
 
         fillRect(startX-1, startY+1, startX+1, startY-1);
@@ -183,8 +185,8 @@ function generateDirectional() {
                 y += randomWindyness;
                 if (y < 0) {
                     y = 0;
-                } else if (y > numTiles - 3) {
-                    y = numTiles - 3;
+                } else if (y > levelHeight - 3) {
+                    y = levelHeight - 3;
                 }
             }
 
@@ -197,17 +199,25 @@ function generateDirectional() {
 
 function generateTraps(numberOfTraps) {
     for (let i = 0; i < numberOfTraps; i++) {
-        randomPassableTile().traps.push(getRandomTrap());
+        const t = getRandomTrap();
+        if (t.category === "trap" && t.name === "Spiketrap") {
+            t.loaded = true;
+            t.sprite = SPRITES.SPIKETRAP_LOADED;
+        }
+        const tile = randomPassableTile();
+        if (tile.monster) continue;
+        if (tile.objects.some(o => o.category === "trap")) continue;
+        tile.objects.push(t);
     }
 }
 
 function fillRect(x1, y1, x2, y2) {
     for (let i = x1; i <= x2; i++) {
         for (let j = y1; j >= y2; j--) {
-            //tiles[i][j] = new Floor(i, j, 32);
+            //tiles[i][j] = new Floor(i, j, SPRITES.FLOOR_CHASM);
             if (tiles[i] != undefined) {
                 if (tiles[i][j] != undefined) {
-                    tiles[i][j].replace(Floor, 202);
+                    tiles[i][j].replace(Floor, SPRITES.FLOOR_DUNGEON_2);
                 }
 
             }
@@ -217,7 +227,7 @@ function fillRect(x1, y1, x2, y2) {
 
 function generateItems(numberOfItems) {
     for (let i = 0; i < numberOfItems; i++) {
-        randomPassableTile().items.push(getRandomItem());
+        tryTo("place item", () => tryAddItemToTile(randomPassableTile(), getRandomItem()));
     }
 }
 
@@ -230,176 +240,23 @@ function generateDecorativeObjects() {
     if (randomRange(1, 2) == 1) return;
 
     for (let i = 0; i < randomRange(0, 6); i++) {
-        let chosenDecoration;
+        let chosenItem;
 
         if (randomRange(1, 2) == 1) {
-            chosenDecoration = objects.decorative.bone;
+            chosenItem = items.tools.bone;
         } else {
-            chosenDecoration = objects.decorative.skull;
+            chosenItem = items.tools.skull;
         }
 
-        randomPassableTile().objects.push(Object.create(chosenDecoration));
+        tryAddItemToTile(randomPassableTile(), chosenItem);
     }
 }
 function getRandomObject() {
-    let objectsPool = []
-
-    /*barrel = {
-        name: "Barrel",
-        sprite: 64
-    }
-    objects.push(barrel);
-
-    bookshelf = {
-        name: "Bookshelf",
-        sprite: 71
-    }
-    objects.push(bookshelf);
-
-    spider_cocoon = {
-        name: "Spider Cocoon",
-        sprite: 68
-    }
-    objects.push(spider_cocoon);
-
-    coffin = {
-        name: "Coffin",
-        sprite: 69
-    }
-    objects.push(coffin);
-
-    gravel = {
-        name: "Gravel",
-        sprite: 93
-    }
-    objects.push(gravel);
-
-    campfire = {
-        name: "Campfire",
-        sprite: 98
-    }
-    objects.push(campfire);*/
-
-    objectsPool = levelPool[level-1].objPool;
-    
+    let objectsPool = levelPool[level-1].objPool;
     return Object.create(shuffle(objectsPool)[0]);
 }
 
 function getRandomTrap() {
-
-    /*beartrap = {
-        name: "Bear Trap",
-        sprite: 28,
-        visible: false,
-        sound: "trap",
-        use(monster) {
-            playSound(this.sound);
-
-
-
-            addStatus("Bleeding", randomRange(2, 5), monster);
-            addStatus("Stunned", randomRange(2, 5), monster);
-            addPopups("Skirr!", "white", monster);
-            addPopups("Bleed!", "red", monster);
-            addPopups("Stun!", "yellow", monster);
-
-            this.blood = true;
-            const neighbours = monster.tile.getAdjacentNeighbours();
-            for (const neighbour of neighbours) {
-                if (!neighbour.passable && randomRange(1, 3) == 3) {
-                    neighbour.wallBlood = true;
-                }
-            }
-
-            this.visible = true;
-
-            this.disarm(monster.tile);
-
-        },
-        disarm(target) {
-            beartrap_item = {
-                name: "Bear Trap",
-                type: "trap",
-                sprite: 29,
-                get() {
-                    player.inventory.push(this);
-                    return true;
-                }
-            }
-            target.items.push(beartrap_item)
-            target.traps.splice(target.traps.indexOf(this));
-        }
-    };
-    traps.push(beartrap);
-
-    trapdoor = {
-        name: "Trapdoor",
-        sprite: 31,
-        visible: false,
-        sound: "trapdoor",
-        use(monster) {
-            playSound(this.sound);
-
-            if (monster == player) {
-                saveLevel();
-                level++;
-                startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
-                player.hit(10);
-                player.bleed();
-            } else {
-                monster.hit(9999);
-            }
-
-            shakeAmount = 50;
-
-            this.visible = true;
-        }
-    };
-    traps.push(trapdoor);
-
-    pressure_plate = {
-        name: "Pressure plate",
-        sprite: 72,
-        visible: false,
-        sound: "trapdoor",
-        use(monster) {
-            playSound(this.sound);
-
-            monster.move(randomPassableTile());
-
-            shakeAmount = 50;
-
-            this.visible = true;
-        },
-        disarm(target) {
-            target.traps.splice(target.traps.indexOf(this));
-        }
-    };
-    traps.push(pressure_plate);
-
-    cobweb = {
-        name: "Cobweb",
-        sprite: 67,
-        visible: true,
-        //sound: "trapdoor",
-        use(monster) {
-            addStatus("Stunned", 5, monster);
-            addPopups("Webbed!", "white", monster);
-
-            shakeAmount = 10;
-
-            this.visible = true;
-
-            if (roll(1, 20) > 15) {
-                this.disarm(monster.tile);
-            }
-        },
-        disarm(target) {
-            target.traps.splice(target.traps.indexOf(this));
-        }
-    };
-    traps.push(cobweb);*/
-
     let trapsPool = levelPool[level-1].trapsPool;
     let chosenTrap = Object.create(shuffle(trapsPool)[0]);
 
@@ -538,8 +395,23 @@ function initSwords() {
         quality: "normal",
         get() {
             //player.wield(this);
-            player.inventory.push(this);
-            return true;
+            // Check if identical item already exists in inventory
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
+            // If no identical item found, add as new
+            if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
+                player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
+                return true;
+            } else {
+                addPopups("Not enough space", "white", player);
+            }
         }
     };
     swords.push(weapon);
@@ -552,9 +424,21 @@ function initSwords() {
         damage_max: 5,
         quality: "normal",
         get() {
-            //player.wield(this);
-            player.inventory.push(this);
-            return true;
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
+            if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
+                player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
+                return true;
+            } else {
+                addPopups("Not enough space", "white", player);
+            }
         }
     };
     swords.push(weapon);
@@ -567,9 +451,21 @@ function initSwords() {
         damage_max: 5,
         quality: "normal",
         get() {
-            //player.wield(this);
-            player.inventory.push(this);
-            return true;
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
+            if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
+                player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
+                return true;
+            } else {
+                addPopups("Not enough space", "white", player);
+            }
         }
     };
     swords.push(weapon);
@@ -582,9 +478,21 @@ function initSwords() {
         damage_max: 7,
         quality: "normal",
         get() {
-            //player.wield(this);
-            player.inventory.push(this);
-            return true;
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
+            if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
+                player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
+                return true;
+            } else {
+                addPopups("Not enough space", "white", player);
+            }
         }
     };
     swords.push(weapon);
@@ -597,9 +505,21 @@ function initSwords() {
         damage_max: 6,
         quality: "normal",
         get() {
-            //player.wield(this);
-            player.inventory.push(this);
-            return true;
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
+            if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
+                player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
+                return true;
+            } else {
+                addPopups("Not enough space", "white", player);
+            }
         }
     };
     swords.push(weapon);
@@ -612,9 +532,21 @@ function initSwords() {
         damage_max: 7,
         quality: "normal",
         get() {
-            //player.wield(this);
-            player.inventory.push(this);
-            return true;
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
+            if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
+                player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
+                return true;
+            } else {
+                addPopups("Not enough space", "white", player);
+            }
         }
     };
     swords.push(weapon);
@@ -634,18 +566,6 @@ function getRandomItem() {
 
     body_armor = shuffle(initBodyArmor())[0];
 
-    /*body_armor = {
-        name: "Leather Chestplate",
-        type: "body_armor",
-        sprite: 44,
-        av: randomRange(2, 5),
-        ev: randomRange(1, 5),
-        get() {
-            player.wear(this);
-            return true;
-        }
-    };*/
-
     gold = {
         name: "Gold",
         type: "coin",
@@ -664,8 +584,17 @@ function getRandomItem() {
         type: "scroll",
         sprite: 800,
         get() { 
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
             if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
                 player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
                 return true;
             } else {
                 return false;
@@ -701,8 +630,17 @@ function getRandomItem() {
         type: "tool",
         sprite: 56,
         get() { 
+            for (let existingItem of player.inventory) {
+                if (areItemsIdentical(this, existingItem)) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                    addPopups("Picked up " + this.name, "white", player);
+                    return true;
+                }
+            }
             if (player.inventory.length < player.inventory_space) {
+                this.quantity = 1;
                 player.inventory.push(this);
+                addPopups("Picked up " + this.name, "white", player);
                 return true;
             } else {
                 return false;
@@ -713,7 +651,7 @@ function getRandomItem() {
     weapon.quality = getQuality(weapon);
     body_armor.quality = getQuality(body_armor);
     
-    item_pool.push(makeSword(randomRange(0, 4), randomRange(0, 1)), makeAxe(), makeHammer(), makeStaff(), makeBodyarmor(), gold, magicScroll, magicBook, items.weapons.pickaxe)
+    item_pool.push(makeSword(randomRange(0, 4), randomRange(0, 1)), makeAxe(), makeHammer(), makeQuarterstaff(), makeBodyarmor(), gold, magicScroll, magicBook, items.weapons.pickaxe, items.tools.skull, items.tools.bone, items.food.potato, makeTorch(), makeLantern())
 
     item = shuffle(item_pool)[0];
 
@@ -721,11 +659,21 @@ function getRandomItem() {
 }
 
 function saveLevel() {
+    // Clear monster references from tiles to prevent invisible player blocking
+    for (let i = 0; i < tiles.length; i++) {
+        for (let j = 0; j < tiles[i].length; j++) {
+            if (tiles[i][j]) {
+                tiles[i][j].monster = null;
+            }
+        }
+    }
     levelTiles[level-1] = tiles;
 }
 
 function loadLevel() {
     tiles = levelTiles[level-1];
+    levelWidth = tiles.length;
+    levelHeight = tiles[0].length;
 }
 
 function generateCellular(wallChance, levelType) {
@@ -733,29 +681,29 @@ function generateCellular(wallChance, levelType) {
 
     // clean level
     tiles = [];
-    for (let i = 0; i < numTiles; i++) {
+    for (let i = 0; i < levelWidth; i++) {
         tiles[i] = [];
     }
 
     //tiles = [];
-    for (let i = 0; i < numTiles; i++) {
+    for (let i = 0; i < levelWidth; i++) {
         //tiles[i] = [];
-        for (let j = 0; j < numTiles; j++) {
+        for (let j = 0; j < levelHeight; j++) {
             if (Math.random() < wallChance || !inBounds(i, j)) {
                 if (levelType == 0) {
-                    tiles[i][j] = new Wall(i, j, 3);
+                    tiles[i][j] = new Wall(i, j, SPRITES.WALL_UNDERGROUND);
                 } else if (levelType == 1) {
-                    tiles[i][j] = new Wall(i, j, 33);
+                    tiles[i][j] = new Wall(i, j, SPRITES.WALL_CHASM);
                 } else if(levelType == 2) {
-                    tiles[i][j] = new Wall(i, j, 35);
+                    tiles[i][j] = new Wall(i, j, SPRITES.WALL_CAVE);
                 }
             } else {
                 if (levelType == 0) {
-                    tiles[i][j] = new Floor(i, j, 2);
+                    tiles[i][j] = new Floor(i, j, SPRITES.FLOOR_UNDERGROUND);
                 } else if (levelType == 1) {
-                    tiles[i][j] = new Floor(i, j, 32);
+                    tiles[i][j] = new Floor(i, j, SPRITES.FLOOR_CHASM);
                 } else if (levelType == 2) {
-                    tiles[i][j] = new Floor(i, j, 34);
+                    tiles[i][j] = new Floor(i, j, SPRITES.FLOOR_CAVE);
                 }
                 passableTiles++;
             }
@@ -766,29 +714,28 @@ function generateCellular(wallChance, levelType) {
 
 function iterateCellular(count, levelType) {
     for(let c = 0; c < count; c++) {
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
+        for (let i = 0; i < levelWidth; i++) {
+            for (let j = 0; j < levelHeight; j++) {
                 const neighbours = tiles[i][j].getAdjacentPassableNeighbours();
                 if (tiles[i][j].passable) {
                     if(neighbours >= 5); {
-                        //tiles[i][j] = null;
                         if (levelType == 0) {
-                            tiles[i][j] = tiles[i][j].replace(Wall, 3);
+                            tiles[i][j] = tiles[i][j].replace(Wall, SPRITES.WALL_UNDERGROUND);
                         } else if (levelType == 1) {
-                            tiles[i][j] = tiles[i][j].replace(Wall, 33);
+                            tiles[i][j] = tiles[i][j].replace(Wall, SPRITES.WALL_CHASM);
                         } else if (levelType == 2) {
-                            tiles[i][j] = tiles[i][j].replace(Wall, 35);
+                            tiles[i][j] = tiles[i][j].replace(Wall, SPRITES.WALL_CAVE);
                         }
                         
                     }
                 } else {
                     if(neighbours < 5); {
                         if (levelType == 0) {
-                            tiles[i][j] = tiles[i][j].replace(Floor, 2);
+                            tiles[i][j] = tiles[i][j].replace(Floor, SPRITES.FLOOR_UNDERGROUND);
                         } else if (levelType == 1) {
-                            tiles[i][j] = tiles[i][j].replace(Floor, 32);
+                            tiles[i][j] = tiles[i][j].replace(Floor, SPRITES.FLOOR_CHASM);
                         } else if (levelType == 2) {
-                            tiles[i][j] = tiles[i][j].replace(Floor, 34)
+                            tiles[i][j] = tiles[i][j].replace(Floor, SPRITES.FLOOR_CAVE);
                         }
                     }
                 }
@@ -798,7 +745,7 @@ function iterateCellular(count, levelType) {
 }
 
 function inBounds(x, y) {
-    return x > 0 && y > 0 && x < numTiles - 1 && y < numTiles - 1;
+    return x > 0 && y > 0 && x < levelWidth - 1 && y < levelHeight - 1;
 }
 
 function getTile(x, y) {
@@ -807,32 +754,28 @@ function getTile(x, y) {
     }
 
     if (tiles[x] == undefined) {
-        const newWall = new Wall(x, y, 36);
-        //newWall.known = true;
+        const newWall = new Wall(x, y, SPRITES.WALL_CAVE);
         tiles[x] = [];
         tiles[x][y] = newWall;
-        //tiles[x][y] = new Wall(x, y, 36);
         return tiles[x][y];
-        //return newWall;
     } else if (tiles[x][y] == undefined) {
-        const newWall = new Wall(x, y, 36);
+        const newWall = new Wall(x, y, SPRITES.WALL_CAVE);
         tiles[x][y] = newWall;
-        //newWall.known = true;
-        //tiles[x][y] = new Wall(x, y, 36);
         return tiles[x][y];
-        //return newWall;
     } else {
         return tiles[x][y];
     }
 }
 
-function randomPassableTile() {
+function randomPassableTile(allowHole) {
     let tile;
     tryTo('get random passable tile', () => {
-        const x = randomRange(0, numTiles-1);
-        const y = randomRange(0, numTiles-1);
+        const x = randomRange(0, levelWidth - 1);
+        const y = randomRange(0, levelHeight - 1);
         tile = getTile(x, y);
-        return tile.passable && !tile.monster;
+        if (!tile.passable || tile.monster) return false;
+        if (!allowHole && tile.constructor.name === "Hole") return false;
+        return true;
     })
     return tile;
 }
@@ -868,6 +811,7 @@ function spawnOODMonster() {
         monster.levelUp();
         monster.rare = true;
     }
+    monsters.push(monster);
 }
 
 function spawnMonster(rare) {

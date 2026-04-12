@@ -24,9 +24,9 @@ function initTouchControls() {
 
 function touchMove(x, y) {
     if (gameState == "title") {
-            startGame();
+            openCharacterCreation();
         } else if (gameState == "dead") {
-            showTitle();
+            openCharacterCreation();
         } else if (gameState == "running") {
             player.tryMove(x, y);
         }

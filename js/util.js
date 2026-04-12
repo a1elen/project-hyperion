@@ -61,3 +61,11 @@ function rightPad(textArray) {
     });
     return finalText;
 }
+
+function removeWorldObjectFromTile(tile, obj) {
+    if (!tile || !tile.objects || !obj) return;
+    const i = tile.objects.indexOf(obj);
+    if (i >= 0) {
+        tile.objects.splice(i, 1);
+    }
+}

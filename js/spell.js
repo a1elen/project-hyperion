@@ -4,8 +4,8 @@ spells = {
         addPopups("Whoosh", "purple", player);
     },
     Earthquake() {
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
+        for (let i = 0; i < levelWidth; i++) {
+            for (let j = 0; j < levelHeight; j++) {
                 const tile = getTile(i, j);
                 if (tile.monster) {
                     const numWalls = 8 - tile.getAdjacentPassableNeighbours().length;
@@ -61,8 +61,8 @@ spells = {
         }
     },
     Dig() {
-        for (let i = 1; i < numTiles - 1; i++) {
-            for (let j = 1; j < numTiles - 1; j++) {
+        for (let i = 1; i < levelWidth - 1; i++) {
+            for (let j = 1; j < levelHeight - 1; j++) {
                 const tile = getTile(i, j);
                 if(!tile.passable) {
                     tile.replace(Floor);
@@ -77,7 +77,7 @@ spells = {
             if (!monsters[k].isPlayer) {
                 addPopups("Chink", "yellow", monsters[k]);
                 monsters[k].tile.treasure = true;
-                monsters[k].die();
+                monsters[k].die(player);
                 k--;
 
             }
@@ -193,7 +193,15 @@ function boltTravel(direction, effect, damage) {
         if (testTile.passable) {
             newTile = testTile;
             if (newTile.monster) {
-                newTile.monster.hit(damage);
+                // Apply electrical resistance
+                let finalDamage = damage;
+                if (newTile.monster.resistances && newTile.monster.resistances.electrical > 0) {
+                    const resistancePercent = newTile.monster.resistances.electrical;
+                    const resistedDamage = Math.floor(damage * (resistancePercent / 100));
+                    finalDamage = damage - resistedDamage;
+                    finalDamage = Math.max(1, finalDamage);
+                }
+                newTile.monster.hit(finalDamage);
             }
             newTile.setEffect(effect);
         } else {

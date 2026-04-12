@@ -26,7 +26,7 @@ class HpRegen extends StatusEffect {
     }
 
     update(target) {
-        if (target.hp < target.maxHealth) { 
+        if (target.hp < target.maxHealth) {
             target.heal(1 * target.will);
         }
         super.update(target);
@@ -97,7 +97,7 @@ function addStatus(name, duration, target) {
         return;
     }
 
- if (name == "Stunned") {
+    if (name == "Stunned") {
         let count = 0;
         for (const status of target.statuses) {
             if (status.constructor.name == "Stunned") {

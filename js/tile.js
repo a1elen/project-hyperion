@@ -1,3 +1,7 @@
+function defaultTileGases() {
+    return { Air: 100 };
+}
+
 class Tile {
     constructor(x, y, sprite, passable) {
         this.x = x;
@@ -10,6 +14,12 @@ class Tile {
         this.wallBlood = false;
         this.known = false;
 
+        this.floorSolid = true;
+        this.blocksOpenVolume = false;
+        this.temperatureC = 26;
+        this.itemCapacity = 5;
+        this.gases = defaultTileGases();
+
         this.liquid;
         this.liquidVolume = 0;
         this.liquidVolumeCapacity = 500;
@@ -20,13 +30,39 @@ class Tile {
         this.selected = false;
 
         this.objects = [];
-        this.traps = [];
         this.items = [];
+        this.lightLevel = 0;
+    }
+
+    hasOpenAtmosphere() {
+        return this.floorSolid && !this.blocksOpenVolume;
+    }
+
+    gasSummaryString() {
+        if (!this.gases) return "";
+        return Object.keys(this.gases)
+            .map((k) => `${k} ${this.gases[k]}%`)
+            .join(" · ");
     }
 
     replace(newTileType, sprite) {
-        tiles[this.x][this.y] = sprite ? new newTileType(this.x, this.y, sprite) : new newTileType(this.x, this.y, 2);
+        let next;
+        if (sprite !== undefined && sprite !== null) {
+            next = new newTileType(this.x, this.y, sprite);
+        } else if (newTileType === StairsDown || newTileType === StairsUp) {
+            next = new newTileType(this.x, this.y);
+        } else if (newTileType === Hole) {
+            next = new Hole(this.x, this.y);
+        } else {
+            next = new newTileType(this.x, this.y, SPRITES.FLOOR_UNDERGROUND);
+        }
         
+        // Preserve monster, items, and objects references from old tile
+        next.monster = this.monster;
+        next.items = this.items;
+        next.objects = this.objects;
+        
+        tiles[this.x][this.y] = next;
         return tiles[this.x][this.y];
     }
 
@@ -45,7 +81,7 @@ class Tile {
             this.getNeighbour(0, 1),
             this.getNeighbour(-1, 0),
             this.getNeighbour(1, 0),
-            
+
             // Diagonal directions
             this.getNeighbour(-1, -1),
             this.getNeighbour(1, 1),
@@ -78,35 +114,30 @@ class Tile {
 
         if (this.liquid == "Blood") {
             if (this.liquidVolume > 400) {
-                drawSprite(553, this.x, this.y);
+                drawSprite(SPRITES.BLOOD_4, this.x, this.y);
             }
             if (this.liquidVolume > 300) {
-                drawSprite(552, this.x, this.y);
+                drawSprite(SPRITES.BLOOD_3, this.x, this.y);
             }
             else if (this.liquidVolume > 150) {
-                drawSprite(551, this.x, this.y);
+                drawSprite(SPRITES.BLOOD_2, this.x, this.y);
             }
             else if (this.liquidVolume > 0) {
-                drawSprite(550, this.x, this.y);
-            }
-        }
-
-        if (this.traps.length > 0) {
-            for (let trap of this.traps) {
-                if (trap.visible) {
-                    drawSprite(trap.sprite, this.x, this.y);
-                }
+                drawSprite(SPRITES.BLOOD_1, this.x, this.y);
             }
         }
 
         if (this.objects.length > 0) {
             for (let object of this.objects) {
+                if (object.category === "trap" && !object.visible) {
+                    continue;
+                }
                 drawSprite(object.sprite, this.x, this.y);
             }
         }
 
         if (this.items.length > 0) {
-            for(let item of this.items) {
+            for (let item of this.items) {
                 if (item != undefined) {
                     drawSprite(item.sprite, this.x, this.y);
                 }
@@ -115,27 +146,19 @@ class Tile {
         }
 
         if (this.wallBlood) {
-            drawSprite(554, this.x, this.y);
+            drawSprite(SPRITES.WALL_BLOOD, this.x, this.y);
         }
 
         if (this.treasure) {
-            drawSprite(12, this.x, this.y);
+            drawSprite(SPRITES.TREASURE, this.x, this.y);
         }
 
         if (this.scroll) {
-            drawSprite(18, this.x, this.y);
-        }
-
-        if (this.trap && this.visible) {
-            if (this.trapWorks) {
-                drawSprite(28, this.x, this.y);
-            } else {
-                drawSprite(29, this.x, this.y);
-            }
+            drawSprite(SPRITES.SCROLL, this.x, this.y);
         }
 
         if (this.selected) {
-            drawSprite(102, this.x, this.y);
+            drawSprite(SPRITES.SELECTION, this.x, this.y);
         }
 
         if (!this.effectCounter) {
@@ -158,93 +181,27 @@ class Floor extends Tile {
     constructor(x, y, sprite) {
         super(x, y, sprite, true);
 
+        this.floorSolid = true;
+        this.blocksOpenVolume = false;
         this.liquidVolumeCapacity = 500;
     }
 
     stepOn(monster) {
-        if (this.traps.length > 0) {
-            for (let trap of this.traps) {
-                trap.action(monster);
+        const objs = this.objects.slice();
+        for (const obj of objs) {
+            if (obj.onStep) {
+                obj.onStep(monster, this);
             }
         }
 
 
 
-        /*
-        if (monster.isPlayer) {
-            const isTrapdoor = randomRange(1, 100);
-            if (isTrapdoor > 10) {
-                playSound("trap");
-                addStatus("Bleeding", randomRange(2, 5), monster);
-                addStatus("Stunned", randomRange(2, 5), monster);
-                addPopups("Skirr!", "white", monster);
-                addPopups("Bleed!", "red", monster);
-                addPopups("Stun!", "yellow", monster);
-                this.blood = true;
-                const neighbours = this.getAdjacentNeighbours();
-                for (const neighbour of neighbours) {
-                    if (!neighbour.passable && randomRange(1, 3) == 3) {
-                        neighbour.wallBlood = true;
-                    }
-                }
-            } else {
-                playSound("trapdoor");
-                saveLevel();
-                level++;
-                startLevel(Math.min(maxHp, player.hp-5), player.spells, true);
-                shakeAmount = 50;
-
-            }
-        } else {
-            playSound("trap");
-            addStatus("Bleeding", randomRange(2, 5), monster);
-            addStatus("Stunned", randomRange(2, 5), monster);
-            addPopups("Skirr!", "white", monster);
-            addPopups("Bleed!", "red", monster);
-            addPopups("Stun!", "yellow", monster);
-            this.blood = true;
-            const neighbours = this.getAdjacentNeighbours();
-            for (const neighbour of neighbours) {
-                if (!neighbour.passable && randomRange(1, 3) == 3) {
-                    neighbour.wallBlood = true;
-                }
-            }
-        }
-
-        this.visible = true;
-        this.trapWorks = false;
-        shakeAmount = 10;
-        */
     }
 
     use() {
-
         if (this.items.length > 0) {
-            if (this.items[0].get()) this.items.splice(0, 1); return;
-        }
-
-        for (let trap of this.traps) {
-            if (trap.name == "Bear Trap") {
-                let randomNumber = roll(1, 20);
-                if (randomNumber > 10) {
-                    trap.disarm(this);
-                    addPopups("Trap disarmed!", "white", player);
-                } else if (randomNumber > 1) {
-                    addPopups("Failed...", "white", player);
-                } else {
-                    addPopups("Trap broken!", "white", player);
-                    this.traps.splice(this.traps.indexOf(trap));
-                }
-            }
-            if (trap.name == "Pressure Plate") {
-                let randomNumber = roll(1, 20);
-                if (randomNumber > 10) {
-                    trap.disarm(this);
-                    addPopups("Trap disarmed!", "white", player);
-                } else {
-                    addPopups("Failed...", "white", player);
-                }
-            }
+            if (this.items[0].get()) this.items.splice(0, 1);
+            return;
         }
     }
 
@@ -255,9 +212,43 @@ class Floor extends Tile {
     }
 }
 
+class Hole extends Tile {
+    constructor(x, y, sprite) {
+        const spr = sprite !== undefined ? sprite : SPRITES.HOLE;
+        super(x, y, spr, true);
+        this.floorSolid = false;
+        this.blocksOpenVolume = false;
+        this.itemCapacity = 0;
+        this.items = [];
+        this.liquidVolume = 0;
+        this.liquid = undefined;
+    }
+
+    stepOn(monster) {
+        if (!monster.isPlayer) {
+            monster.die(undefined);
+            addPopups("Fell!", "grey", monster);
+            return;
+        }
+        playSound("trapdoor");
+        if (level >= numLevels) {
+            addScore(score, true);
+            showTitle();
+            return;
+        }
+        saveLevel();
+        level++;
+        startLevel(Math.min(maxHp, player.hp - 2), player.spells, undefined, -1);
+        addPopups("You fall through!", "grey", player);
+    }
+}
+
 class Wall extends Tile {
     constructor(x, y, sprite) {
         super(x, y, sprite, false);
+        this.floorSolid = true;
+        this.blocksOpenVolume = true;
+        this.itemCapacity = 0;
     }
 
     use() {
@@ -288,39 +279,11 @@ class Wall extends Tile {
     }
 }
 
-class ClosedDoor extends Tile {
-    constructor(x, y, sprite) {
-        super(x, y, 253, false);
-    }
-
-    stepOn() {
-
-    }
-
-    use() {
-        this.replace(OpenDoor);
-        addPopups("Creak", "brown", player);
-    }
-}
-
-class OpenDoor extends Tile {
-    constructor(x, y, sprite) {
-        super(x, y, 254, true);
-    }
-
-    stepOn() {
-        
-    }
-
-    use() {
-        this.replace(ClosedDoor);
-        addPopups("Creak", "brown", player);
-    }
-}
-
 class StairsDown extends Tile {
     constructor(x, y) {
         super(x, y, 250, true);
+        this.floorSolid = true;
+        this.blocksOpenVolume = false;
     }
 
     stepOn(monster) {
@@ -333,7 +296,7 @@ class StairsDown extends Tile {
     }
 
     moveDown(monster) {
-        if(monster.isPlayer) {
+        if (monster.isPlayer) {
             playSound("newLevel");
             if (level == numLevels) {
                 addScore(score, true);
@@ -342,7 +305,7 @@ class StairsDown extends Tile {
                 this.replace(StairsDown);
                 saveLevel();
                 level++;
-                startLevel(Math.min(maxHp, player.hp+1), player.spells, undefined, -1);
+                startLevel(Math.min(maxHp, player.hp + 1), player.spells, undefined, -1);
                 addPopups("Tap tap tap...", "grey", player);
             }
         }
@@ -358,6 +321,8 @@ class StairsDown extends Tile {
 class StairsUp extends Tile {
     constructor(x, y) {
         super(x, y, 251, true);
+        this.floorSolid = true;
+        this.blocksOpenVolume = false;
     }
 
     stepOn(monster) {
@@ -370,7 +335,7 @@ class StairsUp extends Tile {
     }
 
     moveUp(monster) {
-        if(monster.isPlayer) {
+        if (monster.isPlayer) {
             playSound("newLevel");
             if (level == 1) {
                 addScore(score, true);
@@ -379,7 +344,7 @@ class StairsUp extends Tile {
                 this.replace(StairsUp);
                 saveLevel();
                 level--;
-                startLevel(Math.min(maxHp, player.hp+1), player.spells, undefined, 1);
+                startLevel(Math.min(maxHp, player.hp + 1), player.spells, undefined, 1);
                 addPopups("Tap tap tap...", "grey", player);
             }
         }

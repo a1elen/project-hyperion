@@ -6,19 +6,25 @@
 <meta http-equiv='pragma' content='no-cache'>
 
 <style>
-    canvas {
-        outline: 1px solid white
+    html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        overscroll-behavior: contain;
     }
 
     body {
         background-color: rgb(43, 43, 43);
-        text-align: center;
-        margin-top: 50px;
-        overscroll-behavior: contain;
+    }
+
+    canvas {
+        display: block;
+        outline: none;
     }
 </style>
 
 <canvas onmousemove="mouseCoords(event)" onmouseenter="mouseEnter(event)" onmouseout="mouseLeave(event)"></canvas>
+<script src = "js/sprites.js"></script>
 <script src = "js/game.js"></script>
 <script src = "js/map.js"></script>
 <script src = "js/tile.js"></script>
@@ -35,7 +41,8 @@
 <script src = "js/touch.js"></script>
 <script>
     tileSize = 64;
-    numTiles = 24;
+    levelWidth = 24;
+    levelHeight = 24;
     uiWidth = 4;
     level = 1;
     maxHp = 999;

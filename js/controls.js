@@ -1,18 +1,49 @@
 function initKeyControls() {
+    if (!window._gameMenuKeydownBound) {
+        window._gameMenuKeydownBound = true;
+        document.addEventListener("keydown", handleGameMenuKeydown);
+    }
+
+    // Ensure window gets focus on click
+    document.addEventListener("click", () => {
+        window.focus();
+    });
+
     document.querySelector("html").onkeypress = (e) => {
-        if (e.key == "N") DEBUG = !DEBUG;
+        if (gameState === "gameMenu") return;
+
+        if (e.key == "n") DEBUG = !DEBUG;
 
         if (gameState == "title") {
-            if (e.key == "1") {
-                playerClass = 1;
-                startGame();
+            if (e.key === "Enter") {
+                openCharacterCreation();
             }
-            if (e.key == "2") {
-                playerClass = 2;
-                startGame();
+        } else if (gameState == "characterCreation") {
+            if (e.key >= "1" && e.key <= "3") {
+                const index = parseInt(e.key, 10) - 1;
+                if (characterCreationState.phase === "race") {
+                    characterCreationState.selectedRaceIndex = index;
+                } else {
+                    characterCreationState.selectedDestinyIndex = index;
+                }
+            }
+            if (e.key === "Enter") {
+                if (characterCreationState.phase === "race") {
+                    characterCreationState.phase = "destiny";
+                    characterCreationState.selectedDestinyIndex = 0;
+                } else {
+                    startGameWithCharacterCreation();
+                }
+            }
+            if (e.key === "Escape") {
+                if (characterCreationState.phase === "destiny") {
+                    characterCreationState.phase = "race";
+                } else {
+                    showTitle();
+                }
             }
         } else if (gameState == "dead") {
-            showTitle();
+            openCharacterCreation();
         } else if (gameState == "running") {
             // Four-side movement
             if (e.key == "8") player.tryMove(0, -1);
@@ -34,10 +65,10 @@ function initKeyControls() {
                 if (e.key == "k") addPopups("Pressed 'k'!", "white", player);
                 if (e.key == "j") addMessageLog("Pressed 'j'!");
                 if (e.key == "m") addStatus("AllSeeingEye", randomRange(2, 5), player);
-                if (e.key == "o") startLevel(Math.min(maxHp, player.hp-5), player.spells);
+                if (e.key == "o") startLevel(Math.min(maxHp, player.hp - 5), player.spells);
                 if (e.key == "p") {
                     level++;
-                    startLevel(Math.min(maxHp, player.hp+1), player.spells);
+                    startLevel(Math.min(maxHp, player.hp + 1), player.spells);
                 }
             }
 
@@ -47,31 +78,23 @@ function initKeyControls() {
                 selectedTile.selected = true;
             }
 
-            if (e.key == "i") {
-                gameState = "inventory";
-            }
+            if (e.key == "i") openInventoryGameMenu();
 
-            if (e.key == "w") {
-                gameState = "wield";
-            }
+            if (e.key == "b") openEquipmentMenu();
 
-            if (e.key == "W") {
-                gameState = "wear";
-            }
+            if (e.key == "w") openWieldGameMenu();
 
-            if (e.key == "E") {
-                gameState = "eat";
-            }
+            if (e.key == "W") openWearGameMenu();
 
-            if (e.key == "d") {
-                gameState = "drop";
-            }
+            if (e.key == "E") openEatGameMenu();
 
-            if (e.key == "r") {
-                gameState = "read";
-            }
+            if (e.key == "d") openDropGameMenu();
 
-            if (e.key == "a") gameState = "abilities";
+            if (e.key == "r") openReadGameMenu();
+
+            if (e.key == "a") openAbilitiesGameMenu();
+
+            if (e.key == "t") openThrowGameMenu();
 
             if (e.key == "e") {
                 gameState = "useSelect";
@@ -80,18 +103,16 @@ function initKeyControls() {
                 player.tile.getNeighbour(0, 1).selected = true;
                 player.tile.getNeighbour(-1, 0).selected = true;
                 player.tile.getNeighbour(1, 0).selected = true;
-    
+
                 player.tile.getNeighbour(1, -1).selected = true;
                 player.tile.getNeighbour(1, 1).selected = true;
                 player.tile.getNeighbour(-1, 1).selected = true;
                 player.tile.getNeighbour(-1, -1).selected = true;
 
                 player.tile.getNeighbour(0, 0).selected = true;
-
             }
 
             if (e.key == "z") {
-
                 if (scaleX < 1.75) {
                     scaleX += 0.25;
                     scaleY += 0.25;
@@ -99,87 +120,24 @@ function initKeyControls() {
             }
 
             if (e.key == "Z") {
-
                 if (scaleX > 0.25) {
                     scaleX -= 0.25;
                     scaleY -= 0.25;
                 }
             }
             if (e.key == "5") {
-                if (randomRange(1, 20) > 10 && player.hunger > 0) {
-                    player.heal(1);
-                    player.healMana(1);
-                    player.hunger = Math.max(0, player.hunger - randomRange(5, 10)) ;
-                }
                 tick();
             }
-            
-            if (e.key == "0") gameState = "spells";
+
+            if (e.key == "R") {
+                isResting = true;
+                addMessageLog("Resting...");
+                processRest();
+            }
+
+            if (e.key == "0") openSpellsGameMenu();
 
             if (e.key == "@") gameState = "stats";
-
-        } else if (gameState == "spells") {
-            if (e.key >= 1 && e.key <= 9) player.castSpell(e.key-1);
-
-            if (e.key == "0") gameState = "running";
-        } else if (gameState == "stats") {
-            if (e.key == "@") gameState = "running";
-        } else if (gameState == "inventory") {
-            if (e.key == "i") {
-                gameState = "running";
-            }
-        } else if (gameState == "wield") {
-            if (e.key == "w") {
-                gameState = "running";
-            }
-            if (e.key >= 1 && e.key <= 9) {
-                player.wield(e.key-1);
-                tick();
-                gameState = "running";
-            }
-        } else if (gameState == "wear") {
-            if (e.key == "W") {
-                gameState = "running";
-            }
-            if (e.key >= 1 && e.key <= 9) {
-                player.wear(e.key-1);
-                tick();
-                gameState = "running";
-            }
-        } else if (gameState == "eat") {
-            if (e.key == "E") {
-                gameState = "running";
-            }
-            if (e.key >= 1 && e.key <= 9) {
-                player.eat(e.key-1);
-                tick();
-                gameState = "running";
-            }
-        } else if (gameState =="read") {
-            if (e.key == "r") {
-                gameState = "running";
-            }
-            if (e.key >= 1 && e.key <= 9) {
-                player.castScroll(e.key-1);
-                tick();
-                gameState = "running";
-            }
-        } else if (gameState == "drop") {
-            if (e.key == "d") {
-                gameState = "running";
-            }
-            if (e.key >= 1 && e.key <= 9) {
-                player.drop(e.key-1);
-                tick();
-                gameState = "running";
-            }
-        } else if (gameState == "abilities") {
-            if (e.key = "a") gameState = "running";
-            if (e.key >= 1 && e.key <= 9) {
-                player.useAbility(e.key-1);
-                tick();
-                gameState = "running";
-            }
         } else if (gameState == "useSelect") {
             if (e.key == "w" || e.key == "8") player.use(0, -1);
             if (e.key == "s" || e.key == "2") player.use(0, 1);
@@ -193,21 +151,15 @@ function initKeyControls() {
 
             if (e.key == "5") player.use(0, 0);
 
-            if (e.key == "e") gameState = "running";
-
-            player.tile.getNeighbour(0, -1).selected = false;
-            player.tile.getNeighbour(0, 1).selected = false;
-            player.tile.getNeighbour(-1, 0).selected = false;
-            player.tile.getNeighbour(1, 0).selected = false;
-    
-            player.tile.getNeighbour(1, -1).selected = false;
-            player.tile.getNeighbour(1, 1).selected = false;
-            player.tile.getNeighbour(-1, 1).selected = false;
-            player.tile.getNeighbour(-1, -1).selected = false;
-
-            player.tile.getNeighbour(0, 0).selected = false;
+            if (e.key == "e") {
+                gameState = "running";
+                for (let ox = -1; ox <= 1; ox++) {
+                    for (let oy = -1; oy <= 1; oy++) {
+                        player.tile.getNeighbour(ox, oy).selected = false;
+                    }
+                }
+            }
         } else if (gameState == "viewmode") {
-
             if (selectedTile != undefined) {
                 if (selectedTile.selected = true) {
                     selectedTile.selected = false;
@@ -218,7 +170,7 @@ function initKeyControls() {
                 selectedTile.selected = false;
                 selectedTile = selectedTile.getNeighbour(0, -1);
                 selectedTile.selected = true;
-            } 
+            }
             if (e.key == "2") {
                 selectedTile.selected = false;
                 selectedTile = selectedTile.getNeighbour(0, 1);
@@ -256,6 +208,209 @@ function initKeyControls() {
             }
 
             if (e.key == "x") gameState = "running";
+        } else if (gameState == "throwTarget") {
+            if (selectedTile != undefined) {
+                if (selectedTile.selected = true) {
+                    selectedTile.selected = false;
+                }
+            }
+
+            const radius = 3;
+            const dx = 0;
+            const dy = 0;
+
+            if (e.key == "8") {
+                const newTile = selectedTile.getNeighbour(0, -1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "2") {
+                const newTile = selectedTile.getNeighbour(0, 1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "4") {
+                const newTile = selectedTile.getNeighbour(-1, 0);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "6") {
+                const newTile = selectedTile.getNeighbour(1, 0);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "9") {
+                const newTile = selectedTile.getNeighbour(1, -1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "3") {
+                const newTile = selectedTile.getNeighbour(1, 1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "1") {
+                const newTile = selectedTile.getNeighbour(-1, 1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "7") {
+                const newTile = selectedTile.getNeighbour(-1, -1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+
+            if (e.key == "x" || e.key == "Escape") {
+                gameState = "running";
+                selectedTile.selected = false;
+                selectedItemIndex = null;
+            }
+
+            if (e.key == "Enter" || e.key == " ") {
+                player.throwItem(selectedItemIndex, selectedTile);
+                gameState = "running";
+                selectedTile.selected = false;
+                selectedItemIndex = null;
+            }
+        } else if (gameState == "jumpTarget") {
+            if (selectedTile != undefined) {
+                if (selectedTile.selected = true) {
+                    selectedTile.selected = false;
+                }
+            }
+
+            const radius = 3;
+
+            if (e.key == "8") {
+                const newTile = selectedTile.getNeighbour(0, -1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "2") {
+                const newTile = selectedTile.getNeighbour(0, 1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "4") {
+                const newTile = selectedTile.getNeighbour(-1, 0);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "6") {
+                const newTile = selectedTile.getNeighbour(1, 0);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "9") {
+                const newTile = selectedTile.getNeighbour(1, -1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "3") {
+                const newTile = selectedTile.getNeighbour(1, 1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "1") {
+                const newTile = selectedTile.getNeighbour(-1, 1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+            if (e.key == "7") {
+                const newTile = selectedTile.getNeighbour(-1, -1);
+                if (newTile.dist(player.tile) <= radius) {
+                    selectedTile.selected = false;
+                    selectedTile = newTile;
+                    selectedTile.selected = true;
+                }
+            }
+
+            if (e.key == "x" || e.key == "Escape") {
+                gameState = "running";
+                selectedTile.selected = false;
+            }
+
+            if (e.key == "Enter" || e.key == " ") {
+                // Check if tile is passable
+                if (selectedTile.passable) {
+                    // Check hunger
+                    if (player.hunger >= 10) {
+                        player.hunger -= 10;
+                        addMessageLog("Jump! -10 hunger");
+                        addPopups("-10 Hunger", "orange", player);
+                    } else {
+                        player.hp -= 1;
+                        addMessageLog("Jump! -1 HP (not enough hunger)");
+                        addPopups("-1 HP", "red", player);
+                    }
+                    
+                    // Move player to target tile
+                    player.tile.monster = null;
+                    selectedTile.monster = player;
+                    player.tile = selectedTile;
+                    
+                    // Use a turn
+                    tick();
+                    
+                    // Set cooldown
+                    const jumpAbility = player.abilities.find(a => a.name === "Jump");
+                    if (jumpAbility) {
+                        jumpAbility.currentCooldown = jumpAbility.cd;
+                    }
+                    
+                    addPopups("Jump!", "aqua", player);
+                } else {
+                    addMessageLog("Cannot jump to impassable tile");
+                }
+                
+                gameState = "running";
+                selectedTile.selected = false;
+            }
         }
-    }
+    };
 }
