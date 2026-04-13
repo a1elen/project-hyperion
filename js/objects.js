@@ -91,10 +91,21 @@ objects.usable.barrel.use = function(target) {
     } else {
         lootTable = [makeSword(randomRange(0, 1), randomRange(0, 2))];
     }
-    
+
     for (let i = 0; i < numberOfLoot; i++) {
         tryAddItemToTile(target, shuffle(lootTable)[0]);
     }
+};
+objects.usable.barrel.getInteractions = function(player, tile) {
+    return [
+        {
+            label: "break barrel",
+            run: () => {
+                this.use(tile);
+                addPopups("Broken", "brown", player);
+            },
+        },
+    ];
 };
 
 objects.usable.bookshelf = Object.create(objects.usable)
@@ -160,6 +171,17 @@ objects.usable.campfire.use = function(target) {
     target.objects.splice(target.objects.indexOf(this));
     target.objects.push(objects.usable.campfireLit);
 };
+objects.usable.campfire.getInteractions = function(player, tile) {
+    return [
+        {
+            label: "Light campfire",
+            run: () => {
+                this.use(tile);
+                addPopups("Lit", "orange", player);
+            },
+        },
+    ];
+};
 
 objects.usable.campfireLit = Object.create(objects.usable)
 objects.usable.campfireLit.name = "Lit Campfire";
@@ -199,7 +221,35 @@ objects.decorative.gravel = Object.create(objects.decorative)
 objects.decorative.gravel.name = "Gravel";
 objects.decorative.gravel.sprite = SPRITES.DECOR_GRAVEL;
 
+objects.decorative.standingTorch = Object.create(objects.decorative)
+objects.decorative.standingTorch.name = "Standing Torch";
+objects.decorative.standingTorch.sprite = SPRITES.STANDING_TORCH;
+objects.decorative.standingTorch.getInteractions = function(player, tile) {
+    return [
+        {
+            label: "Light standing torch",
+            run: () => {
+                tile.objects.splice(tile.objects.indexOf(this));
+                tile.objects.push(objects.decorative.standingTorchLit);
+                addPopups("Lit", "orange", player);
+            },
+        },
+    ];
+};
+
 objects.decorative.standingTorchLit = Object.create(objects.decorative)
 objects.decorative.standingTorchLit.name = "Standing Torch";
 objects.decorative.standingTorchLit.sprite = SPRITES.STANDING_TORCH_LIT;
 objects.decorative.standingTorchLit.lightRadius = 5;
+objects.decorative.standingTorchLit.getInteractions = function(player, tile) {
+    return [
+        {
+            label: "Extinguish standing torch",
+            run: () => {
+                tile.objects.splice(tile.objects.indexOf(this));
+                tile.objects.push(objects.decorative.standingTorch);
+                addPopups("Extinguished", "gray", player);
+            },
+        },
+    ];
+};

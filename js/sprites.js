@@ -89,8 +89,8 @@ const SPRITES = {
     AXE_COPPER: 600,
     AXE_BRONZE: 601,
     AXE_IRON: 602,
-    AXE_SILVER: 603,
-    AXE_GOLD: 604,
+    AXE_SILVER: 604,
+    AXE_GOLD: 603,
     AXE_STEEL: 605,
 
     // Items - Weapons (Swords)
@@ -105,24 +105,20 @@ const SPRITES = {
     HAMMER_COPPER: 612,
     HAMMER_BRONZE: 613,
     HAMMER_IRON: 614,
-    HAMMER_SILVER: 615,
-    HAMMER_GOLD: 616,
+    HAMMER_SILVER: 616,
+    HAMMER_GOLD: 615,
     HAMMER_STEEL: 617,
 
     // Items - Weapons (Staves & Other)
     STAFF_WOODEN: 618,
     PICKAXE: 619,
-    STAFF_COPPER: 52,
-    STAFF_SILVER: 54,
-    STAFF_GOLD: 43,
-    STAFF_BRONZE: 77,
 
     // Items - Armor (Breastplates)
     BREASTPLATE_COPPER: 900,
     BREASTPLATE_BRONZE: 901,
     BREASTPLATE_IRON: 902,
-    BREASTPLATE_SILVER: 903,
-    BREASTPLATE_GOLD: 904,
+    BREASTPLATE_SILVER: 904,
+    BREASTPLATE_GOLD: 903,
     BREASTPLATE_STEEL: 905,
 
     // Items - Rings
@@ -178,6 +174,8 @@ const SPRITES = {
     // Effects
     TELEPORT: 500,
     STUN: 451,
+    AWARE: 454,
+    HOSTILE: 453,
     SELECTION: 102,
 
     // Tile features

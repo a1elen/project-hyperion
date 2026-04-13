@@ -11,6 +11,7 @@ class Monster {
         this.hunger = 100;
 
         this.angry = false;
+        this.aware = false;
         this.teleportCounter = randomRange(3, 6);
         this.offsetX = 0;
         this.offsetY = 0;
@@ -197,8 +198,20 @@ class Monster {
 
     doStuff() {
         let neighbours = this.tile.getAdjacentPassableNeighbours();
+        
+        // Set aware if monster can see player (within 8 tiles)
+        if (this.tile.dist(player.tile) < 8) {
+            this.aware = true;
+        }
+        
+        // Set angry if monster is close enough to attack (within 4 tiles)
         if (this.tile.dist(player.tile) < 4) {
             this.angry = true;
+        }
+        
+        // Debug logging
+        if (this.aware || this.angry) {
+            console.log(`Monster ${this.constructor.name}: aware=${this.aware}, angry=${this.angry}, dist=${this.tile.dist(player.tile)}`);
         }
         
         // Avoid traps if creature has trapSense
@@ -228,8 +241,10 @@ class Monster {
             drawSprite(SPRITES.TELEPORT, this.getDisplayX(), this.getDisplayY());
         } else {
             drawSprite(this.sprite, this.getDisplayX(), this.getDisplayY());
-            this.drawHp();
             if (this.stunned) this.drawStun();
+            if (this.aware && !this.angry) this.drawAware();
+            if (this.angry) this.drawHostile();
+            this.drawHp();
         }
 
         if (this.rare == true) {
@@ -265,6 +280,22 @@ class Monster {
     drawStun() {
         drawSprite(
             SPRITES.STUN,
+            this.getDisplayX(),
+            this.getDisplayY()
+        );
+    }
+
+    drawAware() {
+        drawSprite(
+            SPRITES.AWARE,
+            this.getDisplayX(),
+            this.getDisplayY()
+        );
+    }
+
+    drawHostile() {
+        drawSprite(
+            SPRITES.HOSTILE,
             this.getDisplayX(),
             this.getDisplayY()
         );
@@ -344,7 +375,7 @@ class Monster {
                 damage -= resistedDamage;
                 damage = Math.max(1, damage);
                 resistanceApplied = true;
-                damageBreakdown.push(`-${resistedDamage} (${resistancePercent}% ${primaryDamageType} res)`);
+                damageBreakdown.push(`-${resistedDamage.toFixed(1)} (${resistancePercent}% ${primaryDamageType} res)`);
             }
         }
 
@@ -382,14 +413,11 @@ class Monster {
         addPopups("("+damage+")", "white", enemy);
         if (this == player) {
             const weaponName = attackWeapon ? attackWeapon.fullName() : "unarmed";
-            let breakdownStr = damageBreakdown.join(" ");
-            if (armorReduction > 0 && preArmorDamage > damage) {
-                breakdownStr += ` -${armorReduction}`;
+            let damageTypeStr = "";
+            if (attackWeapon && attackWeapon.damageTypes && attackWeapon.damageTypes.length > 0) {
+                damageTypeStr = ` (${attackWeapon.damageTypes.map(d => `${d.rolls}d${d.sides} | ${d.type}`).join(", ")})`;
             }
-            if (damage > preArmorDamage) {
-                breakdownStr += " (CRIT!)";
-            }
-            addMessageLog(`You hit ${newTile.monster.constructor.name} with ${weaponName}: ${breakdownStr} = ${damage} damage`);
+            addMessageLog(`You hit ${newTile.monster.constructor.name} with ${weaponName}${damageTypeStr} for ${Math.round(damage)} damage`);
         }
         newTile.monster.hit(damage, this);
 
@@ -417,10 +445,6 @@ class Monster {
                     // Attack with both weapons simultaneously
                     attackHit = this.performAttack(newTile, this.rightHand);
                     this.performAttack(newTile, this.leftHand);
-                    
-                    if (this == player) {
-                        addMessageLog("Dual-wielding attack!");
-                    }
                 } else {
                     // Single weapon attack
                     attackHit = this.performAttack(newTile);
@@ -512,10 +536,10 @@ class Monster {
         // Stop resting if player takes damage
         if (this.isPlayer) {
             stopResting();
-            let breakdownStr = `${damage} damage`;
+            let breakdownStr = `${Math.round(damage)} damage`;
             if (attacker && attacker.weapon && attacker.weapon.damageTypes) {
                 let dmgStr = attacker.weapon.damageTypes.map(d => `${d.rolls}d${d.sides}`).join(", ");
-                breakdownStr = `${dmgStr} = ${damage} damage`;
+                breakdownStr = `${dmgStr} = ${Math.round(damage)} damage`;
             }
             if (attacker) {
                 addMessageLog(`${attacker.constructor.name} hit you for ${breakdownStr}`);
@@ -560,6 +584,12 @@ class Monster {
             }
         }
         this.killedByPlayer = attacker && attacker.isPlayer;
+        
+        // Add death message for non-player monsters
+        if (!this.isPlayer) {
+            addMessageLog(`${this.constructor.name} died`);
+        }
+        
         check_dead();
     }
 
@@ -949,7 +979,7 @@ class Player extends Monster {
                 addStatus("Stunned", 1, this);
                 addPopups("CRITICAL HIT!", "red", this);
                 addPopups("Stunned!", "yellow", this);
-                addMessageLog("No space to dodge - critical hit for " + criticalDamage + " damage and stunned!");
+                addMessageLog("No space to dodge - critical hit for " + Math.round(criticalDamage) + " damage and stunned!");
             }
         } else {
             super.tryDodge();
@@ -978,8 +1008,6 @@ class Player extends Monster {
                     // Attack with both weapons simultaneously
                     attackHit = this.performAttack(newTile, this.rightHand);
                     this.performAttack(newTile, this.leftHand);
-                    
-                    addMessageLog("Dual-wielding attack!");
                 } else {
                     // Single weapon attack
                     attackHit = this.performAttack(newTile);
@@ -1127,7 +1155,7 @@ class Player extends Monster {
         if (targetTile.monster && targetTile.monster !== this) {
             targetTile.monster.hit(damage, this);
             addPopups("("+damage+")", "white", targetTile.monster);
-            addMessageLog(`You threw ${itemToThrow.fullName ? itemToThrow.fullName() : itemToThrow.name} at ${targetTile.monster.constructor.name}: 1d${damage} = ${damage} damage`);
+            addMessageLog(`You threw ${itemToThrow.fullName ? itemToThrow.fullName() : itemToThrow.name} at ${targetTile.monster.constructor.name}: 1d${damage} = ${Math.round(damage)} damage`);
         } else {
             addMessageLog("You threw " + (itemToThrow.fullName ? itemToThrow.fullName() : itemToThrow.name));
         }

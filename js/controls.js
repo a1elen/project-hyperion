@@ -97,19 +97,35 @@ function initKeyControls() {
             if (e.key == "t") openThrowGameMenu();
 
             if (e.key == "e") {
+                // Check if there are any interactions available
+                let hasInteractions = false;
+                for (let ox = -1; ox <= 1; ox++) {
+                    for (let oy = -1; oy <= 1; oy++) {
+                        const tile = player.tile.getNeighbour(ox, oy);
+                        if (tile && collectTileInteractions(player, tile).length > 0) {
+                            hasInteractions = true;
+                            break;
+                        }
+                    }
+                    if (hasInteractions) break;
+                }
+
+                if (!hasInteractions) {
+                    addPopups("Nothing to interact with", "gray", player);
+                    return;
+                }
+
                 gameState = "useSelect";
 
-                player.tile.getNeighbour(0, -1).selected = true;
-                player.tile.getNeighbour(0, 1).selected = true;
-                player.tile.getNeighbour(-1, 0).selected = true;
-                player.tile.getNeighbour(1, 0).selected = true;
-
-                player.tile.getNeighbour(1, -1).selected = true;
-                player.tile.getNeighbour(1, 1).selected = true;
-                player.tile.getNeighbour(-1, 1).selected = true;
-                player.tile.getNeighbour(-1, -1).selected = true;
-
-                player.tile.getNeighbour(0, 0).selected = true;
+                // Only highlight tiles that have interactions
+                for (let ox = -1; ox <= 1; ox++) {
+                    for (let oy = -1; oy <= 1; oy++) {
+                        const tile = player.tile.getNeighbour(ox, oy);
+                        if (tile && collectTileInteractions(player, tile).length > 0) {
+                            tile.selected = true;
+                        }
+                    }
+                }
             }
 
             if (e.key == "z") {

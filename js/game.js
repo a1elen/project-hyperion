@@ -603,19 +603,18 @@ function drawInventoryMenu() {
     const rightColWidth = 320;
     const menuW = Math.min(menuMaxW, canvas.width - 28);
     
-    // Calculate dynamic height based on content
-    const contentHeight = Math.max(
-        itemLines.length * lineH,
-        itemDesc.length * lineH + actions.length * lineH + lineH * 3
-    );
+    // Calculate fixed height with minimum like equipment menu
+    const contentHeight = Math.max(itemLines.length * lineH, 20 * lineH);
     const menuH = innerPadY * 2 + titleRowH + lineH + 10 + contentHeight + footerH;
     const mx = (canvas.width - menuW) / 2;
     const my = Math.max(6, (canvas.height - menuH) / 2);
     
+    let y = my - titleSize - 5;
+    drawText("Inventory", titleSize, false, y, "violet", canvas.width / 2, "center");
+    
     drawUIBox(mx, my, menuW, menuH);
     
-    let y = my + innerPadY + titleSize;
-    drawText("Inventory", titleSize, false, y, "violet", canvas.width / 2, "center");
+    y = my + innerPadY + titleSize;
     y += titleRowH;
     
     // Draw gold
@@ -639,7 +638,12 @@ function drawInventoryMenu() {
         if (item.isHeader) {
             drawText(item.text, bodySize, true, y + i * lineH, item.color, listX);
         } else {
-            const color = item.displayIndex === selectedInventoryItemIndex ? "yellow" : item.color;
+            const isSelected = item.displayIndex === selectedInventoryItemIndex;
+            if (isSelected) {
+                ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
+                ctx.fillRect(listX, y + i * lineH - 2 - lineH / 2, leftColWidth, lineH);
+            }
+            const color = isSelected ? "yellow" : item.color;
             drawText(item.text, bodySize, false, y + i * lineH, color, listX);
             currentDisplayIndex++;
         }
@@ -2294,18 +2298,39 @@ function collectTileInteractions(player, tile) {
         }
     }
     if (tile.items.length > 0 && typeof tile.get === "function") {
-        out.push({
-            label: "Pick up top item",
-            run: () => {
-                tile.get();
-            },
-        });
+        for (let i = 0; i < tile.items.length; i++) {
+            const item = tile.items[i];
+            out.push({
+                label: `Pick up ${item.fullName ? item.fullName() : item.name}`,
+                run: () => {
+                    if (item.get()) {
+                        tile.items.splice(i, 1);
+                    }
+                },
+            });
+        }
     }
     if (tile instanceof Wall) {
         out.push({
             label: "Mine wall (pickaxe)",
             run: () => {
                 tile.use();
+            },
+        });
+    }
+    if (tile instanceof StairsDown) {
+        out.push({
+            label: "Descend stairs",
+            run: () => {
+                tile.moveDown(player);
+            },
+        });
+    }
+    if (tile instanceof StairsUp) {
+        out.push({
+            label: "Ascend stairs",
+            run: () => {
+                tile.moveUp(player);
             },
         });
     }
@@ -2355,6 +2380,7 @@ function setupCanvas() {
 
     popupText = [];
     messageLog = [];
+    turnCounter = 0;
 
 }
 
@@ -2878,75 +2904,69 @@ function draw() {
               
         }
 
-        // Here lies text
-        if (player && player.tile.items.length > 0) {
-            drawText("Here lies: ", 20, false, 500, "white", 20);
-            for (let i = 0; i < player.tile.items.length; i++) {
-                let item = player.tile.items[i];
-                let text = item.name;
-                let text_color = "white";
-
-                switch(item.type) {
-                    case "weapon": text = item.fullName(); break;
-                    case "armor": text = item.fullName(); break;
-                    case "coin": text = item.amount + " " + item.name; break;
-                    case "scroll": text = item.fullName(); break;
-                    case "book": text = item.fullName(); break;
-                    case "food": break;
-                }
-
-                if (item.quality != undefined) {
-                    switch(item.quality) {
-                        case "Junk": text_color = "grey"; break;
-                        case "Rusted": text_color = "orange"; break;
-                        case "Normal": text_color = "white"; break;
-                        case "Sharp": text_color = "aqua"; break;
-                        case "Masterpiece": text_color = "violet"; break;
-                    }
-                }
-
-
-                drawText(text, 20, false, 520 + i*20, text_color, 20);
-            }
-        }
 
         // Message Log
         const logX = 20;
-        const logY = canvas.height - 145;
+        const logY = canvas.height - 240;
         const lineHeight = 18;
-        const maxMessages = 8;
+        const maxMessages = 12;
         const maxWidth = 800;
         
-        // Collect all lines from messages (with wrapping)
+        // Collect all lines from messages (with wrapping) and track turn info
         const allLines = [];
         for (let i = 0; i < messageLog.length; i++) {
-            const msgIndex = messageLog.length - 1 - i;
-            const msg = messageLog[msgIndex];
-            const wrappedLines = wrapText(msg, maxWidth);
-            allLines.push(...wrappedLines);
+            const msg = messageLog[i];
+            
+            // Handle both object and string messages
+            let text;
+            let msgTurn;
+            if (typeof msg === 'object' && msg.text) {
+                text = msg.text;
+                msgTurn = msg.turn || 0;
+            } else if (typeof msg === 'string') {
+                text = msg;
+                msgTurn = 0;
+            } else {
+                text = String(msg);
+                msgTurn = 0;
+            }
+            const wrappedLines = wrapText(text, maxWidth);
+            wrappedLines.forEach(line => {
+                allLines.push({ text: line, turn: msgTurn });
+            });
         }
         
-        // Limit to maxMessages lines
+        // Limit to maxMessages lines (newest at end)
         const displayLines = allLines.slice(-maxMessages);
         
-        // Draw background box for message log (static height)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(logX - 5, logY - 15, 420, 170);
-        ctx.strokeStyle = 'rgba(128, 128, 128, 0.5)';
+        // Draw background box for message log
+        ctx.fillStyle = 'rgba(15, 15, 20, 0.85)';
+        ctx.fillRect(logX - 8, logY - 18, 450, 220);
+        ctx.strokeStyle = 'rgba(120, 120, 140, 0.6)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(logX - 8, logY - 18, 450, 220);
+        
+        // Draw inner border for style
+        ctx.strokeStyle = 'rgba(180, 180, 200, 0.3)';
         ctx.lineWidth = 1;
-        ctx.strokeRect(logX - 5, logY - 15, 420, 170);
+        ctx.strokeRect(logX - 6, logY - 16, 446, 216);
         
         // Draw messages with color coding (newest at bottom)
         ctx.font = '13px Arial';
         for (let i = 0; i < displayLines.length; i++) {
-            const line = displayLines[i];
+            const lineObj = displayLines[i];
+            const line = lineObj.text;
+            const lineTurn = lineObj.turn || 0;
             const color = getMessageColor(line);
             const y = logY + i * lineHeight;
             
-            // Fade older messages (older = higher index)
-            const alpha = 1 - ((displayLines.length - 1 - i) * 0.15);
+            // Calculate fade based on turns ago (older = more gray)
+            const turnsAgo = turnCounter - lineTurn;
+            const fadeAmount = Math.min(turnsAgo * 0.15, 0.6); // Max 0.6 fade
+            const alpha = 1 - fadeAmount;
+            
             ctx.fillStyle = color;
-            ctx.globalAlpha = Math.max(alpha, 0.3);
+            ctx.globalAlpha = Math.max(alpha, 0.4);
             
             ctx.fillText(line, logX, y);
             
@@ -3044,9 +3064,9 @@ function addPopups(txt, clr, target) {
 }
 
 function addMessageLog(txt) {
-    messageLog.push(txt);
+    messageLog.push({ text: txt, turn: turnCounter });
 
-    if (messageLog.length > 8) {
+    if (messageLog.length > 15) {
         messageLog.shift();
     }
 }
@@ -3080,23 +3100,23 @@ function getMessageColor(msg) {
     const lowerMsg = msg.toLowerCase();
     
     // Turn separator
-    if (msg === "---") {
-        return "#666666"; // Gray for turn separator
+    if (msg.includes("turn") && msg.includes("ago")) {
+        return "#8888aa"; // Bluish-gray for turn separator
     }
     
-    // Combat - damage dealt
-    if (lowerMsg.includes("damage") || lowerMsg.includes("hit") || lowerMsg.includes("attack")) {
-        if (lowerMsg.includes("you damaged") || lowerMsg.includes("for")) {
-            return "#ff6b6b"; // Red for damage dealt
-        }
-        if (lowerMsg.includes("missed") || lowerMsg.includes("dodged")) {
-            return "#ffd93d"; // Yellow for misses/dodges
-        }
-    }
-    
-    // Combat - damage taken
+    // Combat - damage taken (check first to override other patterns)
     if (lowerMsg.includes("hit you") || lowerMsg.includes("damaged you")) {
         return "#ff4757"; // Darker red for damage taken
+    }
+    
+    // Combat - damage dealt (make white)
+    if (lowerMsg.includes("you hit")) {
+        return "#ffffff"; // White for attack messages
+    }
+    
+    // Misses/dodges
+    if (lowerMsg.includes("missed") || lowerMsg.includes("dodged")) {
+        return "#ffd93d"; // Yellow for misses/dodges
     }
     
     // Healing
@@ -3409,6 +3429,8 @@ function check_for_tick() {
 }
 
 function tick() {
+    turnCounter++;
+
     const messageLogLengthBefore = messageLog.length;
 
     for (let i = 0; i < levelWidth; i++) {
@@ -3503,6 +3525,7 @@ function startGame() {
 let selectedRaceForGame = null;
 let selectedDestinyForGame = null;
 let hasReceivedStartingItems = false;
+let turnCounter = 0;
 
 function startGameWithCharacterCreation() {
     selectedRaceForGame = RACES[characterCreationState.selectedRaceIndex];
@@ -3558,9 +3581,6 @@ function initLevelPool() {
 }
 
 function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
-    spawnRate = 5;
-    spawnCounter = spawnRate;
-
     if (gameStarted) {
         // Save player stats
         savePlayer();

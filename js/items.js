@@ -20,6 +20,9 @@ function areItemsIdentical(item1, item2) {
         if (item1.handedness !== item2.handedness) return false;
         if (item1.accuracy !== item2.accuracy) return false;
         if (item1.attackSpeed !== item2.attackSpeed) return false;
+        // Handle weapons without material (both undefined is ok)
+        if ((item1.material === undefined && item2.material !== undefined) ||
+            (item1.material !== undefined && item2.material === undefined)) return false;
         // Check damageTypes array
         if (item1.damageTypes.length !== item2.damageTypes.length) return false;
         for (let i = 0; i < item1.damageTypes.length; i++) {
@@ -133,7 +136,8 @@ items.weapons.accuracy = 0.8;
 items.weapons.attackSpeed = 1.0; // 1.0 = normal, 1.25 = 25% faster
 items.weapons.fullName = function() {
     const qualityPrefix = this.quality === "Normal" ? "" : this.quality + " ";
-    return `${qualityPrefix}${this.material} ${this.name}`;
+    const materialPrefix = this.material ? this.material + " " : "";
+    return `${qualityPrefix}${materialPrefix}${this.name}`;
 };
 
 items.tools = Object.create(item);
@@ -627,16 +631,9 @@ function makeHammer(material, quality) {
     return weapon;
 }
 
-function makeQuarterstaff(material, quality) {
+function makeQuarterstaff(quality) {
     const baseStats = WEAPON_DATA.weaponBaseStats.quarterstaff;
-    const materials = ["Wooden", "Copper", "Bronze", "Iron", "Silver", "Gold"];
     const qualities = WEAPON_DATA.qualities;
-
-    // Determine material
-    if (material == undefined || material == null) {
-        material = Math.floor(Math.random() * materials.length);
-    }
-    const materialName = materials[material];
 
     // Determine quality
     if (quality == undefined || quality == null) {
@@ -645,21 +642,15 @@ function makeQuarterstaff(material, quality) {
     const qualityName = qualities[quality];
     const qualityMod = WEAPON_DATA.qualityModifiers[qualityName];
 
-    // Determine handedness based on material
-    const handedness = typeof baseStats.handedness === 'string' 
-        ? baseStats.handedness 
-        : baseStats.handedness[materialName];
-
     // Create weapon
     const weapon = Object.create(items.weapons);
     weapon.name = baseStats.name;
     weapon.category = baseStats.category;
-    weapon.material = materialName;
     weapon.quality = qualityName;
-    weapon.handedness = handedness;
+    weapon.handedness = baseStats.handedness;
     weapon.accuracy = baseStats.accuracy;
     weapon.attackSpeed = baseStats.attackSpeed + (qualityMod * 0.05);
-    weapon.sprite = baseStats.spriteMap[materialName];
+    weapon.sprite = baseStats.spriteMap["Wooden"];
 
     // Calculate damage types with quality modifier
     weapon.damageTypes = baseStats.damageTypes.map(d => ({
