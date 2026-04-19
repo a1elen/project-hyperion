@@ -92,6 +92,12 @@ objects.usable.barrel.use = function(target) {
         lootTable = [makeSword(randomRange(0, 1), randomRange(0, 2))];
     }
 
+    // Add chance for new items
+    if (randomRange(1, 10) == 1) {
+        const newItemLoot = [makeStatRing("gold"), makeStatRing("silver"), makeStatRing("sapphire"), makeStatRing("ruby"), makeStatBelt("silver"), makeStatBelt("gold"), makeHeadlamp(), makeSteelArmor("helmet"), makeSteelArmor("cap"), items.armor.leatherCap, items.armor.leatherBoots, items.armor.leatherTrousers, items.armor.leatherGloves, items.armor.leatherTunic];
+        lootTable = lootTable.concat(newItemLoot);
+    }
+
     for (let i = 0; i < numberOfLoot; i++) {
         tryAddItemToTile(target, shuffle(lootTable)[0]);
     }
@@ -116,10 +122,13 @@ objects.usable.bookshelf.use = function(target) {
     tryAddItemToTile(target, items.tools.woodscraps);
 
     let numberOfLoot = randomRange(1, 3);
-    /*for (let i = 0; i < numberOfLoot; i++) {
-        let lootTable = []
-        tryAddItemToTile(target, shuffle(lootTable)[0]);
-    }*/
+    for (let i = 0; i < numberOfLoot; i++) {
+        // Add chance for new items
+        if (randomRange(1, 5) == 1) {
+            const newItemLoot = [makeStatRing("gold"), makeStatRing("silver"), makeStatRing("sapphire"), makeStatRing("ruby"), makeStatBelt("silver"), makeStatBelt("gold"), makeHeadlamp(), makeSteelArmor("helmet"), makeSteelArmor("cap"), items.armor.leatherCap, items.armor.leatherBoots, items.armor.leatherTrousers, items.armor.leatherGloves, items.armor.leatherTunic];
+            tryAddItemToTile(target, shuffle(newItemLoot)[0]);
+        }
+    }
 };
 
 objects.usable.spiderCocoon = Object.create(objects.usable)
@@ -131,7 +140,14 @@ objects.usable.spiderCocoon.use = function(target) {
 
     let numberOfLoot = randomRange(0, 3);
     for (let i = 0; i < numberOfLoot; i++) {
-        let lootTable = [makeSword(randomRange(2, 3), randomRange(0, 2))]
+        let lootTable = [makeSword(randomRange(2, 3), randomRange(0, 2))];
+        
+        // Add chance for new items
+        if (randomRange(1, 5) == 1) {
+            const newItemLoot = [makeStatRing("gold"), makeStatRing("silver"), makeStatRing("sapphire"), makeStatRing("ruby"), makeStatBelt("silver"), makeStatBelt("gold"), makeHeadlamp(), makeSteelArmor("helmet"), makeSteelArmor("cap"), items.armor.leatherCap, items.armor.leatherBoots, items.armor.leatherTrousers, items.armor.leatherGloves, items.armor.leatherTunic];
+            lootTable = lootTable.concat(newItemLoot);
+        }
+        
         tryAddItemToTile(target, shuffle(lootTable)[0]);
     }
 };
@@ -145,7 +161,14 @@ objects.usable.coffin.use = function(target) {
 
     let numberOfLoot = randomRange(0, 3);
     for (let i = 0; i < numberOfLoot; i++) {
-        let lootTable = [makeSword(randomRange(2, 3), randomRange(1, 2))]
+        let lootTable = [makeSword(randomRange(2, 3), randomRange(1, 2))];
+        
+        // Add chance for new items
+        if (randomRange(1, 5) == 1) {
+            const newItemLoot = [makeStatRing("gold"), makeStatRing("silver"), makeStatRing("sapphire"), makeStatRing("ruby"), makeStatBelt("silver"), makeStatBelt("gold"), makeHeadlamp(), makeSteelArmor("helmet"), makeSteelArmor("cap"), items.armor.leatherCap, items.armor.leatherBoots, items.armor.leatherTrousers, items.armor.leatherGloves, items.armor.leatherTunic];
+            lootTable = lootTable.concat(newItemLoot);
+        }
+        
         tryAddItemToTile(target, shuffle(lootTable)[0]);
     }
 };
@@ -159,7 +182,14 @@ objects.usable.weaponStand.use = function(target) {
 
     let numberOfLoot = randomRange(0, 3);
     for (let i = 0; i < numberOfLoot; i++) {
-        let lootTable = [makeSword(randomRange(0, 4), randomRange(0, 4))]
+        let lootTable = [makeSword(randomRange(0, 4), randomRange(0, 4))];
+        
+        // Add chance for new items
+        if (randomRange(1, 5) == 1) {
+            const newItemLoot = [makeStatRing("gold"), makeStatRing("silver"), makeStatRing("sapphire"), makeStatRing("ruby"), makeStatBelt("silver"), makeStatBelt("gold"), makeHeadlamp(), makeSteelArmor("helmet"), makeSteelArmor("cap"), items.armor.leatherCap, items.armor.leatherBoots, items.armor.leatherTrousers, items.armor.leatherGloves, items.armor.leatherTunic];
+            lootTable = lootTable.concat(newItemLoot);
+        }
+        
         tryAddItemToTile(target, shuffle(lootTable)[0]);
     }
 };

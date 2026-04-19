@@ -60,6 +60,14 @@ function areItemsIdentical(item1, item2) {
     // Check isLit state for items that have it (lanterns, torches, etc.)
     if (item1.isLit !== item2.isLit) return false;
     
+    // Check statBoost property
+    if (item1.statBoost && item2.statBoost) {
+        if (item1.statBoost.stat !== item2.statBoost.stat) return false;
+        if (item1.statBoost.value !== item2.statBoost.value) return false;
+    } else if (item1.statBoost || item2.statBoost) {
+        return false;
+    }
+    
     return true;
 }
 
@@ -85,6 +93,37 @@ item.get = function() {
 };
 item.fullName = function() {
     return this.name;
+};
+
+item.menuName = function() {
+    let baseName;
+    if (this.material) {
+        // Check if name already starts with material (case-insensitive)
+        const nameLower = this.name.toLowerCase();
+        const materialLower = this.material.toLowerCase();
+        if (nameLower.startsWith(materialLower)) {
+            baseName = this.name;
+        } else {
+            baseName = `${this.material} ${this.name}`;
+        }
+    } else {
+        baseName = this.name;
+    }
+    switch (this.quality) {
+        case "Junk":
+            return `-${baseName}-`;
+        case "Rusted":
+            return `/${baseName}/`;
+        case "Normal":
+            return baseName;
+        case "Sharpened":
+        case "Reinforced":
+            return `+${baseName}+`;
+        case "Masterpiece":
+            return `*${baseName}*`;
+        default:
+            return baseName;
+    }
 };
 
 // Food
@@ -213,7 +252,7 @@ items.armor.resistances = {
 };
 items.armor.fullName = function() {
     const qualityPrefix = this.quality === "Normal" ? "" : this.quality + " ";
-    return qualityPrefix+this.material+" "+this.name+" ["+this.ac+"/"+this.ec+"]";
+    return qualityPrefix+this.material+" "+this.name;
 };
 
 function makeLantern() {
@@ -245,6 +284,140 @@ function makeLantern() {
 }
 
 items.tools.lantern = makeLantern();
+
+function makeHeadlamp() {
+    const headlamp = Object.create(items.armor);
+    headlamp.name = "Headlamp";
+    headlamp.type = "armor";
+    headlamp.sprite = SPRITES.HEADLAMP;
+    headlamp.isLit = false;
+    headlamp.lightRadius = 0;
+    headlamp.slot = "headwear";
+    headlamp.activate = function() {
+        this.isLit = !this.isLit;
+        if (this.isLit) {
+            this.sprite = SPRITES.HEADLAMP_LIT;
+            this.lightRadius = 6;
+            addMessageLog("Headlamp lit.");
+            addPopups("Lit", "yellow", player);
+        } else {
+            this.sprite = SPRITES.HEADLAMP;
+            this.lightRadius = 0;
+            addMessageLog("Headlamp extinguished.");
+            addPopups("Extinguished", "gray", player);
+        }
+    };
+    headlamp.fullName = function() {
+        return this.isLit ? "Headlamp (lit)" : "Headlamp";
+    };
+    return headlamp;
+}
+
+items.tools.headlamp = makeHeadlamp();
+
+// Stat-Boosting Rings
+function makeStatRing(ringType) {
+    const ring = Object.create(items.armor);
+    ring.type = "armor";
+    ring.slot = "ring";
+    ring.ac = 0;
+    ring.ec = 0;
+    
+    // Available stats to boost
+    const stats = ["strength", "constitution", "perception", "agility", "arcane", "will"];
+    const selectedStat = shuffle(stats)[0];
+    ring.statBoost = { stat: selectedStat, value: 1 };
+    
+    // Set name and sprite based on ring type
+    const ringData = {
+        "gold": { name: "Gold Ring", sprite: SPRITES.RING_GOLD },
+        "silver": { name: "Silver Ring", sprite: SPRITES.RING_SILVER },
+        "sapphire": { name: "Sapphire Ring", sprite: SPRITES.SAPPHIRE_RING },
+        "ruby": { name: "Ruby Ring", sprite: SPRITES.RUBY_RING }
+    };
+    
+    const data = ringData[ringType];
+    ring.name = data.name;
+    ring.sprite = data.sprite;
+    ring.material = ringType.charAt(0).toUpperCase() + ringType.slice(1);
+    
+    ring.fullName = function() {
+        const statName = this.statBoost.stat.charAt(0).toUpperCase() + this.statBoost.stat.slice(1);
+        return `${this.name} (+1 ${statName})`;
+    };
+    
+    return ring;
+}
+
+// Stat-Boosting Belts
+function makeStatBelt(beltType) {
+    const belt = Object.create(items.armor);
+    belt.type = "armor";
+    belt.slot = "belt";
+    belt.ac = 0;
+    belt.ec = 0;
+    
+    // Available stats to boost
+    const stats = ["strength", "constitution", "perception", "agility", "arcane", "will"];
+    const selectedStat = shuffle(stats)[0];
+    belt.statBoost = { stat: selectedStat, value: 1 };
+    
+    // Set name and sprite based on belt type
+    const beltData = {
+        "silver": { name: "Silver Belt", sprite: SPRITES.SILVER_BELT },
+        "gold": { name: "Gold Belt", sprite: SPRITES.GOLD_BELT }
+    };
+    
+    const data = beltData[beltType];
+    belt.name = data.name;
+    belt.sprite = data.sprite;
+    belt.material = beltType.charAt(0).toUpperCase() + beltType.slice(1);
+    
+    belt.fullName = function() {
+        const statName = this.statBoost.stat.charAt(0).toUpperCase() + this.statBoost.stat.slice(1);
+        return `${this.name} (+1 ${statName})`;
+    };
+    
+    return belt;
+}
+
+// Steel Armor
+function makeSteelArmor(armorType) {
+    const armor = Object.create(items.armor);
+    armor.type = "armor";
+    armor.slot = "headwear";
+    armor.material = "Steel";
+    armor.quality = "Normal";
+    
+    // Steel resistance pattern (from breastplate data)
+    const steelResistances = {
+        slash: 15,
+        blunt: 16,
+        pierce: 10,
+        fire: 0,
+        cold: 0,
+        electrical: 0,
+        poison: 0,
+        arcane: 0,
+        death: 0
+    };
+    
+    if (armorType === "helmet") {
+        armor.name = "Steel Helmet";
+        armor.sprite = SPRITES.STEEL_HELMET;
+        armor.ac = 3;
+        armor.ec = -2;
+    } else if (armorType === "cap") {
+        armor.name = "Steel Cap";
+        armor.sprite = SPRITES.STEEL_CAP;
+        armor.ac = 2;
+        armor.ec = 0;
+    }
+    
+    armor.resistances = steelResistances;
+    
+    return armor;
+}
 
 // Leather Armor
 items.armor.leatherCap = Object.create(items.armor);

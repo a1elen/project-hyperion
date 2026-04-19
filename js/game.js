@@ -8,10 +8,6 @@ selectedInventoryItemIndex = 0;
 selectedAbilityIndex = 0;
 selectedStatsIndex = 0;
 selectedDebugOptionIndex = 0;
-selectedEquipmentSlotIndex = 0;
-selectedEquipItemIndex = 0;
-currentEquipSlotKey = "";
-currentEquipSlotName = "";
 
 isResting = false;
 
@@ -31,6 +27,13 @@ characterCreationState = {
     selectedColumn: 0, // 0 = race, 1 = destiny
     selectedRaceIndex: 0,
     selectedDestinyIndex: 0
+};
+
+// Equipment menu state
+equipmentMenuState = {
+    selectedColumn: 0, // 0 = slots, 1 = items
+    selectedSlotIndex: 0,
+    selectedItemIndex: 0
 };
 
 // Helper function to get available destinies for a race
@@ -528,9 +531,17 @@ function calculatePlayerStats() {
         death: 0
     };
     let damageStr = "None";
+    let statBoosts = {
+        strength: 0,
+        constitution: 0,
+        perception: 0,
+        agility: 0,
+        arcane: 0,
+        will: 0
+    };
     
-    // Calculate armor stats
-    const armorSlots = ['headwear', 'bodyarmor', 'gloves', 'legwear', 'boots', 'belt'];
+    // Calculate armor stats and stat boosts
+    const armorSlots = ['headwear', 'bodyarmor', 'gloves', 'legwear', 'boots', 'belt', 'rightFinger', 'leftFinger'];
     for (const slot of armorSlots) {
         const armor = player[slot];
         if (armor && armor.type === "armor") {
@@ -542,6 +553,10 @@ function calculatePlayerStats() {
                 for (const type in armor.resistances) {
                     totalResistances[type] += armor.resistances[type];
                 }
+            }
+            // Apply stat boosts
+            if (armor.statBoost) {
+                statBoosts[armor.statBoost.stat] += armor.statBoost.value;
             }
         }
     }
@@ -557,7 +572,87 @@ function calculatePlayerStats() {
         ac: totalAC,
         ec: totalEC,
         resistances: totalResistances,
-        damage: damageStr
+        damage: damageStr,
+        statBoosts: statBoosts
+    };
+}
+
+function calculateProjectedStats(slotKey, newItem) {
+    // Create a temporary copy of player equipment
+    const tempEquipment = {};
+    const equipmentSlots = ['rightHand', 'leftHand', 'headwear', 'bodyarmor', 'rightFinger', 'leftFinger', 'gloves', 'legwear', 'boots', 'necklace', 'belt'];
+    
+    for (const slot of equipmentSlots) {
+        tempEquipment[slot] = player[slot];
+    }
+    
+    // Apply the new item to the slot
+    tempEquipment[slotKey] = newItem;
+    
+    // Handle two-handed weapons
+    if (newItem && newItem.handedness === "two-handed") {
+        if (slotKey === "rightHand") {
+            tempEquipment.leftHand = null;
+        } else if (slotKey === "leftHand") {
+            tempEquipment.rightHand = null;
+        }
+    }
+    
+    // Calculate stats with temporary equipment
+    let totalAC = 0;
+    let totalEC = 0;
+    let totalResistances = {
+        slash: 0,
+        blunt: 0,
+        pierce: 0,
+        fire: 0,
+        cold: 0,
+        electrical: 0,
+        poison: 0,
+        arcane: 0,
+        death: 0
+    };
+    let damageStr = "None";
+    let statBoosts = {
+        strength: 0,
+        constitution: 0,
+        perception: 0,
+        agility: 0,
+        arcane: 0,
+        will: 0
+    };
+    
+    const armorSlots = ['headwear', 'bodyarmor', 'gloves', 'legwear', 'boots', 'belt', 'rightFinger', 'leftFinger'];
+    for (const slot of armorSlots) {
+        const armor = tempEquipment[slot];
+        if (armor && armor.type === "armor") {
+            if (slot === 'bodyarmor') {
+                totalAC = armor.ac;
+                totalEC = armor.ec;
+            }
+            if (armor.resistances) {
+                for (const type in armor.resistances) {
+                    totalResistances[type] += armor.resistances[type];
+                }
+            }
+            if (armor.statBoost) {
+                statBoosts[armor.statBoost.stat] += armor.statBoost.value;
+            }
+        }
+    }
+    
+    if (tempEquipment.rightHand && tempEquipment.rightHand.damageTypes) {
+        damageStr = tempEquipment.rightHand.damageTypes.map(d => `${d.rolls}d${d.sides} ${d.type}`).join(", ");
+    } else if (tempEquipment.leftHand && tempEquipment.leftHand.damageTypes) {
+        damageStr = tempEquipment.leftHand.damageTypes.map(d => `${d.rolls}d${d.sides} ${d.type}`).join(", ");
+    }
+    
+    return {
+        ac: totalAC,
+        ec: totalEC,
+        resistances: totalResistances,
+        damage: damageStr,
+        statBoosts: statBoosts
     };
 }
 
@@ -670,7 +765,7 @@ function drawInventoryMenu() {
             currentCategory = category;
         }
         
-        let text = item.fullName != undefined ? item.fullName() : item.name;
+        let text = item.menuName != undefined ? item.menuName() : item.name;
         let text_color = "white";
         if (item.quality != undefined) {
             switch(item.quality) {
@@ -819,7 +914,7 @@ function openSpellsGameMenu() {
 
 function openWieldGameMenu() {
     const opts = player.inventory.map((item, i) => ({
-        label: item.fullName ? item.fullName() : item.name,
+        label: item.menuName ? item.menuName() : item.name,
         run: () => {
             if (item.handedness === "two-handed") {
                 player.wield(i, "both");
@@ -843,13 +938,13 @@ function openHandSelectionMenu(itemIndex) {
             run: () => player.wield(itemIndex, "left"),
         },
     ];
-    openGameMenu(`Equip ${item.fullName ? item.fullName() : item.name} in:`, [], opts);
+    openGameMenu(`Equip ${item.menuName ? item.menuName() : item.name} in:`, [], opts);
 }
 
 function openWearGameMenu() {
     const list = player.inventory.filter((it) => it.type === "armor");
     const opts = list.map((a, i) => ({
-        label: a.fullName(),
+        label: a.menuName ? a.menuName() : a.name,
         run: () => player.wear(i),
     }));
     openGameMenu("Wear armor", [], opts);
@@ -858,7 +953,7 @@ function openWearGameMenu() {
 function openEatGameMenu() {
     const list = player.inventory.filter((it) => it.type === "food");
     const opts = list.map((f, i) => ({
-        label: f.fullName(),
+        label: f.menuName ? f.menuName() : f.name,
         run: () => player.eat(i),
     }));
     openGameMenu("Eat", [], opts);
@@ -867,7 +962,7 @@ function openEatGameMenu() {
 function openReadGameMenu() {
     const list = player.inventory.filter((it) => it.type === "scroll");
     const opts = list.map((s, i) => ({
-        label: s.fullName(),
+        label: s.menuName ? s.menuName() : s.name,
         run: () => player.castScroll(i),
     }));
     openGameMenu("Read scroll", [], opts);
@@ -875,7 +970,7 @@ function openReadGameMenu() {
 
 function openDropGameMenu() {
     const opts = player.inventory.map((it, i) => ({
-        label: it.fullName != undefined ? it.fullName() : it.name,
+        label: it.menuName != undefined ? it.menuName() : it.name,
         run: () => player.drop(i),
     }));
     openGameMenu("Drop item", [], opts);
@@ -883,7 +978,7 @@ function openDropGameMenu() {
 
 function openThrowGameMenu() {
     const opts = player.inventory.map((it, i) => ({
-        label: it.fullName != undefined ? it.fullName() : it.name,
+        label: it.menuName != undefined ? it.menuName() : it.name,
         run: () => {
             gameState = "throwTarget";
             selectedTile = player.tile;
@@ -1035,26 +1130,21 @@ function openAbilitiesGameMenu() {
 }
 
 function openEquipmentMenu() {
-    selectedEquipmentSlotIndex = 0;
+    equipmentMenuState.selectedColumn = 0;
+    equipmentMenuState.selectedSlotIndex = 0;
+    equipmentMenuState.selectedItemIndex = 0;
     gameState = "equipmentMenu";
-}
-
-function openEquipSlotMenu(slotKey, slotName) {
-    currentEquipSlotKey = slotKey;
-    currentEquipSlotName = slotName;
-    selectedEquipItemIndex = 0;
-    gameState = "equipSlotMenu";
 }
 
 function drawEquipmentMenu() {
     const lineH = 19;
     const titleSize = 19;
     const bodySize = 14;
-    const menuMaxW = 1000;
-    const innerPadX = 12;
-    const innerPadY = 10;
+    const menuMaxW = 1150;
+    const innerPadX = 16;
+    const innerPadY = 12;
     const footerH = 40;
-    const titleRowH = 22;
+    const titleRowH = 28;
     const colGap = 20;
 
     // Define equipment slots
@@ -1072,7 +1162,9 @@ function drawEquipmentMenu() {
         { name: "Belt", slot: "belt" }
     ];
 
-    // Build slot lines
+    const selectedSlot = equipmentSlots[equipmentMenuState.selectedSlotIndex];
+
+    // Build slot lines (column 1)
     const slotLines = [];
     for (let i = 0; i < equipmentSlots.length; i++) {
         const slot = equipmentSlots[i];
@@ -1080,8 +1172,18 @@ function drawEquipmentMenu() {
         let itemText = "Empty";
         let itemColor = "gray";
         
+        // Check if this slot should show "---" due to two-handed weapon
+        if (equippedItem === null) {
+            const otherHand = slot.slot === "rightHand" ? "leftHand" : "leftHand";
+            const otherHandItem = player[otherHand];
+            if (otherHandItem && otherHandItem.handedness === "two-handed") {
+                itemText = "---";
+                itemColor = "orange";
+            }
+        }
+        
         if (equippedItem) {
-            itemText = equippedItem.fullName ? equippedItem.fullName() : equippedItem.name;
+            itemText = equippedItem.menuName ? equippedItem.menuName() : equippedItem.name;
             itemColor = "white";
             
             if (equippedItem.quality) {
@@ -1106,9 +1208,82 @@ function drawEquipmentMenu() {
         });
     }
 
-    // Calculate player stats
-    const playerStats = calculatePlayerStats();
+    // Build item lines for selected slot (column 2)
+    const itemLines = [];
+    
+    // Add "None" option first
+    const equippedItem = selectedSlot ? player[selectedSlot.slot] : null;
+    if (equippedItem) {
+        itemLines.push({
+            text: "None",
+            color: "orange",
+            isNone: true,
+            index: 0
+        });
+    }
 
+    // Filter inventory items that can be equipped in the selected slot
+    const equippableItems = [];
+    for (let i = 0; i < player.inventory.length; i++) {
+        const item = player.inventory[i];
+        let canEquip = false;
+        const itemSlot = item.slot || "";
+
+        if (selectedSlot.slot === "rightHand" || selectedSlot.slot === "leftHand") {
+            canEquip = item.type === "weapon" || item.type === "tool";
+        } else if (selectedSlot.slot === "headwear") {
+            canEquip = item.type === "armor" && itemSlot === "headwear";
+        } else if (selectedSlot.slot === "bodyarmor") {
+            canEquip = item.type === "armor" && (itemSlot === "bodyarmor" || itemSlot === "chest");
+        } else if (selectedSlot.slot === "rightFinger" || selectedSlot.slot === "leftFinger") {
+            canEquip = item.type === "armor" && (itemSlot === "rightFinger" || itemSlot === "leftFinger" || itemSlot === "ring");
+        } else if (selectedSlot.slot === "gloves") {
+            canEquip = item.type === "armor" && itemSlot === "gloves";
+        } else if (selectedSlot.slot === "legwear") {
+            canEquip = item.type === "armor" && itemSlot === "legwear";
+        } else if (selectedSlot.slot === "boots") {
+            canEquip = item.type === "armor" && itemSlot === "boots";
+        } else if (selectedSlot.slot === "necklace") {
+            canEquip = item.type === "armor" && itemSlot === "necklace";
+        } else if (selectedSlot.slot === "belt") {
+            canEquip = item.type === "armor" && itemSlot === "belt";
+        }
+
+        if (canEquip) {
+            equippableItems.push({
+                item: item,
+                originalIndex: i
+            });
+        }
+    }
+
+    for (let i = 0; i < equippableItems.length; i++) {
+        const eqItem = equippableItems[i];
+        let itemColor = "white";
+        if (eqItem.item.quality) {
+            switch(eqItem.item.quality) {
+                case "Junk": itemColor = "grey"; break;
+                case "Rusted": itemColor = "orange"; break;
+                case "Normal": itemColor = "white"; break;
+                case "Sharpened": itemColor = "aqua"; break;
+                case "Masterpiece": itemColor = "violet"; break;
+                case "Sharp": itemColor = "aqua"; break;
+            }
+        }
+        const displayIndex = equippedItem ? i + 1 : i;
+        itemLines.push({
+            text: eqItem.item.menuName ? eqItem.item.menuName() : eqItem.item.name,
+            color: itemColor,
+            originalIndex: eqItem.originalIndex,
+            isNone: false,
+            index: displayIndex,
+            item: eqItem.item
+        });
+    }
+
+    // Calculate current player stats
+    const playerStats = calculatePlayerStats();
+    
     // Calculate weapon stats
     let weaponAccuracy = 0;
     let weaponAttackSpeed = 0;
@@ -1124,88 +1299,17 @@ function drawEquipmentMenu() {
         weaponHandedness = player.leftHand.handedness;
     }
 
-    const col1Width = 200;
-    const col2Width = 280;
-    const col3Width = 280;
-    const menuW = Math.min(menuMaxW, canvas.width - 28);
-    const menuH = innerPadY * 2 + titleRowH + Math.max(slotLines.length * lineH, 20 * lineH) + footerH;
-    const mx = (canvas.width - menuW) / 2;
-    const my = Math.max(6, (canvas.height - menuH) / 2);
-
-    drawUIBox(mx, my, menuW, menuH);
-
-    let y = my + innerPadY + titleSize;
-    drawText("Equipment", titleSize, false, y, "violet", canvas.width / 2, "center");
-    y += titleRowH;
-
-    // Draw separator lines
-    const sep1X = mx + innerPadX + col1Width;
-    const sep2X = sep1X + colGap + col2Width;
-    ctx.strokeStyle = 'rgba(128, 128, 128, 0.5)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(sep1X, my + innerPadY);
-    ctx.lineTo(sep1X, my + menuH - innerPadY);
-    ctx.moveTo(sep2X, my + innerPadY);
-    ctx.lineTo(sep2X, my + menuH - innerPadY);
-    ctx.stroke();
-
-    // Draw slot list in column 1
-    const listX = mx + innerPadX;
-    for (let i = 0; i < slotLines.length; i++) {
-        const slot = slotLines[i];
-        const color = slot.index === selectedEquipmentSlotIndex ? "yellow" : slot.color;
-        const prefix = slot.index === selectedEquipmentSlotIndex ? "> " : "  ";
-        drawText(prefix + slot.text, bodySize, false, y + i * lineH, color, listX);
-    }
-
-    // Draw selected item stats in column 2
-    const itemX = sep1X + colGap;
-    let itemY = my + innerPadY + titleSize + titleRowH;
-    
-    const selectedSlot = slotLines[selectedEquipmentSlotIndex];
-    if (selectedSlot && selectedSlot.item) {
-        drawText("Selected Item:", bodySize, true, itemY, "violet", itemX);
-        itemY += lineH;
-        
-        const itemDesc = getItemDescription(selectedSlot.item);
-        for (const line of itemDesc) {
-            drawText(line.text, bodySize, false, itemY, line.color, itemX);
-            itemY += lineH;
-        }
-    } else {
-        drawText("Selected Item:", bodySize, true, itemY, "violet", itemX);
-        itemY += lineH;
-        drawText("No item selected", bodySize, false, itemY, "gray", itemX);
-    }
-
-    // Draw player stats and resistances in column 3
-    const statsX = sep2X + colGap;
-    let statsY = my + innerPadY + titleSize + titleRowH;
-    
-    drawText("Player Stats:", bodySize, true, statsY, "violet", statsX);
-    statsY += lineH;
-    
-    drawText(`Damage: ${playerStats.damage}`, bodySize, false, statsY, "white", statsX);
-    statsY += lineH;
-    
-    drawText(`Attack Speed: ${weaponAttackSpeed.toFixed(2)}x`, bodySize, false, statsY, "aqua", statsX);
-    statsY += lineH;
-    
-    drawText(`Accuracy: x${weaponAccuracy.toFixed(2)}`, bodySize, false, statsY, "white", statsX);
-    statsY += lineH;
-    
-    drawText(`Handedness: ${weaponHandedness}`, bodySize, false, statsY, "white", statsX);
-    statsY += lineH;
-    
-    drawText(`Armor Class: ${playerStats.ac}`, bodySize, false, statsY, "white", statsX);
-    statsY += lineH;
-    
-    drawText(`Evasion Class: ${playerStats.ec}`, bodySize, false, statsY, "white", statsX);
-    statsY += lineH + 5;
-    
-    drawText("Resistances:", bodySize, true, statsY, "violet", statsX);
-    statsY += lineH;
+    // Build current stats lines (column 3)
+    const statsLines = [];
+    statsLines.push({text: "Current Stats:", color: "violet"});
+    statsLines.push({text: `Damage: ${playerStats.damage}`, color: "white"});
+    statsLines.push({text: `Attack Speed: ${weaponAttackSpeed.toFixed(2)}x`, color: "aqua"});
+    statsLines.push({text: `Accuracy: x${weaponAccuracy.toFixed(2)}`, color: "white"});
+    statsLines.push({text: `Handedness: ${weaponHandedness}`, color: "white"});
+    statsLines.push({text: `Armor Class: ${playerStats.ac}`, color: "white"});
+    statsLines.push({text: `Evasion Class: ${playerStats.ec}`, color: "white"});
+    statsLines.push({text: "", color: "white"});
+    statsLines.push({text: "Resistances:", color: "violet"});
     
     const resistTypes = [
         {key: "slash", label: "Slash"},
@@ -1222,237 +1326,203 @@ function drawEquipmentMenu() {
     for (const resist of resistTypes) {
         const value = playerStats.resistances[resist.key];
         const resistColor = value > 0 ? "aqua" : "gray";
-        drawText(`${resist.label}: ${value}%`, bodySize, false, statsY, resistColor, statsX);
-        statsY += lineH;
+        statsLines.push({text: `${resist.label}: ${value}%`, color: resistColor});
     }
 
-    // Draw footer
-    const footY = my + menuH - innerPadY - 4;
-    drawText("Arrow keys: Navigate  ·  Enter: Select slot  ·  Escape: Close", 13, false, footY, "gray", canvas.width / 2, "center");
-}
-
-function drawEquipSlotMenu() {
-    const lineH = 19;
-    const titleSize = 19;
-    const bodySize = 14;
-    const menuMaxW = 800;
-    const innerPadX = 12;
-    const innerPadY = 10;
-    const footerH = 40;
-    const titleRowH = 22;
-    const colGap = 30;
-
-    // Filter inventory items that can be equipped in the selected slot
-    const equippableItems = [];
-    for (let i = 0; i < player.inventory.length; i++) {
-        const item = player.inventory[i];
-        let canEquip = false;
-        const itemSlot = item.slot || "";
-
-        // Check if item can be equipped in the current slot
-        if (currentEquipSlotKey === "rightHand" || currentEquipSlotKey === "leftHand") {
-            canEquip = true;
-        } else if (currentEquipSlotKey === "headwear") {
-            canEquip = item.type === "armor" && itemSlot === "headwear";
-        } else if (currentEquipSlotKey === "bodyarmor") {
-            canEquip = item.type === "armor" && (itemSlot === "bodyarmor" || itemSlot === "chest");
-        } else if (currentEquipSlotKey === "rightFinger" || currentEquipSlotKey === "leftFinger") {
-            canEquip = item.type === "armor" && (itemSlot === "rightFinger" || itemSlot === "leftFinger" || itemSlot === "ring");
-        } else if (currentEquipSlotKey === "gloves") {
-            canEquip = item.type === "armor" && itemSlot === "gloves";
-        } else if (currentEquipSlotKey === "legwear") {
-            canEquip = item.type === "armor" && itemSlot === "legwear";
-        } else if (currentEquipSlotKey === "boots") {
-            canEquip = item.type === "armor" && itemSlot === "boots";
-        } else if (currentEquipSlotKey === "necklace") {
-            canEquip = item.type === "armor" && itemSlot === "necklace";
-        } else if (currentEquipSlotKey === "belt") {
-            canEquip = item.type === "armor" && itemSlot === "belt";
-        }
-
-        if (canEquip) {
-            equippableItems.push({
-                item: item,
-                originalIndex: i,
-                name: item.fullName ? item.fullName() : item.name
-            });
-        }
-    }
-
-    // Add "Unequip" option if slot has an item
-    const equippedItem = player[currentEquipSlotKey];
-    const itemLines = [];
-    
-    if (equippedItem) {
-        itemLines.push({
-            text: "Unequip current item",
-            color: "orange",
-            isUnequip: true,
-            index: -1
-        });
-    }
-
-    for (let i = 0; i < equippableItems.length; i++) {
-        const eqItem = equippableItems[i];
-        let itemColor = "white";
-        if (eqItem.item.quality) {
-            switch(eqItem.item.quality) {
-                case "Junk": itemColor = "grey"; break;
-                case "Rusted": itemColor = "orange"; break;
-                case "Normal": itemColor = "white"; break;
-                case "Sharpened": itemColor = "aqua"; break;
-                case "Masterpiece": itemColor = "violet"; break;
-                case "Sharp": itemColor = "aqua"; break;
+    // Build selected item stats lines (column 3) - only if item selected in column 2
+    const selectedItemLines = [];
+    if (equipmentMenuState.selectedColumn === 1 && equipmentMenuState.selectedItemIndex < itemLines.length) {
+        const selectedItem = itemLines[equipmentMenuState.selectedItemIndex];
+        if (selectedItem && !selectedItem.isNone) {
+            selectedItemLines.push({text: "Selected Item Stats:", color: "violet"});
+            
+            const itemDesc = getItemDescription(selectedItem.item);
+            for (const line of itemDesc) {
+                selectedItemLines.push({text: line.text, color: line.color});
             }
         }
-        itemLines.push({
-            text: eqItem.name,
-            color: itemColor,
-            originalIndex: eqItem.originalIndex,
-            isUnequip: false,
-            index: i
-        });
     }
 
-    const leftColWidth = 280;
-    const rightColWidth = 320;
-    const menuW = Math.min(menuMaxW, canvas.width - 28);
-    const menuH = innerPadY * 2 + titleRowH + Math.max(itemLines.length * lineH, 15 * lineH) + footerH;
+    // Build projected stats lines (column 5) - only if item selected in column 2
+    const projectedLines = [];
+    if (equipmentMenuState.selectedColumn === 1 && equipmentMenuState.selectedItemIndex < itemLines.length) {
+        const selectedItem = itemLines[equipmentMenuState.selectedItemIndex];
+        if (selectedItem && !selectedItem.isNone) {
+            const projectedStats = calculateProjectedStats(selectedSlot.slot, selectedItem.item);
+            
+            projectedLines.push({text: "Projected Stats:", color: "violet"});
+            
+            // Compare damage
+            const damageColor = projectedStats.damage !== playerStats.damage ? "green" : "white";
+            projectedLines.push({text: `Damage: ${projectedStats.damage}`, color: damageColor});
+            
+            // Compare attack speed (only for weapons)
+            const currentWeapon = player.rightHand && player.rightHand.type === "weapon" ? player.rightHand : 
+                                (player.leftHand && player.leftHand.type === "weapon" ? player.leftHand : null);
+            const newWeapon = selectedItem.item;
+            if (newWeapon.type === "weapon") {
+                const currentSpeed = currentWeapon ? currentWeapon.attackSpeed : 0;
+                const newSpeed = newWeapon.attackSpeed;
+                const speedColor = newSpeed !== currentSpeed ? (newSpeed > currentSpeed ? "green" : "red") : "white";
+                projectedLines.push({text: `Attack Speed: ${newSpeed.toFixed(2)}x`, color: speedColor});
+                
+                // Compare accuracy
+                const currentAcc = currentWeapon ? currentWeapon.accuracy : 0;
+                const newAcc = newWeapon.accuracy;
+                const accColor = newAcc !== currentAcc ? (newAcc > currentAcc ? "green" : "red") : "white";
+                projectedLines.push({text: `Accuracy: x${newAcc.toFixed(2)}`, color: accColor});
+                
+                // Compare handedness
+                const handednessColor = newWeapon.handedness !== weaponHandedness ? "yellow" : "white";
+                projectedLines.push({text: `Handedness: ${newWeapon.handedness}`, color: handednessColor});
+            } else {
+                // For tools, show "N/A" for weapon stats
+                projectedLines.push({text: "Attack Speed: N/A", color: "gray"});
+                projectedLines.push({text: "Accuracy: N/A", color: "gray"});
+                projectedLines.push({text: "Handedness: N/A", color: "gray"});
+            }
+            
+            // Compare AC
+            const acColor = projectedStats.ac !== playerStats.ac ? (projectedStats.ac > playerStats.ac ? "green" : "red") : "white";
+            projectedLines.push({text: `Armor Class: ${projectedStats.ac}`, color: acColor});
+            
+            // Compare EC
+            const ecColor = projectedStats.ec !== playerStats.ec ? (projectedStats.ec > playerStats.ec ? "green" : "red") : "white";
+            projectedLines.push({text: `Evasion Class: ${projectedStats.ec}`, color: ecColor});
+            
+            projectedLines.push({text: "", color: "white"});
+            projectedLines.push({text: "Resistances:", color: "violet"});
+            
+            for (const resist of resistTypes) {
+                const value = projectedStats.resistances[resist.key];
+                const currentValue = playerStats.resistances[resist.key];
+                const resistColor = value > currentValue ? "green" : (value < currentValue ? "red" : (value > 0 ? "aqua" : "gray"));
+                projectedLines.push({text: `${resist.label}: ${value}%`, color: resistColor});
+            }
+        }
+    }
+
+    const col1Width = 200;
+    const col2Width = 220;
+    const col3Width = 220;
+    const col4Width = 220;
+    const col5Width = 180;
+    const menuW = Math.min(menuMaxW, canvas.width - 40);
+    
+    // Calculate dynamic height based on content
+    const maxContentLines = Math.max(
+        slotLines.length,
+        itemLines.length,
+        selectedItemLines.length > 0 ? selectedItemLines.length : 1,
+        statsLines.length,
+        projectedLines.length > 0 ? projectedLines.length : 1
+    );
+    const contentHeight = maxContentLines * lineH;
+    const menuH = innerPadY * 2 + titleRowH + lineH + 10 + contentHeight + footerH;
     const mx = (canvas.width - menuW) / 2;
     const my = Math.max(6, (canvas.height - menuH) / 2);
-
+    
     drawUIBox(mx, my, menuW, menuH);
 
-    let y = my + innerPadY + titleSize;
-    drawText(`Equip to ${currentEquipSlotName}`, titleSize, false, y, "violet", canvas.width / 2, "center");
-    y += titleRowH;
+    // Title
+    let titleY = my + innerPadY + titleSize;
+    const titleX = mx + innerPadX;
+    drawText("Equipment", titleSize, false, titleY, "violet", titleX);
 
-    // Draw separator line
-    const separatorX = mx + innerPadX + leftColWidth;
+    // Column separator positions
+    const sep1X = mx + innerPadX + col1Width;
+    const sep2X = sep1X + colGap + col2Width;
+    const sep3X = sep2X + colGap + col3Width;
+    const sep4X = sep3X + colGap + col4Width;
+
+    // Horizontal separator position below title
+    const titleSepY = titleY + 8;
+
+    // Column headers - positioned below title separator
+    const headerY = titleSepY + 18;
+    drawText("Slots", bodySize, true, headerY, equipmentMenuState.selectedColumn === 0 ? "yellow" : "gray", mx + innerPadX + col1Width/2, "center");
+    drawText("Items", bodySize, true, headerY, equipmentMenuState.selectedColumn === 1 ? "yellow" : "gray", sep1X + colGap + col2Width/2, "center");
+    drawText("Item Stats", bodySize, true, headerY, equipmentMenuState.selectedColumn === 1 && selectedItemLines.length > 0 ? "yellow" : "gray", sep2X + colGap + col3Width/2, "center");
+    drawText("Current Stats", bodySize, true, headerY, "gray", sep3X + colGap + col4Width/2, "center");
+    drawText("Comparison", bodySize, true, headerY, equipmentMenuState.selectedColumn === 1 && projectedLines.length > 0 ? "yellow" : "gray", sep4X + colGap + col5Width/2, "center");
+
+    // Draw separator lines
+    const contentStartY = headerY + 12;
+    const lineEndY = my + menuH - footerH;
+    const hLineLeftX = mx;
+    const hLineRightX = mx + menuW;
     ctx.strokeStyle = 'rgba(128, 128, 128, 0.5)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(separatorX, my + innerPadY);
-    ctx.lineTo(separatorX, my + menuH - innerPadY);
+    // Vertical lines
+    ctx.moveTo(sep1X, titleSepY);
+    ctx.lineTo(sep1X, lineEndY);
+    ctx.moveTo(sep2X, titleSepY);
+    ctx.lineTo(sep2X, lineEndY);
+    ctx.moveTo(sep3X, titleSepY);
+    ctx.lineTo(sep3X, lineEndY);
+    ctx.moveTo(sep4X, titleSepY);
+    ctx.lineTo(sep4X, lineEndY);
+    // Horizontal lines
+    ctx.moveTo(hLineLeftX, titleSepY);
+    ctx.lineTo(hLineRightX, titleSepY);
+    ctx.moveTo(hLineLeftX, contentStartY);
+    ctx.lineTo(hLineRightX, contentStartY);
+    ctx.moveTo(hLineLeftX, lineEndY);
+    ctx.lineTo(hLineRightX, lineEndY);
     ctx.stroke();
 
-    if (itemLines.length === 0) {
-        drawText("No equippable items", bodySize, false, y, "gray", canvas.width / 2, "center");
-    } else {
-        // Draw item list on left
-        const listX = mx + innerPadX;
-        for (let i = 0; i < itemLines.length; i++) {
-            const item = itemLines[i];
-            const color = item.index === selectedEquipItemIndex ? "yellow" : item.color;
-            const prefix = item.index === selectedEquipItemIndex ? "> " : "  ";
-            drawText(prefix + item.text, bodySize, false, y + i * lineH, color, listX);
+    // Content starts below the horizontal separator
+    const listStartY = contentStartY + 16;
+
+    // Draw slot list in column 1
+    const slotX = mx + innerPadX;
+    for (let i = 0; i < slotLines.length; i++) {
+        const slot = slotLines[i];
+        const isSelected = i === equipmentMenuState.selectedSlotIndex && equipmentMenuState.selectedColumn === 0;
+        const prefix = isSelected ? "> " : "  ";
+        const color = isSelected ? "yellow" : slot.color;
+        drawText(prefix + slot.text, bodySize, false, listStartY + i * lineH, color, slotX, "left");
+    }
+
+    // Draw item list in column 2
+    const itemX = sep1X + innerPadX;
+    for (let i = 0; i < itemLines.length; i++) {
+        const item = itemLines[i];
+        const isSelected = i === equipmentMenuState.selectedItemIndex && equipmentMenuState.selectedColumn === 1;
+        const prefix = isSelected ? "> " : "  ";
+        const color = isSelected ? "yellow" : item.color;
+        drawText(prefix + item.text, bodySize, false, listStartY + i * lineH, color, itemX, "left");
+    }
+
+    // Draw selected item stats in column 3
+    if (selectedItemLines.length > 0) {
+        const selectedItemX = sep2X + innerPadX;
+        for (let i = 0; i < selectedItemLines.length; i++) {
+            const itemStat = selectedItemLines[i];
+            drawText(itemStat.text, bodySize, false, listStartY + i * lineH, itemStat.color, selectedItemX, "left");
         }
+    }
 
-        // Draw comparison on right
-        const compX = separatorX + colGap;
-        let compY = my + innerPadY + titleSize + titleRowH;
+    // Draw current stats in column 4
+    const statsX = sep3X + innerPadX;
+    for (let i = 0; i < statsLines.length; i++) {
+        const stat = statsLines[i];
+        drawText(stat.text, bodySize, false, listStartY + i * lineH, stat.color, statsX, "left");
+    }
 
-        // Show currently equipped item
-        if (equippedItem) {
-            drawText("Currently Equipped:", bodySize, true, compY, "violet", compX);
-            compY += lineH;
-            
-            const equippedDesc = getItemDescription(equippedItem);
-            for (const line of equippedDesc) {
-                drawText(line.text, bodySize, false, compY, line.color, compX);
-                compY += lineH;
-            }
-            compY += 10;
-        } else {
-            drawText("Currently Equipped: None", bodySize, true, compY, "gray", compX);
-            compY += lineH + 10;
-        }
-
-        // Show selected item for comparison
-        const hasUnequipOption = equippedItem ? 1 : 0;
-        const selectedItemIndex = selectedEquipItemIndex - hasUnequipOption;
-        
-        if (selectedItemIndex >= 0 && selectedItemIndex < equippableItems.length) {
-            const selectedItem = equippableItems[selectedItemIndex];
-            drawText("Selected Item:", bodySize, true, compY, "violet", compX);
-            compY += lineH;
-            
-            const selectedDesc = getItemDescription(selectedItem.item);
-            for (const line of selectedDesc) {
-                drawText(line.text, bodySize, false, compY, line.color, compX);
-                compY += lineH;
-            }
-            
-            // Show stat differences if both items exist
-            if (equippedItem && selectedItem.item.type === equippedItem.type) {
-                compY += 10;
-                drawText("Stat Changes:", bodySize, true, compY, "violet", compX);
-                compY += lineH;
-                
-                if (selectedItem.item.type === "armor") {
-                    const acDiff = (selectedItem.item.ac || 0) - (equippedItem.ac || 0);
-                    const ecDiff = (selectedItem.item.ec || 0) - (equippedItem.ec || 0);
-                    
-                    if (acDiff !== 0) {
-                        const acColor = acDiff > 0 ? "green" : "red";
-                        const acSign = acDiff > 0 ? "+" : "";
-                        drawText(`AC: ${acSign}${acDiff}`, bodySize, false, compY, acColor, compX);
-                        compY += lineH;
-                    }
-                    if (ecDiff !== 0) {
-                        const ecColor = ecDiff > 0 ? "green" : "red";
-                        const ecSign = ecDiff > 0 ? "+" : "";
-                        drawText(`EC: ${ecSign}${ecDiff}`, bodySize, false, compY, ecColor, compX);
-                        compY += lineH;
-                    }
-                    
-                    // Compare resistances
-                    if (selectedItem.item.resistances && equippedItem.resistances) {
-                        const resistTypes = ["slash", "blunt", "pierce", "fire", "cold", "electrical", "poison", "arcane", "death"];
-                        for (const type of resistTypes) {
-                            const newResist = selectedItem.item.resistances[type] || 0;
-                            const oldResist = equippedItem.resistances[type] || 0;
-                            const diff = newResist - oldResist;
-                            if (diff !== 0) {
-                                const resistColor = diff > 0 ? "green" : "red";
-                                const resistSign = diff > 0 ? "+" : "";
-                                drawText(`${type}: ${resistSign}${diff}%`, bodySize, false, compY, resistColor, compX);
-                                compY += lineH;
-                            }
-                        }
-                    }
-                } else if (selectedItem.item.type === "weapon") {
-                    // Compare weapon damage
-                    if (selectedItem.item.damageTypes && equippedItem.damageTypes) {
-                        const newDmg = selectedItem.item.damageTypes.map(d => `${d.rolls}d${d.sides}`).join(", ");
-                        const oldDmg = equippedItem.damageTypes.map(d => `${d.rolls}d${d.sides}`).join(", ");
-                        drawText(`Damage: ${oldDmg} → ${newDmg}`, bodySize, false, compY, "aqua", compX);
-                        compY += lineH;
-                    }
-                    
-                    const accDiff = (selectedItem.item.accuracy || 0) - (equippedItem.accuracy || 0);
-                    if (accDiff !== 0) {
-                        const accColor = accDiff > 0 ? "green" : "red";
-                        const accSign = accDiff > 0 ? "+" : "";
-                        drawText(`Accuracy: ${accSign}${accDiff.toFixed(2)}`, bodySize, false, compY, accColor, compX);
-                        compY += lineH;
-                    }
-                    
-                    const speedDiff = (selectedItem.item.attackSpeed || 0) - (equippedItem.attackSpeed || 0);
-                    if (speedDiff !== 0) {
-                        const speedColor = speedDiff > 0 ? "green" : "red";
-                        const speedSign = speedDiff > 0 ? "+" : "";
-                        drawText(`Attack Speed: ${speedSign}${speedDiff.toFixed(2)}`, bodySize, false, compY, speedColor, compX);
-                        compY += lineH;
-                    }
-                }
-            }
+    // Draw projected stats in column 5
+    if (projectedLines.length > 0) {
+        const projectedX = sep4X + innerPadX;
+        for (let i = 0; i < projectedLines.length; i++) {
+            const proj = projectedLines[i];
+            drawText(proj.text, bodySize, false, listStartY + i * lineH, proj.color, projectedX, "left");
         }
     }
 
     // Draw footer
     const footY = my + menuH - innerPadY - 4;
-    drawText("Arrow keys: Navigate  ·  Enter: Equip  ·  Escape: Back", 13, false, footY, "gray", canvas.width / 2, "center");
+    drawText("Arrow keys: Navigate  ·  Enter: Equip/Unequip  ·  Escape: Close", 13, false, footY, "gray", canvas.width / 2, "center");
 }
 
 function openDebugMenu() {
@@ -1815,7 +1885,7 @@ function executeDebugOption(index) {
                 const item = shuffle(itemTypes)[0];
                 item.quantity = 1;
                 tryAddItemToTile(itemTile, item);
-                addMessageLog("Spawned " + item.fullName());
+                addMessageLog("Spawned " + (item.menuName ? item.menuName() : item.name));
             }
             break;
         case 9: // Reveal All Tiles
@@ -2047,9 +2117,6 @@ function handleGameMenuKeydown(e) {
         } else if (gameState === "equipmentMenu") {
             gameState = "running";
             e.preventDefault();
-        } else if (gameState === "equipSlotMenu") {
-            gameState = "equipmentMenu";
-            e.preventDefault();
         } else if (gameState === "debugMenu") {
             gameState = "running";
             e.preventDefault();
@@ -2165,7 +2232,7 @@ function handleGameMenuKeydown(e) {
                 player.inventory.push(item);
                 player[selectedItemData.slot] = undefined;
                 player.rearm();
-                addMessageLog(`Unequipped and dropped ${item.fullName ? item.fullName() : item.name}`);
+                addMessageLog(`Unequipped and dropped ${item.menuName ? item.menuName() : item.name}`);
                 // Now drop the item from inventory
                 const newIndex = player.inventory.indexOf(item);
                 if (newIndex !== -1) {
@@ -2182,7 +2249,7 @@ function handleGameMenuKeydown(e) {
                 player.inventory.push(item);
                 player[selectedItemData.slot] = undefined;
                 player.rearm();
-                addMessageLog(`Unequipped ${item.fullName ? item.fullName() : item.name}`);
+                addMessageLog(`Unequipped ${item.menuName ? item.menuName() : item.name}`);
                 if (selectedInventoryItemIndex >= sortedItems.length) {
                     selectedInventoryItemIndex = Math.max(0, sortedItems.length - 1);
                 }
@@ -2230,7 +2297,7 @@ function handleGameMenuKeydown(e) {
                 player.inventory.push(item);
                 player[selectedItemData.slot] = undefined;
                 player.rearm();
-                addMessageLog(`Unequipped ${item.fullName ? item.fullName() : item.name}`);
+                addMessageLog(`Unequipped ${item.menuName ? item.menuName() : item.name}`);
                 // Now throw the item from inventory
                 const newIndex = player.inventory.indexOf(item);
                 if (newIndex !== -1) {
@@ -2283,104 +2350,132 @@ function handleGameMenuKeydown(e) {
             { name: "Belt", slot: "belt" }
         ];
 
-        if (e.key === "ArrowUp") {
-            e.preventDefault();
-            selectedEquipmentSlotIndex = Math.max(0, selectedEquipmentSlotIndex - 1);
-        } else if (e.key === "ArrowDown") {
-            e.preventDefault();
-            selectedEquipmentSlotIndex = Math.min(equipmentSlots.length - 1, selectedEquipmentSlotIndex + 1);
-        } else if (e.key === "Enter") {
-            e.preventDefault();
-            const selectedSlot = equipmentSlots[selectedEquipmentSlotIndex];
-            openEquipSlotMenu(selectedSlot.slot, selectedSlot.name);
-        }
-        return;
-    }
+        const selectedSlot = equipmentSlots[equipmentMenuState.selectedSlotIndex];
 
-    if (gameState === "equipSlotMenu") {
-        // Filter inventory items that can be equipped in the selected slot
+        // Build item lines for selected slot
+        const itemLines = [];
+        const equippedItem = selectedSlot ? player[selectedSlot.slot] : null;
+        if (equippedItem) {
+            itemLines.push({ isNone: true, index: 0 });
+        }
+
         const equippableItems = [];
         for (let i = 0; i < player.inventory.length; i++) {
             const item = player.inventory[i];
             let canEquip = false;
             const itemSlot = item.slot || "";
 
-            if (currentEquipSlotKey === "rightHand" || currentEquipSlotKey === "leftHand") {
-                canEquip = item.type === "weapon";
-            } else if (currentEquipSlotKey === "headwear") {
+            if (selectedSlot.slot === "rightHand" || selectedSlot.slot === "leftHand") {
+                canEquip = item.type === "weapon" || item.type === "tool";
+            } else if (selectedSlot.slot === "headwear") {
                 canEquip = item.type === "armor" && itemSlot === "headwear";
-            } else if (currentEquipSlotKey === "bodyarmor") {
+            } else if (selectedSlot.slot === "bodyarmor") {
                 canEquip = item.type === "armor" && (itemSlot === "bodyarmor" || itemSlot === "chest");
-            } else if (currentEquipSlotKey === "rightFinger" || currentEquipSlotKey === "leftFinger") {
+            } else if (selectedSlot.slot === "rightFinger" || selectedSlot.slot === "leftFinger") {
                 canEquip = item.type === "armor" && (itemSlot === "rightFinger" || itemSlot === "leftFinger" || itemSlot === "ring");
-            } else if (currentEquipSlotKey === "gloves") {
+            } else if (selectedSlot.slot === "gloves") {
                 canEquip = item.type === "armor" && itemSlot === "gloves";
-            } else if (currentEquipSlotKey === "legwear") {
+            } else if (selectedSlot.slot === "legwear") {
                 canEquip = item.type === "armor" && itemSlot === "legwear";
-            } else if (currentEquipSlotKey === "boots") {
+            } else if (selectedSlot.slot === "boots") {
                 canEquip = item.type === "armor" && itemSlot === "boots";
-            } else if (currentEquipSlotKey === "necklace") {
+            } else if (selectedSlot.slot === "necklace") {
                 canEquip = item.type === "armor" && itemSlot === "necklace";
-            } else if (currentEquipSlotKey === "belt") {
+            } else if (selectedSlot.slot === "belt") {
                 canEquip = item.type === "armor" && itemSlot === "belt";
             }
 
             if (canEquip) {
-                equippableItems.push({
-                    item: item,
-                    originalIndex: i
-                });
+                equippableItems.push({ item: item, originalIndex: i });
             }
         }
 
-        const equippedItem = player[currentEquipSlotKey];
-        const hasUnequipOption = equippedItem ? 1 : 0;
-        const totalOptions = equippableItems.length + hasUnequipOption;
+        for (let i = 0; i < equippableItems.length; i++) {
+            const displayIndex = equippedItem ? i + 1 : i;
+            itemLines.push({ isNone: false, index: displayIndex, item: equippableItems[i].item, originalIndex: equippableItems[i].originalIndex });
+        }
 
-        if (e.key === "ArrowUp") {
+        if (e.key === "ArrowLeft") {
             e.preventDefault();
-            selectedEquipItemIndex = Math.max(0, selectedEquipItemIndex - 1);
+            if (equipmentMenuState.selectedColumn > 0) {
+                equipmentMenuState.selectedColumn--;
+            }
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            if (equipmentMenuState.selectedColumn < 1) {
+                equipmentMenuState.selectedColumn++;
+            }
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (equipmentMenuState.selectedColumn === 0) {
+                equipmentMenuState.selectedSlotIndex = Math.max(0, equipmentMenuState.selectedSlotIndex - 1);
+                equipmentMenuState.selectedItemIndex = 0;
+            } else if (equipmentMenuState.selectedColumn === 1) {
+                equipmentMenuState.selectedItemIndex = Math.max(0, equipmentMenuState.selectedItemIndex - 1);
+            }
         } else if (e.key === "ArrowDown") {
             e.preventDefault();
-            selectedEquipItemIndex = Math.min(totalOptions - 1, selectedEquipItemIndex + 1);
-        } else if (e.key === "Enter" && totalOptions > 0) {
+            if (equipmentMenuState.selectedColumn === 0) {
+                equipmentMenuState.selectedSlotIndex = Math.min(equipmentSlots.length - 1, equipmentMenuState.selectedSlotIndex + 1);
+                equipmentMenuState.selectedItemIndex = 0;
+            } else if (equipmentMenuState.selectedColumn === 1) {
+                equipmentMenuState.selectedItemIndex = Math.min(itemLines.length - 1, equipmentMenuState.selectedItemIndex + 1);
+            }
+        } else if (e.key === "Enter" && equipmentMenuState.selectedColumn === 1) {
             e.preventDefault();
-            
-            // Check if unequip option is selected
-            if (hasUnequipOption && selectedEquipItemIndex === 0) {
-                // Unequip current item
-                if (equippedItem) {
-                    player.inventory.push(equippedItem);
-                    player[currentEquipSlotKey] = undefined;
-                    player.rearm();
-                    addMessageLog(`Unequipped from ${currentEquipSlotName}`);
-                }
-            } else {
-                // Equip selected item
-                const itemIndex = selectedEquipItemIndex - hasUnequipOption;
-                if (itemIndex >= 0 && itemIndex < equippableItems.length) {
-                    const selectedItem = equippableItems[itemIndex];
+            if (equipmentMenuState.selectedItemIndex < itemLines.length) {
+                const selectedItem = itemLines[equipmentMenuState.selectedItemIndex];
+                if (selectedItem.isNone) {
+                    // Unequip current item
+                    if (equippedItem) {
+                        player.inventory.push(equippedItem);
+                        player[selectedSlot.slot] = undefined;
+                        player.rearm();
+                        addMessageLog(`Unequipped from ${selectedSlot.name}`);
+                    }
+                } else {
+                    // Equip selected item
+                    const itemToEquip = selectedItem.item;
                     
                     // Remove item from inventory
                     player.inventory.splice(selectedItem.originalIndex, 1);
                     
                     // If slot has an item, unequip it first
-                    if (player[currentEquipSlotKey]) {
-                        player.inventory.push(player[currentEquipSlotKey]);
+                    if (player[selectedSlot.slot]) {
+                        player.inventory.push(player[selectedSlot.slot]);
                     }
                     
                     // Equip new item
-                    player[currentEquipSlotKey] = selectedItem.item;
+                    player[selectedSlot.slot] = itemToEquip;
+                    
+                    // Handle two-handed weapons - unequip other hand
+                    if (itemToEquip.handedness === "two-handed") {
+                        if (selectedSlot.slot === "rightHand" && player.leftHand) {
+                            player.inventory.push(player.leftHand);
+                            player.leftHand = undefined;
+                        } else if (selectedSlot.slot === "leftHand" && player.rightHand) {
+                            player.inventory.push(player.rightHand);
+                            player.rightHand = undefined;
+                        }
+                    } else if (selectedSlot.slot === "rightHand" && player.leftHand && player.leftHand.handedness === "two-handed") {
+                        // If equipping one-handed in right hand and left hand has two-handed, unequip it
+                        player.inventory.push(player.leftHand);
+                        player.leftHand = undefined;
+                    } else if (selectedSlot.slot === "leftHand" && player.rightHand && player.rightHand.handedness === "two-handed") {
+                        // If equipping one-handed in left hand and right hand has two-handed, unequip it
+                        player.inventory.push(player.rightHand);
+                        player.rightHand = undefined;
+                    }
+                    
                     player.rearm();
-                    addMessageLog(`Equipped ${selectedItem.item.fullName ? selectedItem.item.fullName() : selectedItem.item.name} to ${currentEquipSlotName}`);
+                    addMessageLog(`Equipped ${itemToEquip.menuName ? itemToEquip.menuName() : itemToEquip.name} to ${selectedSlot.name}`);
                 }
+                equipmentMenuState.selectedItemIndex = 0;
             }
-            
-            gameState = "equipmentMenu";
         }
         return;
     }
-    
+
     if (gameState === "stats") {
         // Build stats items list to count non-header items
         const statsItems = [];
@@ -2800,7 +2895,7 @@ function calculateLighting() {
 }
 
 function draw() {
-    if (!(gameState == "running" || gameState == "dead" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "gameMenu" || gameState == "throwTarget" || gameState == "jumpTarget" || gameState == "inventoryMenu" || gameState == "abilitiesMenu" || gameState == "equipmentMenu" || gameState == "equipSlotMenu" || gameState == "debugMenu" || gameState == "levelUpMenu" || gameState == "characterCreation")) {
+    if (!(gameState == "running" || gameState == "dead" || gameState == "stats" || gameState == "useSelect" || gameState == "viewmode" || gameState == "gameMenu" || gameState == "throwTarget" || gameState == "jumpTarget" || gameState == "inventoryMenu" || gameState == "abilitiesMenu" || gameState == "equipmentMenu" || gameState == "debugMenu" || gameState == "levelUpMenu" || gameState == "characterCreation")) {
         return;
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -3078,7 +3173,7 @@ function draw() {
         let right_hand_weapon;
         let right_hand_color = "white";
         if (player.rightHand != undefined) {
-            right_hand_weapon = player.rightHand.fullName();
+            right_hand_weapon = player.rightHand.menuName ? player.rightHand.menuName() : player.rightHand.name;
 
             if (player.rightHand.quality != undefined) {
                 switch(player.rightHand.quality) {
@@ -3097,7 +3192,7 @@ function draw() {
         let left_hand_weapon;
         let left_hand_color = "white";
         if (player.leftHand != undefined && player.leftHand !== player.rightHand) {
-            left_hand_weapon = player.leftHand.fullName();
+            left_hand_weapon = player.leftHand.menuName ? player.leftHand.menuName() : player.leftHand.name;
 
             if (player.leftHand.quality != undefined) {
                 switch(player.leftHand.quality) {
@@ -3206,8 +3301,6 @@ function draw() {
         drawAbilitiesMenu();
     } else if (gameState == "equipmentMenu") {
         drawEquipmentMenu();
-    } else if (gameState == "equipSlotMenu") {
-        drawEquipSlotMenu();
     } else if (gameState == "debugMenu") {
         drawDebugMenu();
     } else if (gameState == "levelUpMenu") {

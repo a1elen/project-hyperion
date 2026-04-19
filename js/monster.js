@@ -88,6 +88,15 @@ class Monster {
         this.agility = agility;
         this.arcane = arcane;
         this.will = will;
+        // Store base stats for equipment stat boosts
+        this.baseStats = {
+            strength: strength,
+            constitution: constitution,
+            perception: perception,
+            agility: agility,
+            arcane: arcane,
+            will: will
+        };
     }
 
     initSkills(fighting, endurance, dodge, swordSkill, axeSkill, hammerSkill, staffSkill, magic) {
@@ -633,8 +642,18 @@ class Monster {
             death: 0
         };
 
+        // Reset stats to base values before applying equipment boosts
+        if (this.baseStats) {
+            this.strength = this.baseStats.strength;
+            this.constitution = this.baseStats.constitution;
+            this.perception = this.baseStats.perception;
+            this.agility = this.baseStats.agility;
+            this.arcane = this.baseStats.arcane;
+            this.will = this.baseStats.will;
+        }
+
         // Apply stats from all equipped armor pieces
-        const armorSlots = ['headwear', 'bodyarmor', 'gloves', 'legwear', 'boots', 'belt'];
+        const armorSlots = ['headwear', 'bodyarmor', 'gloves', 'legwear', 'boots', 'belt', 'rightFinger', 'leftFinger'];
         for (const slot of armorSlots) {
             const armor = this[slot];
             if (armor != undefined) {
@@ -649,6 +668,11 @@ class Monster {
                     for (const type in armor.resistances) {
                         this.resistances[type] += armor.resistances[type];
                     }
+                }
+
+                // Apply stat boosts
+                if (armor.statBoost) {
+                    this[armor.statBoost.stat] += armor.statBoost.value;
                 }
             }
         }
@@ -685,7 +709,7 @@ class Monster {
             }
             
             if (this.isPlayer) {
-                addMessageLog(`Equipped ${itemToEquip.fullName()} in both hands.`);
+                addMessageLog(`Equipped ${itemToEquip.menuName ? itemToEquip.menuName() : itemToEquip.name} in both hands.`);
             }
         } else {
             // One-handed item - equip in specified hand
@@ -705,7 +729,7 @@ class Monster {
             }
             
             if (this.isPlayer) {
-                addMessageLog(`Equipped ${itemToEquip.fullName()} in ${hand} hand.`);
+                addMessageLog(`Equipped ${itemToEquip.menuName ? itemToEquip.menuName() : itemToEquip.name} in ${hand} hand.`);
             }
         }
         
@@ -822,7 +846,7 @@ class Monster {
                             this.inventory.splice(i, 1);
                         }
                         if (this.isPlayer) {
-                            addMessageLog(`Equipped ${this.belt.fullName()} to belt.`);
+                            addMessageLog(`Equipped ${this.belt.menuName ? this.belt.menuName() : this.belt.name} to belt.`);
                         }
                         break;
                     }
@@ -1155,9 +1179,9 @@ class Player extends Monster {
         if (targetTile.monster && targetTile.monster !== this) {
             targetTile.monster.hit(damage, this);
             addPopups("("+damage+")", "white", targetTile.monster);
-            addMessageLog(`You threw ${itemToThrow.fullName ? itemToThrow.fullName() : itemToThrow.name} at ${targetTile.monster.constructor.name}: 1d${damage} = ${Math.round(damage)} damage`);
+            addMessageLog(`You threw ${itemToThrow.menuName ? itemToThrow.menuName() : itemToThrow.name} at ${targetTile.monster.constructor.name}: 1d${damage} = ${Math.round(damage)} damage`);
         } else {
-            addMessageLog("You threw " + (itemToThrow.fullName ? itemToThrow.fullName() : itemToThrow.name));
+            addMessageLog("You threw " + (itemToThrow.menuName ? itemToThrow.menuName() : itemToThrow.name));
         }
 
         // Skip a turn

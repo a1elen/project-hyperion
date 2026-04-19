@@ -132,9 +132,15 @@ const SPRITES = {
     BREASTPLATE_GOLD: 903,
     BREASTPLATE_STEEL: 905,
 
+    // Items - Headlamp
+    HEADLAMP: 906,
+    HEADLAMP_LIT: 920,
+
     // Items - Rings
     RING_GOLD: 907,
     RING_SILVER: 908,
+    SAPPHIRE_RING: 916,
+    RUBY_RING: 917,
 
     // Items - Leather Gear
     LEATHER_CAP: 909,
@@ -142,6 +148,14 @@ const SPRITES = {
     LEATHER_TROUSERS: 911,
     LEATHER_GLOVES: 912,
     LEATHER_TUNIC: 913,
+
+    // Items - Belts
+    SILVER_BELT: 914,
+    GOLD_BELT: 915,
+
+    // Items - Steel Armor
+    STEEL_HELMET: 918,
+    STEEL_CAP: 919,
 
     // Items - Tools
     TOOL_BEARTRAP: 853,
