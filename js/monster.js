@@ -211,7 +211,7 @@ class Monster {
         
         // Debug logging
         if (this.aware || this.angry) {
-            console.log(`Monster ${this.constructor.name}: aware=${this.aware}, angry=${this.angry}, dist=${this.tile.dist(player.tile)}`);
+            //console.log(`Monster ${this.constructor.name}: aware=${this.aware}, angry=${this.angry}, dist=${this.tile.dist(player.tile)}`);
         }
         
         // Avoid traps if creature has trapSense
@@ -1387,5 +1387,22 @@ class GoblinSwordsman extends Monster {
         this.trapSense = true;
         this.weaponDamage[0] = 1;
         this.weaponDamage[1] = 3;
+    }
+}
+
+class GoblinChieftain extends Monster {
+    constructor (tile) {
+        super(tile, SPRITES.GOBLIN_CHIEFTAIN, 5);
+        this.isHumanoid = true;
+        this.initMainStats(12, 10, 4, 3, 2, 2);
+        this.updateStats();
+        this.initSkills(10, 8, 6, 0, 0, 0, 0, 0);
+        this.hp = this.maxHealth;
+        this.xpPoints = 10;
+        this.moveSpeed = 100;
+        this.trapSense = true;
+        this.weaponDamage[0] = 3;
+        this.weaponDamage[1] = 5;
+        this.isBoss = true;
     }
 }

@@ -558,7 +558,151 @@ BIOMES.maze.levelgen = function() {
             }
         }
 
-        
+
+
 
         return passableTiles;
 }
+
+BIOMES.goblinHideout = Object.create(biome);
+BIOMES.goblinHideout.name = "Goblin Hideout";
+BIOMES.goblinHideout.monsterPool = [GoblinSpear, GoblinRanger, GoblinSwordsman];
+BIOMES.goblinHideout.objPool = [objects.usable.barrel, objects.usable.campfire, objects.usable.campfireLit, objects.decorative.standingTorch, objects.decorative.standingTorchLit];
+BIOMES.goblinHideout.trapsPool = [traps.beartrap, traps.tripwire];
+BIOMES.goblinHideout.levelgen = function() {
+    let passableTiles = 0;
+
+    // clean level
+    tiles = [];
+    for (let i = 0; i < levelWidth; i++) {
+        tiles[i] = [];
+    }
+
+    // Fill with walls first
+    for (let i = 0; i < levelWidth; i++) {
+        for (let j = 0; j < levelHeight; j++) {
+            tiles[i][j] = new Wall(i, j, SPRITES.WALL_GOBLIN_HIDEOUT_1);
+        }
+    }
+
+    // Check if this is the last level of goblin hideout (boss level)
+    let isBossLevel = (levelPool[level-1] === BIOMES.goblinHideout) &&
+                      (level === levelPool.length || levelPool[level] !== BIOMES.goblinHideout);
+
+    if (isBossLevel) {
+        // Generate Throne Room (boss level)
+        let centerX = Math.floor(levelWidth / 2);
+        let centerY = Math.floor(levelHeight / 2);
+        let roomWidth = 5;
+        let roomHeight = 5;
+
+        // Create throne room
+        for (let x = centerX - Math.floor(roomWidth/2); x < centerX + Math.floor(roomWidth/2); x++) {
+            for (let y = centerY - Math.floor(roomHeight/2); y < centerY + Math.floor(roomHeight/2); y++) {
+                if (inBounds(x, y)) {
+                    tiles[x][y] = new Floor(x, y, SPRITES.FLOOR_GOBLIN_HIDEOUT_1);
+                    passableTiles++;
+                }
+            }
+        }
+    } else {
+        // Generate regular goblin hideout level
+        let centerX = Math.floor(levelWidth / 2);
+        let centerY = Math.floor(levelHeight / 2);
+
+        // Create central open area
+        let openAreaRadius = randomRange(3, 5);
+        for (let x = centerX - openAreaRadius; x < centerX + openAreaRadius; x++) {
+            for (let y = centerY - openAreaRadius; y < centerY + openAreaRadius; y++) {
+                if (inBounds(x, y)) {
+                    tiles[x][y] = new Floor(x, y, SPRITES.FLOOR_GOBLIN_HIDEOUT_1);
+                    passableTiles++;
+                }
+            }
+        }
+
+        // Generate goblin rooms (4-8 rooms, 1x2 with doors)
+        let numRooms = randomRange(4, 8);
+        let rooms = [];
+
+        for (let r = 0; r < numRooms; r++) {
+            // Find a valid position for the room
+            let roomX, roomY;
+            let attempts = 0;
+            do {
+                roomX = randomRange(2, levelWidth - 4);
+                roomY = randomRange(2, levelHeight - 4);
+                attempts++;
+            } while (attempts < 50 && tiles[roomX][roomY].passable);
+
+            if (attempts >= 50) continue;
+
+            // Create 1x2 room (horizontal or vertical)
+            let horizontal = randomRange(0, 1) === 0;
+            if (horizontal) {
+                // Horizontal room
+                if (inBounds(roomX, roomY) && inBounds(roomX + 1, roomY)) {
+                    tiles[roomX][roomY] = new Floor(roomX, roomY, SPRITES.FLOOR_GOBLIN_HIDEOUT_2);
+                    tiles[roomX + 1][roomY] = new Floor(roomX + 1, roomY, SPRITES.FLOOR_GOBLIN_HIDEOUT_2);
+                    passableTiles += 2;
+                    rooms.push({x: roomX, y: roomY, horizontal: true});
+                }
+            } else {
+                // Vertical room
+                if (inBounds(roomX, roomY) && inBounds(roomX, roomY + 1)) {
+                    tiles[roomX][roomY] = new Floor(roomX, roomY, SPRITES.FLOOR_GOBLIN_HIDEOUT_2);
+                    tiles[roomX][roomY + 1] = new Floor(roomX, roomY + 1, SPRITES.FLOOR_GOBLIN_HIDEOUT_2);
+                    passableTiles += 2;
+                    rooms.push({x: roomX, y: roomY, horizontal: false});
+                }
+            }
+        }
+
+        // Connect rooms to central area with tunnels
+        for (let room of rooms) {
+            let roomCenterX = room.horizontal ? room.x + 0.5 : room.x;
+            let roomCenterY = room.horizontal ? room.y : room.y + 0.5;
+
+            // Carve tunnel from room to center
+            let startX = Math.floor(roomCenterX);
+            let startY = Math.floor(roomCenterY);
+            let endX = centerX;
+            let endY = centerY;
+
+            // Simple L-shaped tunnel
+            let x = startX;
+            let y = startY;
+
+            // First horizontal, then vertical
+            while (x !== endX) {
+                if (x < endX) x++;
+                else x--;
+                if (inBounds(x, y) && !tiles[x][y].passable) {
+                    tiles[x][y] = new Floor(x, y, SPRITES.FLOOR_GOBLIN_HIDEOUT_3);
+                    passableTiles++;
+                }
+            }
+
+            while (y !== endY) {
+                if (y < endY) y++;
+                else y--;
+                if (inBounds(x, y) && !tiles[x][y].passable) {
+                    tiles[x][y] = new Floor(x, y, SPRITES.FLOOR_GOBLIN_HIDEOUT_3);
+                    passableTiles++;
+                }
+            }
+
+            // Place door at room entrance
+            let doorX = room.horizontal ? (room.x > centerX ? room.x - 1 : room.x + 2) : room.x;
+            let doorY = room.horizontal ? room.y : (room.y > centerY ? room.y - 1 : room.y + 2);
+            if (inBounds(doorX, doorY)) {
+                let door = Object.create(objects.door);
+                tiles[doorX][doorY].objects.push(door);
+                door.setClosed(tiles[doorX][doorY]);
+            }
+        }
+    }
+
+    return passableTiles;
+}
+

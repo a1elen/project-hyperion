@@ -49,21 +49,22 @@ class Tile {
         let next;
         if (sprite !== undefined && sprite !== null) {
             next = new newTileType(this.x, this.y, sprite);
-        } else if (newTileType === StairsDown || newTileType === StairsUp) {
+        } else if (newTileType === StairsDown || newTileType === StairsUp || newTileType === StairsDownGoblinHideout || newTileType === StairsUpGoblinHideout) {
             next = new newTileType(this.x, this.y);
         } else if (newTileType === Hole) {
             next = new Hole(this.x, this.y);
         } else {
             next = new newTileType(this.x, this.y, SPRITES.FLOOR_UNDERGROUND);
         }
-        
-        // Preserve monster, items, and objects references from old tile
         next.monster = this.monster;
-        next.items = this.items;
         next.objects = this.objects;
-        
+        next.items = this.items;
+        next.liquid = this.liquid;
+        next.liquidVolume = this.liquidVolume;
+        next.stain = this.stain;
+        next.stainVolume = this.stainVolume;
         tiles[this.x][this.y] = next;
-        return tiles[this.x][this.y];
+        return next;
     }
 
     dist(other) {
@@ -281,7 +282,7 @@ class Wall extends Tile {
 
 class StairsDown extends Tile {
     constructor(x, y) {
-        super(x, y, 250, true);
+        super(x, y, 256, true);
         this.floorSolid = true;
         this.blocksOpenVolume = false;
     }
@@ -304,6 +305,48 @@ class StairsDown extends Tile {
             } else {
                 this.replace(StairsDown);
                 saveLevel();
+
+                // Check if this is a branching point
+                if (this.branch && !currentBranch) {
+                    currentBranch = this.branch;
+
+                    // Dynamically add the chosen branch to levelPool
+                    if (currentBranch === "caves") {
+                        // Add caves/tunnel branch
+                        if (randomRange(1, 2) == 1) {
+                            for (let i = 0; i < randomRange(3, 6); i++) {
+                                levelPool.push(BIOMES.caves);
+                            }
+                        } else {
+                            for (let i = 0; i < randomRange(3, 6); i++) {
+                                levelPool.push(BIOMES.tunnel);
+                            }
+                        }
+                    } else if (currentBranch === "goblin") {
+                        // Add goblin hideout branch
+                        for (let i = 0; i < randomRange(3, 5); i++) {
+                            levelPool.push(BIOMES.goblinHideout);
+                        }
+                    }
+
+                    // Add dungeon/maze after the branch
+                    if (randomRange(1, 2) == 1) {
+                        for (let i = 0; i < randomRange(3, 6); i++) {
+                            levelPool.push(BIOMES.dungeon);
+                        }
+                    } else {
+                        for (let i = 0; i < randomRange(3, 6); i++) {
+                            levelPool.push(BIOMES.maze);
+                        }
+                    }
+                }
+
+                // Ensure levelPool has an entry for the next level
+                if (level >= levelPool.length) {
+                    // Fallback: add current biome again if levelPool is too short
+                    levelPool.push(levelPool[levelPool.length - 1]);
+                }
+
                 level++;
                 startLevel(Math.min(maxHp, player.hp + 1), player.spells, undefined, -1);
                 addPopups("Tap tap tap...", "grey", player);
@@ -318,9 +361,151 @@ class StairsDown extends Tile {
     }
 }
 
+class StairsDownGoblinHideout extends Tile {
+    constructor(x, y) {
+        super(x, y, 258, true);
+        this.floorSolid = true;
+        this.blocksOpenVolume = false;
+    }
+
+    stepOn(monster) {
+    }
+
+    use() {
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1); return;
+        }
+    }
+
+    getInteractions(player, tile) {
+        return [
+            {
+                label: "Descend stairs",
+                run: () => {
+                    this.moveDown(player);
+                },
+            },
+        ];
+    }
+
+    moveDown(monster) {
+        if (monster.isPlayer) {
+            playSound("newLevel");
+            if (level == numLevels) {
+                addScore(score, true);
+                showTitle();
+            } else {
+                this.replace(StairsDownGoblinHideout);
+                saveLevel();
+
+                // Check if this is a branching point
+                if (this.branch && !currentBranch) {
+                    currentBranch = this.branch;
+
+                    // Dynamically add the chosen branch to levelPool
+                    if (currentBranch === "caves") {
+                        // Add caves/tunnel branch
+                        if (randomRange(1, 2) == 1) {
+                            for (let i = 0; i < randomRange(3, 6); i++) {
+                                levelPool.push(BIOMES.caves);
+                            }
+                        } else {
+                            for (let i = 0; i < randomRange(3, 6); i++) {
+                                levelPool.push(BIOMES.tunnel);
+                            }
+                        }
+                    } else if (currentBranch === "goblin") {
+                        // Add goblin hideout branch
+                        for (let i = 0; i < randomRange(3, 5); i++) {
+                            levelPool.push(BIOMES.goblinHideout);
+                        }
+                    }
+
+                    // Add dungeon/maze after the branch
+                    if (randomRange(1, 2) == 1) {
+                        for (let i = 0; i < randomRange(3, 6); i++) {
+                            levelPool.push(BIOMES.dungeon);
+                        }
+                    } else {
+                        for (let i = 0; i < randomRange(3, 6); i++) {
+                            levelPool.push(BIOMES.maze);
+                        }
+                    }
+                }
+
+                // Ensure levelPool has an entry for the next level
+                if (level >= levelPool.length) {
+                    // Fallback: add current biome again if levelPool is too short
+                    levelPool.push(levelPool[levelPool.length - 1]);
+                }
+
+                level++;
+                startLevel(Math.min(maxHp, player.hp + 1), player.spells, undefined, -1);
+                addPopups("Tap tap tap...", "grey", player);
+            }
+        }
+    }
+
+    get() {
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1);
+        }
+    }
+}
+
+class StairsUpGoblinHideout extends Tile {
+    constructor(x, y) {
+        super(x, y, 259, true);
+        this.floorSolid = true;
+        this.blocksOpenVolume = false;
+    }
+
+    stepOn(monster) {
+    }
+
+    use() {
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1); return;
+        }
+    }
+
+    getInteractions(player, tile) {
+        return [
+            {
+                label: "Ascend stairs",
+                run: () => {
+                    this.moveUp(player);
+                },
+            },
+        ];
+    }
+
+    moveUp(monster) {
+        if (monster.isPlayer) {
+            playSound("newLevel");
+            if (level == 1) {
+                addScore(score, true);
+                showTitle();
+            } else {
+                this.replace(StairsUpGoblinHideout);
+                saveLevel();
+                level--;
+                startLevel(Math.min(maxHp, player.hp + 1), player.spells, undefined, 1);
+                addPopups("Tap tap tap...", "grey", player);
+            }
+        }
+    }
+
+    get() {
+        if (this.items.length > 0) {
+            if (this.items[0].get()) this.items.splice(0, 1);
+        }
+    }
+}
+
 class StairsUp extends Tile {
     constructor(x, y) {
-        super(x, y, 251, true);
+        super(x, y, 257, true);
         this.floorSolid = true;
         this.blocksOpenVolume = false;
     }

@@ -19,28 +19,30 @@ function initKeyControls() {
                 openCharacterCreation();
             }
         } else if (gameState == "characterCreation") {
+            const selectedRace = RACES[characterCreationState.selectedRaceIndex];
+            const availableDestinies = getDestiniesForRace(selectedRace.name);
+            
+            // Number keys to select race (1-3)
             if (e.key >= "1" && e.key <= "3") {
                 const index = parseInt(e.key, 10) - 1;
-                if (characterCreationState.phase === "race") {
+                if (index < RACES.length) {
                     characterCreationState.selectedRaceIndex = index;
-                } else {
+                    characterCreationState.selectedDestinyIndex = 0;
+                    characterCreationState.selectedColumn = 0;
+                }
+            }
+            // Number keys to select destiny (only when in destiny column)
+            if (e.key >= "1" && e.key <= "9" && characterCreationState.selectedColumn === 1) {
+                const index = parseInt(e.key, 10) - 1;
+                if (index < availableDestinies.length) {
                     characterCreationState.selectedDestinyIndex = index;
                 }
             }
             if (e.key === "Enter") {
-                if (characterCreationState.phase === "race") {
-                    characterCreationState.phase = "destiny";
-                    characterCreationState.selectedDestinyIndex = 0;
-                } else {
-                    startGameWithCharacterCreation();
-                }
+                startGameWithCharacterCreation();
             }
             if (e.key === "Escape") {
-                if (characterCreationState.phase === "destiny") {
-                    characterCreationState.phase = "race";
-                } else {
-                    showTitle();
-                }
+                showTitle();
             }
         } else if (gameState == "dead") {
             openCharacterCreation();

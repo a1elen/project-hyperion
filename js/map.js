@@ -672,8 +672,20 @@ function saveLevel() {
 
 function loadLevel() {
     tiles = levelTiles[level-1];
+    if (!tiles || tiles.length === 0) {
+        // Fallback if level data is corrupted or missing
+        console.error("Level data corrupted or missing for level " + level + ". Generating fallback level.");
+        tiles = [];
+        for (let i = 0; i < levelWidth; i++) {
+            tiles[i] = [];
+            for (let j = 0; j < levelHeight; j++) {
+                tiles[i][j] = new Wall(i, j, SPRITES.WALL_UNDERGROUND);
+            }
+        }
+        return;
+    }
     levelWidth = tiles.length;
-    levelHeight = tiles[0].length;
+    levelHeight = tiles[0] ? tiles[0].length : levelHeight;
 }
 
 function generateCellular(wallChance, levelType) {
@@ -782,20 +794,96 @@ function randomPassableTile(allowHole) {
 
 function generateMonsters() {
     monsters = [];
-    const numMonsters = Math.floor(level / 5) + randomRange(2, 5);
-    let numberOfRare;
 
-    if (randomRange(1, 100) < 10) {
-        numberOfRare = randomRange(1, 2);
+    // Check if this is the goblin hideout boss level
+    let isGoblinBossLevel = (levelPool[level-1] === BIOMES.goblinHideout) &&
+                           (level === levelPool.length || levelPool[level] !== BIOMES.goblinHideout);
+
+    if (isGoblinBossLevel) {
+        // Spawn Goblin Chieftain in the center (throne room)
+        let centerX = Math.floor(levelWidth / 2);
+        let centerY = Math.floor(levelHeight / 2);
+        let bossTile = getTile(centerX, centerY);
+        if (bossTile && bossTile.passable) {
+            const chieftain = new GoblinChieftain(bossTile);
+            monsters.push(chieftain);
+        }
+        return; // Don't spawn other monsters on boss level
     }
-    
-    if (randomRange(1, 2) == 1) spawnOODMonster();
 
-    for (let i = 0; i < numMonsters; i++) {
-        if (i < numberOfRare) {
-            spawnMonster(true);
-        } else {
-            spawnMonster(false);
+    // Check if this is a goblin hideout level (for group spawning)
+    let isGoblinHideout = (levelPool[level-1] === BIOMES.goblinHideout);
+
+    if (isGoblinHideout) {
+        // Spawn goblins in groups in rooms
+        // Find all floor tiles that are part of rooms (not central area or tunnels)
+        let roomTiles = [];
+        for (let i = 0; i < levelWidth; i++) {
+            for (let j = 0; j < levelHeight; j++) {
+                if (tiles[i][j].passable && tiles[i][j].sprite === SPRITES.FLOOR_GOBLIN_HIDEOUT_2) {
+                    roomTiles.push(tiles[i][j]);
+                }
+            }
+        }
+
+        // Group room tiles into rooms (adjacent tiles)
+        let rooms = [];
+        let visited = new Set();
+
+        for (let tile of roomTiles) {
+            let key = `${tile.x},${tile.y}`;
+            if (!visited.has(key)) {
+                let room = [];
+                let queue = [tile];
+                visited.add(key);
+
+                while (queue.length > 0) {
+                    let current = queue.shift();
+                    room.push(current);
+
+                    let neighbors = current.getAdjacentNeighbours();
+                    for (let neighbor of neighbors) {
+                        if (neighbor.passable && neighbor.sprite === SPRITES.FLOOR_GOBLIN_HIDEOUT_2) {
+                            let nKey = `${neighbor.x},${neighbor.y}`;
+                            if (!visited.has(nKey)) {
+                                visited.add(nKey);
+                                queue.push(neighbor);
+                            }
+                        }
+                    }
+                }
+                if (room.length > 0) {
+                    rooms.push(room);
+                }
+            }
+        }
+
+        // Spawn 3-6 goblins in each room
+        for (let room of rooms) {
+            let numGoblins = randomRange(3, 6);
+            for (let i = 0; i < numGoblins && i < room.length; i++) {
+                let monsterType = shuffle(levelPool[level-1].monsterPool)[0];
+                let monster = new monsterType(room[i]);
+                monsters.push(monster);
+            }
+        }
+    } else {
+        // Normal monster spawning for other biomes
+        const numMonsters = Math.floor(level / 5) + randomRange(2, 5);
+        let numberOfRare;
+
+        if (randomRange(1, 100) < 10) {
+            numberOfRare = randomRange(1, 2);
+        }
+
+        if (randomRange(1, 2) == 1) spawnOODMonster();
+
+        for (let i = 0; i < numMonsters; i++) {
+            if (i < numberOfRare) {
+                spawnMonster(true);
+            } else {
+                spawnMonster(false);
+            }
         }
     }
 }

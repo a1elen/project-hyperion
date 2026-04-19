@@ -7,6 +7,7 @@ const SPRITES = {
     DESERT_KNIGHT_HUMAN: 25,
     DISCIPLE_HUMAN: 23,
     WASTE_OF_SKIN_HUMAN: 21,
+    WANDERER_HUMAN: 26,
 
     DESERT_KNIGHT_ELF: 17,
     DISCIPLE_ELF: 22,
@@ -31,6 +32,7 @@ const SPRITES = {
     GOBLIN_SPEAR: 13,
     GOBLIN_RANGER: 14,
     GOBLIN_SWORDSMAN: 15,
+    GOBLIN_CHIEFTAIN: 27,
 
     // Tile terrain - Underground style
     FLOOR_UNDERGROUND: 2,
@@ -56,9 +58,18 @@ const SPRITES = {
     FLOOR_DUNGEON_3: 203,
     WALL_DUNGEON_3: 153,
 
+    // Tile terrain - Goblin Hideout style
+    FLOOR_GOBLIN_HIDEOUT_1: 214,
+    FLOOR_GOBLIN_HIDEOUT_2: 215,
+    FLOOR_GOBLIN_HIDEOUT_3: 216,
+    WALL_GOBLIN_HIDEOUT_1: 162,
+    WALL_GOBLIN_HIDEOUT_2: 163,
+
     // Special tiles
-    STAIRS_DOWN: 250,
-    STAIRS_UP: 251,
+    STAIRS_DOWN: 256,
+    STAIRS_UP: 257,
+    STAIRS_DOWN_GOBLIN_HIDEOUT: 258,
+    STAIRS_UP_GOBLIN_HIDEOUT: 259,
     HOLE: 255,
 
     // Doors
@@ -97,8 +108,8 @@ const SPRITES = {
     SWORD_COPPER: 606,
     SWORD_BRONZE: 607,
     SWORD_IRON: 608,
-    SWORD_SILVER: 609,
-    SWORD_GOLD: 610,
+    SWORD_SILVER: 610,
+    SWORD_GOLD: 609,
     SWORD_STEEL: 611,
 
     // Items - Weapons (Hammers)

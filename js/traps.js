@@ -20,8 +20,16 @@ traps.beartrap.item = items.tools.beartrap;
 traps.beartrap.onStep = function (monster, tile) {
     playSound(this.sound);
 
-    addStatus("Bleeding", randomRange(5, 10), monster);
-    addStatus("Stunned", randomRange(4, 8), monster);
+    const bleedDuration = randomRange(5, 10);
+    const stunDuration = randomRange(4, 8);
+    addStatus("Bleeding", bleedDuration, monster);
+    addStatus("Stunned", stunDuration, monster);
+
+    if (monster == player) {
+        addMessageLog("You stepped on " + this.name);
+        addMessageLog("Stunned for " + stunDuration + " turns");
+        addMessageLog("Bleeding for " + bleedDuration + " turns");
+    }
     addPopups("Skirr!", "white", monster);
     addPopups("Bleed!", "red", monster);
     addPopups("Stun!", "yellow", monster);
@@ -67,6 +75,9 @@ traps.trapdoor.name = "Trapdoor";
 traps.trapdoor.sprite = SPRITES.TRAPDOOR;
 traps.trapdoor.sound = "trapdoor";
 traps.trapdoor.onStep = function (monster, tile) {
+    if (monster == player) {
+        addMessageLog("You stepped on " + this.name);
+    }
     if (monster.tile.dist(player.tile) < 6) {
         playSound(this.sound);
         shakeAmount = 50;
@@ -90,13 +101,10 @@ traps.pressurePlate.name = "Pressure Plate";
 traps.pressurePlate.sprite = SPRITES.PRESSURE_PLATE;
 traps.pressurePlate.sound = "trapdoor";
 traps.pressurePlate.onStep = function (monster, tile) {
-    // Prevent infinite loop if monster was just moved by a pressure plate
-    if (monster.pressurePlateCooldown > 0) {
-        return;
+    if (monster == player) {
+        addMessageLog("You stepped on " + this.name);
     }
-    
     monster.move(randomPassableTile());
-    monster.pressurePlateCooldown = 1; // Prevent triggering another pressure plate next turn
 
     if (monster.tile.dist(player.tile) < 6) {
         shakeAmount = 50;
@@ -128,6 +136,10 @@ traps.cobweb = Object.create(trap);
 traps.cobweb.name = "Cobweb";
 traps.cobweb.sprite = SPRITES.COBWEB;
 traps.cobweb.onStep = function (monster, tile) {
+    if (monster == player) {
+        addMessageLog("You stepped on " + this.name);
+        addMessageLog("Stunned for 5 turns");
+    }
     addStatus("Stunned", 5, monster);
     addPopups("Webbed!", "white", monster);
 
@@ -160,9 +172,15 @@ traps.tripwire.name = "Tripwire";
 traps.tripwire.sprite = SPRITES.TRIPWIRE;
 traps.tripwire.sound = "trap";
 traps.tripwire.onStep = function (monster, tile) {
-    addStatus("Stunned", randomRange(4, 8), monster);
+    const stunDuration = randomRange(4, 8);
+    addStatus("Stunned", stunDuration, monster);
     monster.hit(5);
     monster.tile.setEffect(401);
+
+    if (monster == player) {
+        addMessageLog("You stepped on " + this.name);
+        addMessageLog("Stunned for " + stunDuration + " turns");
+    }
 
     if (monster.tile.dist(player.tile) < 6) {
         shakeAmount = 10;
@@ -194,9 +212,17 @@ traps.spiketrap.onStep = function (monster, tile) {
     if (!this.loaded) {
         return;
     }
-    addStatus("Stunned", randomRange(4, 8), monster);
-    addStatus("Bledding", randomRange(4, 8), monster);
+    const stunDuration = randomRange(4, 8);
+    const bleedDuration = randomRange(4, 8);
+    addStatus("Stunned", stunDuration, monster);
+    addStatus("Bleeding", bleedDuration, monster);
     monster.hit(5);
+
+    if (monster == player) {
+        addMessageLog("You stepped on " + this.name);
+        addMessageLog("Stunned for " + stunDuration + " turns");
+        addMessageLog("Bleeding for " + bleedDuration + " turns");
+    }
 
     this.blood = true;
     const neighbours = monster.tile.getAdjacentNeighbours();

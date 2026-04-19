@@ -28,10 +28,15 @@ levelUpMenuState = {
 
 // Character creation menu state
 characterCreationState = {
-    phase: "race", // "race" or "destiny"
+    selectedColumn: 0, // 0 = race, 1 = destiny
     selectedRaceIndex: 0,
     selectedDestinyIndex: 0
 };
+
+// Helper function to get available destinies for a race
+function getDestiniesForRace(raceName) {
+    return DESTINIES.filter(d => d.races.includes(raceName));
+}
 
 // Race data structures
 const RACES = [
@@ -76,13 +81,33 @@ const RACES = [
 // Destiny (class) data structures
 const DESTINIES = [
     {
+        name: "Wanderer",
+        description: "A versatile adventurer who has traveled far and wide. Jack of all trades, master of none.",
+        races: ["Human", "Elf"],
+        skills: {
+            fighting: 1,
+            endurance: 1,
+            dodge: 1,
+            swordSkill: 1,
+            axeSkill: 0,
+            hammerSkill: 0,
+            staffSkill: 1,
+            magic: 0
+        },
+        startingInventory: [
+            { type: "torch" },
+            { type: "weapon", weaponType: "sword", material: 1, quality: 1 }
+        ]
+    },
+    {
         name: "Desert Knight",
         description: "A formidable warrior trained in the harsh desert wastes. Expert in combat and endurance.",
+        races: ["Human"],
         skills: {
             fighting: 2,
             endurance: 2,
             dodge: 1,
-            swordSkill: 1,
+            swordSkill: 2,
             axeSkill: 1,
             hammerSkill: 0,
             staffSkill: 0,
@@ -96,20 +121,26 @@ const DESTINIES = [
     {
         name: "Disciple",
         description: "A mystical seeker who has forgone martial training in pursuit of arcane mastery.",
+        races: ["Human"],
         skills: {
             fighting: 0,
-            endurance: 0,
+            endurance: 1,
             dodge: 2,
             swordSkill: 0,
             axeSkill: 0,
             hammerSkill: 0,
-            staffSkill: 0,
-            magic: 2
-        }
+            staffSkill: 2,
+            magic: 3
+        },
+        startingInventory: [
+            { type: "torch" },
+            { type: "weapon", weaponType: "staff", material: 1, quality: 2 }
+        ]
     },
     {
         name: "Waste of Skin",
         description: "A blank slate with no special training. Must prove their worth through struggle.",
+        races: ["Human"],
         skills: {
             fighting: 0,
             endurance: 0,
@@ -119,7 +150,105 @@ const DESTINIES = [
             hammerSkill: 0,
             staffSkill: 0,
             magic: 0
-        }
+        },
+        startingInventory: [
+            { type: "torch" }
+        ]
+    },
+    {
+        name: "Priest",
+        description: "A devoted healer and protector of the faith. Wields divine magic to aid allies and smite foes.",
+        races: ["Elf"],
+        skills: {
+            fighting: 0,
+            endurance: 1,
+            dodge: 1,
+            swordSkill: 0,
+            axeSkill: 0,
+            hammerSkill: 0,
+            staffSkill: 1,
+            magic: 3
+        },
+        startingInventory: [
+            { type: "torch" },
+            { type: "weapon", weaponType: "staff", material: 2, quality: 2 }
+        ]
+    },
+    {
+        name: "Assassin",
+        description: "A deadly shadow dweller trained in the art of silent killing. Strikes from darkness with precision.",
+        races: ["Elf"],
+        skills: {
+            fighting: 2,
+            endurance: 0,
+            dodge: 3,
+            swordSkill: 2,
+            axeSkill: 0,
+            hammerSkill: 0,
+            staffSkill: 0,
+            magic: 0
+        },
+        startingInventory: [
+            { type: "torch" },
+            { type: "weapon", weaponType: "sword", material: 2, quality: 3 }
+        ]
+    },
+    {
+        name: "Hard Worker",
+        description: "A sturdy laborer whose years of toil have built both body and will. Resilient and determined.",
+        races: ["Dwarf"],
+        skills: {
+            fighting: 1,
+            endurance: 3,
+            dodge: 0,
+            swordSkill: 0,
+            axeSkill: 2,
+            hammerSkill: 1,
+            staffSkill: 0,
+            magic: 0
+        },
+        startingInventory: [
+            { type: "torch" },
+            { type: "weapon", weaponType: "hammer", material: 2, quality: 2 }
+        ]
+    },
+    {
+        name: "Elder",
+        description: "A wise elder who has survived countless trials. Knowledge and experience are their weapons.",
+        races: ["Dwarf"],
+        skills: {
+            fighting: 1,
+            endurance: 2,
+            dodge: 0,
+            swordSkill: 1,
+            axeSkill: 1,
+            hammerSkill: 1,
+            staffSkill: 1,
+            magic: 1
+        },
+        startingInventory: [
+            { type: "torch" },
+            { type: "weapon", weaponType: "axe", material: 2, quality: 2 }
+        ]
+    },
+    {
+        name: "Fire Keeper",
+        description: "A guardian of ancient forges and sacred flames. Wields fire magic and heavy weapons.",
+        races: ["Dwarf"],
+        skills: {
+            fighting: 2,
+            endurance: 1,
+            dodge: 0,
+            swordSkill: 0,
+            axeSkill: 0,
+            hammerSkill: 2,
+            staffSkill: 0,
+            magic: 2
+        },
+        startingInventory: [
+            { type: "torch" },
+            { type: "weapon", weaponType: "hammer", material: 3, quality: 2 }
+        ]
     }
 ];
 
@@ -1332,7 +1461,7 @@ function openDebugMenu() {
 }
 
 function openCharacterCreation() {
-    characterCreationState.phase = "race";
+    characterCreationState.selectedColumn = 0;
     characterCreationState.selectedRaceIndex = 0;
     characterCreationState.selectedDestinyIndex = 0;
     gameState = "characterCreation";
@@ -1342,91 +1471,109 @@ function drawCharacterCreationMenu() {
     const lineH = 19;
     const titleSize = 19;
     const bodySize = 14;
-    const menuMaxW = 1000;
-    const innerPadX = 12;
-    const innerPadY = 10;
+    const menuMaxW = 1150;
+    const innerPadX = 16;
+    const innerPadY = 12;
     const footerH = 40;
-    const titleRowH = 22;
+    const titleRowH = 28;
     const colGap = 20;
+
+    const selectedRace = RACES[characterCreationState.selectedRaceIndex];
+    const availableDestinies = getDestiniesForRace(selectedRace.name);
+    const selectedDestiny = availableDestinies[characterCreationState.selectedDestinyIndex] || availableDestinies[0];
+
+    const col1Width = 120;  // Race
+    const col2Width = 150;  // Destiny
+    const col3Width = 420;  // Description
+    const col4Width = 100;  // Stats
+    const menuW = Math.min(menuMaxW, canvas.width - 40);
     
-    const isRacePhase = characterCreationState.phase === "race";
-    const items = isRacePhase ? RACES : DESTINIES;
-    const selectedIndex = isRacePhase ? characterCreationState.selectedRaceIndex : characterCreationState.selectedDestinyIndex;
-    const titleText = isRacePhase ? "Choose Your Race" : "Choose Your Destiny";
-    const selectedItem = items[selectedIndex];
-    
-    const col1Width = 200;
-    const col2Width = 280;
-    const col3Width = 280;
-    const menuW = Math.min(menuMaxW, canvas.width - 28);
-    
-    // Build item lines
-    const itemLines = [];
-    for (let i = 0; i < items.length; i++) {
-        itemLines.push({
-            text: `${i + 1}) ${items[i].name}`,
-            color: i === selectedIndex ? "yellow" : "white",
-            index: i
+    // Build race lines (column 1)
+    const raceLines = [];
+    for (let i = 0; i < RACES.length; i++) {
+        raceLines.push({
+            text: `${i + 1}) ${RACES[i].name}`,
+            color: i === characterCreationState.selectedRaceIndex ? "yellow" : "white",
+            index: i,
+            isSelected: i === characterCreationState.selectedRaceIndex && characterCreationState.selectedColumn === 0
         });
     }
     
-    // Build description lines for selected item (column 2)
-    const descLines = [];
-    if (selectedItem) {
-        descLines.push({text: selectedItem.description, color: "aqua"});
-        descLines.push({text: "", color: "white"});
-        
-        // Add starting items for destinies
-        if (!isRacePhase && selectedItem.startingInventory) {
-            descLines.push({text: "Starting Items:", color: "violet"});
-            for (const item of selectedItem.startingInventory) {
-                if (item.type === "torch") {
-                    descLines.push({text: "- Torch", color: "white"});
-                } else if (item.type === "weapon") {
-                    const weaponName = item.weaponType ? item.weaponType.charAt(0).toUpperCase() + item.weaponType.slice(1) : "Weapon";
-                    descLines.push({text: `- ${weaponName}`, color: "white"});
-                }
-            }
-            descLines.push({text: "", color: "white"});
-        }
+    // Build destiny lines (column 2)
+    const destinyLines = [];
+    for (let i = 0; i < availableDestinies.length; i++) {
+        destinyLines.push({
+            text: `${i + 1}) ${availableDestinies[i].name}`,
+            color: i === characterCreationState.selectedDestinyIndex ? "yellow" : "white",
+            index: i,
+            isSelected: i === characterCreationState.selectedDestinyIndex && characterCreationState.selectedColumn === 1
+        });
     }
     
-    // Build stats/skills lines for selected item (column 3)
-    const statsLines = [];
-    if (selectedItem) {
-        if (isRacePhase) {
-            statsLines.push({text: "Stats:", color: "violet"});
-            statsLines.push({text: `Strength: ${selectedItem.stats.strength}`, color: "white"});
-            statsLines.push({text: `Constitution: ${selectedItem.stats.constitution}`, color: "white"});
-            statsLines.push({text: `Perception: ${selectedItem.stats.perception}`, color: "white"});
-            statsLines.push({text: `Agility: ${selectedItem.stats.agility}`, color: "white"});
-            statsLines.push({text: `Arcane: ${selectedItem.stats.arcane}`, color: "white"});
-            statsLines.push({text: `Will: ${selectedItem.stats.will}`, color: "white"});
-        } else {
-            statsLines.push({text: "Skills:", color: "violet"});
-            statsLines.push({text: `Fighting: ${selectedItem.skills.fighting}`, color: "white"});
-            statsLines.push({text: `Endurance: ${selectedItem.skills.endurance}`, color: "white"});
-            statsLines.push({text: `Dodge: ${selectedItem.skills.dodge}`, color: "white"});
-            statsLines.push({text: `Sword Skill: ${selectedItem.skills.swordSkill}`, color: "white"});
-            statsLines.push({text: `Axe Skill: ${selectedItem.skills.axeSkill}`, color: "white"});
-            statsLines.push({text: `Hammer Skill: ${selectedItem.skills.hammerSkill}`, color: "white"});
-            statsLines.push({text: `Staff Skill: ${selectedItem.skills.staffSkill}`, color: "white"});
-            statsLines.push({text: `Magic: ${selectedItem.skills.magic}`, color: "white"});
+    // Build description lines for combined race + destiny (column 3)
+    const descLines = [];
+    
+    // Race description
+    descLines.push({text: `Race: ${selectedRace.name}`, color: "violet"});
+    descLines.push({text: selectedRace.description, color: "aqua"});
+    descLines.push({text: "", color: "white"});
+    
+    // Destiny description
+    descLines.push({text: `Destiny: ${selectedDestiny.name}`, color: "violet"});
+    descLines.push({text: selectedDestiny.description, color: "aqua"});
+    descLines.push({text: "", color: "white"});
+    
+    // Starting items
+    if (selectedDestiny.startingInventory) {
+        descLines.push({text: "Starting Items:", color: "violet"});
+        for (const item of selectedDestiny.startingInventory) {
+            if (item.type === "torch") {
+                descLines.push({text: "- Torch", color: "white"});
+            } else if (item.type === "weapon") {
+                const weaponName = item.weaponType ? item.weaponType.charAt(0).toUpperCase() + item.weaponType.slice(1) : "Weapon";
+                descLines.push({text: `- ${weaponName}`, color: "white"});
+            }
         }
+        descLines.push({text: "", color: "white"});
     }
+    
+    // Build combined stats/skills lines (column 4)
+    const statsLines = [];
+    
+    // Race stats
+    statsLines.push({text: "Base Stats:", color: "violet"});
+    statsLines.push({text: `Strength: ${selectedRace.stats.strength}`, color: "white"});
+    statsLines.push({text: `Constitution: ${selectedRace.stats.constitution}`, color: "white"});
+    statsLines.push({text: `Perception: ${selectedRace.stats.perception}`, color: "white"});
+    statsLines.push({text: `Agility: ${selectedRace.stats.agility}`, color: "white"});
+    statsLines.push({text: `Arcane: ${selectedRace.stats.arcane}`, color: "white"});
+    statsLines.push({text: `Will: ${selectedRace.stats.will}`, color: "white"});
+    statsLines.push({text: "", color: "white"});
+    
+    // Destiny skills
+    statsLines.push({text: "Skills:", color: "violet"});
+    statsLines.push({text: `Fighting: ${selectedDestiny.skills.fighting}`, color: "white"});
+    statsLines.push({text: `Endurance: ${selectedDestiny.skills.endurance}`, color: "white"});
+    statsLines.push({text: `Dodge: ${selectedDestiny.skills.dodge}`, color: "white"});
+    statsLines.push({text: `Sword: ${selectedDestiny.skills.swordSkill}`, color: "white"});
+    statsLines.push({text: `Axe: ${selectedDestiny.skills.axeSkill}`, color: "white"});
+    statsLines.push({text: `Hammer: ${selectedDestiny.skills.hammerSkill}`, color: "white"});
+    statsLines.push({text: `Staff: ${selectedDestiny.skills.staffSkill}`, color: "white"});
+    statsLines.push({text: `Magic: ${selectedDestiny.skills.magic}`, color: "white"});
     
     // Wrap description text
-    const descMaxWidth = col2Width - 40;
+    const descMaxWidth = col3Width - 80;
+    ctx.font = `${bodySize}px Arial`;
     function wrapText(text, maxWidth) {
-        const words = text.split(' ');
+        if (!text) return [''];
+        const words = text.split(' ').filter(w => w.length > 0);
         const lines = [];
         let currentLine = '';
-        
+
         for (const word of words) {
-            const testLine = currentLine + (currentLine ? ' ' : '') + word;
-            ctx.font = `${bodySize}px Arial`;
+            const testLine = currentLine ? currentLine + ' ' + word : word;
             const metrics = ctx.measureText(testLine);
-            
+
             if (metrics.width > maxWidth && currentLine) {
                 lines.push(currentLine);
                 currentLine = word;
@@ -1437,7 +1584,7 @@ function drawCharacterCreationMenu() {
         if (currentLine) {
             lines.push(currentLine);
         }
-        return lines;
+        return lines.length > 0 ? lines : [''];
     }
     
     const wrappedDescLines = [];
@@ -1449,68 +1596,101 @@ function drawCharacterCreationMenu() {
     }
     
     // Calculate dynamic height based on content
-    const contentHeight = Math.max(
-        itemLines.length * lineH,
-        wrappedDescLines.length * lineH,
-        statsLines.length * lineH
+    const maxContentLines = Math.max(
+        raceLines.length,
+        destinyLines.length,
+        wrappedDescLines.length,
+        statsLines.length
     );
+    const contentHeight = maxContentLines * lineH;
     const menuH = innerPadY * 2 + titleRowH + lineH + 10 + contentHeight + footerH;
     const mx = (canvas.width - menuW) / 2;
     const my = Math.max(6, (canvas.height - menuH) / 2);
     
     drawUIBox(mx, my, menuW, menuH);
-    
-    let y = my + innerPadY + titleSize;
-    drawText(titleText, titleSize, false, y, "violet", canvas.width / 2, "center");
-    y += titleRowH;
-    
-    // Draw separator lines
+
+    // Title
+    let titleY = my + innerPadY + titleSize;
+    const titleX = mx + innerPadX;
+    drawText("Character selection", titleSize, false, titleY, "violet", titleX);
+
+    // Column separator positions
     const sep1X = mx + innerPadX + col1Width;
     const sep2X = sep1X + colGap + col2Width;
+    const sep3X = sep2X + colGap + col3Width;
+
+    // Horizontal separator position below title
+    const titleSepY = titleY + 8;
+
+    // Column headers - positioned below title separator
+    const headerY = titleSepY + 18;
+    drawText("Race", bodySize, true, headerY, characterCreationState.selectedColumn === 0 ? "yellow" : "gray", mx + innerPadX + col1Width/2, "center");
+    drawText("Destiny", bodySize, true, headerY, characterCreationState.selectedColumn === 1 ? "yellow" : "gray", sep1X + colGap + col2Width/2 - 10, "center");
+    drawText("Description", bodySize, true, headerY, "gray", sep2X + colGap + col3Width/2, "center");
+    drawText("Stats/Skills", bodySize, true, headerY, "gray", sep3X + colGap + col4Width/2, "center");
+
+    // Draw separator lines
+    const contentStartY = headerY + 12;  // Horizontal line below headers
+    const lineEndY = my + menuH - footerH;
+    const hLineLeftX = mx;
+    const hLineRightX = mx + menuW;
     ctx.strokeStyle = 'rgba(128, 128, 128, 0.5)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(sep1X, my + innerPadY);
-    ctx.lineTo(sep1X, my + menuH - innerPadY);
-    ctx.moveTo(sep2X, my + innerPadY);
-    ctx.lineTo(sep2X, my + menuH - innerPadY);
+    // Vertical lines - from title separator to footer
+    ctx.moveTo(sep1X, titleSepY);
+    ctx.lineTo(sep1X, lineEndY);
+    ctx.moveTo(sep2X, titleSepY);
+    ctx.lineTo(sep2X, lineEndY);
+    ctx.moveTo(sep3X, titleSepY);
+    ctx.lineTo(sep3X, lineEndY);
+    // Horizontal lines - title separator, below headers, and footer
+    ctx.moveTo(hLineLeftX, titleSepY);
+    ctx.lineTo(hLineRightX, titleSepY);
+    ctx.moveTo(hLineLeftX, contentStartY);
+    ctx.lineTo(hLineRightX, contentStartY);
+    ctx.moveTo(hLineLeftX, lineEndY);
+    ctx.lineTo(hLineRightX, lineEndY);
     ctx.stroke();
-    
-    // Draw item list in column 1
-    const listX = mx + innerPadX;
-    for (let i = 0; i < itemLines.length; i++) {
-        const item = itemLines[i];
-        const prefix = item.index === selectedIndex ? "> " : "  ";
-        drawText(prefix + item.text, bodySize, false, y + i * lineH, item.color, listX);
+
+    // Content starts below the horizontal separator
+    const listStartY = contentStartY + 16;
+
+    // Draw race list in column 1 (left-aligned within box)
+    const raceX = mx + innerPadX;
+    for (let i = 0; i < raceLines.length; i++) {
+        const item = raceLines[i];
+        const prefix = item.isSelected ? "> " : "  ";
+        drawText(prefix + item.text, bodySize, false, listStartY + i * lineH, item.color, raceX, "left");
     }
-    
-    // Draw description in column 2
-    if (selectedItem) {
-        const descX = sep1X + colGap;
-        let descY = my + innerPadY + titleSize + titleRowH + 10;
-        
-        for (const line of wrappedDescLines) {
-            drawText(line.text, bodySize, false, descY, line.color, descX);
-            descY += lineH;
-        }
+
+    // Draw destiny list in column 2 (left-aligned within box)
+    const destinyX = sep1X + innerPadX - 10;
+    for (let i = 0; i < destinyLines.length; i++) {
+        const item = destinyLines[i];
+        const prefix = item.isSelected ? "> " : "  ";
+        drawText(prefix + item.text, bodySize, false, listStartY + i * lineH, item.color, destinyX, "left");
     }
-    
-    // Draw stats/skills in column 3
-    if (selectedItem) {
-        const statsX = sep2X + colGap;
-        let statsY = my + innerPadY + titleSize + titleRowH + 10;
-        
-        for (const line of statsLines) {
-            drawText(line.text, bodySize, false, statsY, line.color, statsX);
-            statsY += lineH;
-        }
+
+    // Draw description in column 3 (left-aligned within box)
+    const descX = sep2X + innerPadX;
+    let descY = listStartY;
+    for (const line of wrappedDescLines) {
+        drawText(line.text, bodySize, false, descY, line.color, descX, "left");
+        descY += lineH;
+    }
+
+    // Draw stats/skills in column 4 (left-aligned within box)
+    const statsX = sep3X + innerPadX;
+    let statsY = listStartY;
+    for (const line of statsLines) {
+        drawText(line.text, bodySize, false, statsY, line.color, statsX, "left");
+        statsY += lineH;
     }
     
     // Draw footer
     const footY = my + menuH - innerPadY - 4;
-    const footerText = isRacePhase ? 
-        "Arrow keys/1-3: Select race  ·  Enter: Confirm  ·  Escape: Close" :
-        "Arrow keys/1-3: Select destiny  ·  Enter: Start Game  ·  Escape: Back";
+    const footerText = "Left/Right: Switch column  ·  Up/Down: Navigate  ·  Enter: Start Game  ·  Escape: Back";
     drawText(footerText, 13, false, footY, "gray", canvas.width / 2, "center");
 }
 
@@ -1642,7 +1822,9 @@ function executeDebugOption(index) {
             for (let i = 0; i < tiles.length; i++) {
                 if (tiles[i]) {
                     for (let j = 0; j < tiles[i].length; j++) {
-                        tiles[i][j].known = true;
+                        if (tiles[i][j]) {
+                            tiles[i][j].known = true;
+                        }
                     }
                 }
             }
@@ -1652,7 +1834,9 @@ function executeDebugOption(index) {
             for (let i = 0; i < tiles.length; i++) {
                 if (tiles[i]) {
                     for (let j = 0; j < tiles[i].length; j++) {
-                        tiles[i][j].lightLevel = 1;
+                        if (tiles[i][j]) {
+                            tiles[i][j].lightLevel = 1;
+                        }
                     }
                 }
             }
@@ -1805,21 +1989,36 @@ function handleLevelUpMenuKeydown(e) {
 function handleGameMenuKeydown(e) {
     // Handle character creation arrow keys
     if (gameState === "characterCreation") {
-        const items = characterCreationState.phase === "race" ? RACES : DESTINIES;
+        const selectedRace = RACES[characterCreationState.selectedRaceIndex];
+        const availableDestinies = getDestiniesForRace(selectedRace.name);
         
-        if (e.key === "ArrowUp") {
+        if (e.key === "ArrowLeft") {
             e.preventDefault();
-            if (characterCreationState.phase === "race") {
-                characterCreationState.selectedRaceIndex = (characterCreationState.selectedRaceIndex - 1 + items.length) % items.length;
+            characterCreationState.selectedColumn = 0;
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            characterCreationState.selectedColumn = 1;
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (characterCreationState.selectedColumn === 0) {
+                // Navigate races
+                characterCreationState.selectedRaceIndex = (characterCreationState.selectedRaceIndex - 1 + RACES.length) % RACES.length;
+                // Reset destiny index when changing race to keep it valid
+                characterCreationState.selectedDestinyIndex = 0;
             } else {
-                characterCreationState.selectedDestinyIndex = (characterCreationState.selectedDestinyIndex - 1 + items.length) % items.length;
+                // Navigate destinies
+                characterCreationState.selectedDestinyIndex = (characterCreationState.selectedDestinyIndex - 1 + availableDestinies.length) % availableDestinies.length;
             }
         } else if (e.key === "ArrowDown") {
             e.preventDefault();
-            if (characterCreationState.phase === "race") {
-                characterCreationState.selectedRaceIndex = (characterCreationState.selectedRaceIndex + 1) % items.length;
+            if (characterCreationState.selectedColumn === 0) {
+                // Navigate races
+                characterCreationState.selectedRaceIndex = (characterCreationState.selectedRaceIndex + 1) % RACES.length;
+                // Reset destiny index when changing race to keep it valid
+                characterCreationState.selectedDestinyIndex = 0;
             } else {
-                characterCreationState.selectedDestinyIndex = (characterCreationState.selectedDestinyIndex + 1) % items.length;
+                // Navigate destinies
+                characterCreationState.selectedDestinyIndex = (characterCreationState.selectedDestinyIndex + 1) % availableDestinies.length;
             }
         }
         return;
@@ -2633,6 +2832,10 @@ function draw() {
         translateY = Math.min(padY, Math.max(minTY, translateY));
     }
 
+    // Round translation to prevent tile seams from sub-pixel rendering
+    translateX = Math.round(translateX);
+    translateY = Math.round(translateY);
+
     ctx.save();
     ctx.scale(scaleX, scaleY);
     ctx.translate(translateX, translateY);
@@ -2704,10 +2907,17 @@ function draw() {
     }
 
     // Draw known but not currently visible tiles in grayscale
-    for (let i = -1; i < levelWidth + 1; i++) {
-        for (let j = -1; j < levelHeight + 1; j++) {
+    // Calculate visible tile range for viewport culling
+    const buffer = 2; // Extra tiles to prevent edge flickering
+    const startX = Math.floor((-translateX) / tileSize) - buffer;
+    const endX = Math.floor((-translateX + canvas.width / scaleX) / tileSize) + buffer;
+    const startY = Math.floor((-translateY) / tileSize) - buffer;
+    const endY = Math.floor((-translateY + canvas.height / scaleY) / tileSize) + buffer;
+
+    for (let i = startX; i <= endX; i++) {
+        for (let j = startY; j <= endY; j++) {
             const tile = getTile(i, j);
-            if (tile.known && !seenTiles.includes(tile)) {
+            if (tile && tile.known && !seenTiles.includes(tile)) {
                 // Draw in full grayscale
                 ctx.filter = 'grayscale(100%)';
                 tile.draw();
@@ -2823,7 +3033,30 @@ function draw() {
                 for (let popup of popupText) {
                     let drawX = popup.x+tileSize/2-(popup.startTranslateX-translateX);
                     let drawY = popup.y/*+popupText.indexOf(popup)*20*/-popup.timeout-(popup.startTranslateY-translateY);
-                    drawText(popup.text, 20, false, drawY*scaleY, popup.color, drawX*scaleX, "center");
+                    
+                    // Calculate fade opacity
+                    let opacity = 1;
+                    if (popup.timeout > 70) {
+                        opacity = (100 - popup.timeout) / 30;
+                    }
+                    
+                    // Draw popup with shadow and fade effect
+                    ctx.save();
+                    ctx.globalAlpha = opacity;
+                    
+                    // Text shadow for better readability
+                    ctx.shadowColor = "black";
+                    ctx.shadowBlur = 4;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                    
+                    ctx.fillStyle = popup.color;
+                    ctx.font = "bold 22px monospace";
+                    ctx.textAlign = "center";
+                    ctx.fillText(popup.text, drawX*scaleX, drawY*scaleY);
+                    
+                    ctx.restore();
+                    
                     popup.timeout++;
                     if (popup.timeout >= 100) {
                         popupText.splice(popupText.indexOf(popup), 1);
@@ -2910,7 +3143,7 @@ function draw() {
         const logY = canvas.height - 240;
         const lineHeight = 18;
         const maxMessages = 12;
-        const maxWidth = 800;
+        const maxWidth = 1200;
         
         // Collect all lines from messages (with wrapping) and track turn info
         const allLines = [];
@@ -2939,17 +3172,8 @@ function draw() {
         // Limit to maxMessages lines (newest at end)
         const displayLines = allLines.slice(-maxMessages);
         
-        // Draw background box for message log
-        ctx.fillStyle = 'rgba(15, 15, 20, 0.85)';
-        ctx.fillRect(logX - 8, logY - 18, 450, 220);
-        ctx.strokeStyle = 'rgba(120, 120, 140, 0.6)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(logX - 8, logY - 18, 450, 220);
-        
-        // Draw inner border for style
-        ctx.strokeStyle = 'rgba(180, 180, 200, 0.3)';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(logX - 6, logY - 16, 446, 216);
+        // Draw background box for message log using same style as inventory menu
+        drawUIBox(logX - 8, logY - 18, 450, 220);
         
         // Draw messages with color coding (newest at bottom)
         ctx.font = '13px Arial';
@@ -3390,10 +3614,10 @@ function drawUIBox(x, y, width, height) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
     ctx.fillRect(x, y, width, height);
     ctx.fillStyle = 'rgba(200, 200, 200, 0.75)';
-    ctx.fillRect(x+10, y, width, 10);
-    ctx.fillRect(x, y+height, width, 10);
-    ctx.fillRect(x, y, 10, height);
-    ctx.fillRect(x+width, y+10, 10, height);
+    ctx.fillRect(x+3, y, width, 3);
+    ctx.fillRect(x, y+height, width, 3);
+    ctx.fillRect(x, y, 3, height);
+    ctx.fillRect(x+width, y+3, 3, height);
 }
 
 function check_dead() {
@@ -3485,11 +3709,6 @@ function tick() {
             spawnRate--;
         }
     }
-
-    // Add turn separator only if messages were added during the turn
-    if (messageLog.length > messageLogLengthBefore) {
-        addMessageLog("---");
-    }
 }
 
 function showTitle() {
@@ -3529,7 +3748,8 @@ let turnCounter = 0;
 
 function startGameWithCharacterCreation() {
     selectedRaceForGame = RACES[characterCreationState.selectedRaceIndex];
-    selectedDestinyForGame = DESTINIES[characterCreationState.selectedDestinyIndex];
+    const availableDestinies = getDestiniesForRace(selectedRaceForGame.name);
+    selectedDestinyForGame = availableDestinies[characterCreationState.selectedDestinyIndex];
     
     gameStarted = false;
     level = 1;
@@ -3548,6 +3768,7 @@ function startGameWithCharacterCreation() {
 }
 
 function initLevelPool() {
+    // Initialize first biome (underground or chasm)
     if (randomRange(1, 2) == 1) {
         for (let i = 0; i < randomRange(3, 6); i++) {
             levelPool.push(BIOMES.underground);
@@ -3558,26 +3779,11 @@ function initLevelPool() {
         }
     }
 
-    if (randomRange(1, 2) == 1) {
-        for (let i = 0; i < randomRange(3, 6); i++) {
-            levelPool.push(BIOMES.caves);
-        }
-    } else {
-        for (let i = 0; i < randomRange(3, 6); i++) {
-            levelPool.push(BIOMES.tunnel);
-        }
-    }
+    // Track the length of the first biome for branching
+    firstBiomeLength = levelPool.length;
 
-    if (randomRange(1, 2) == 1) {
-        for (let i = 0; i < randomRange(3, 6); i++) {
-            levelPool.push(BIOMES.dungeon);
-        }
-    } else {
-        for (let i = 0; i < randomRange(3, 6); i++) {
-            levelPool.push(BIOMES.maze);
-        }
-    }
-
+    // Branch will be added dynamically when player descends from first biome
+    currentBranch = null; // "caves" or "goblin"
 }
 
 function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
@@ -3783,27 +3989,110 @@ function startLevel(playerHp, playerSpells, randomUpStairs, upOrDown) {
     }
 
     function placeStairs() {
+        // Determine which stairs type to use based on biome
+        let isGoblinHideout = (levelPool[level-1] === BIOMES.goblinHideout);
+        let stairsUpType = isGoblinHideout ? StairsUpGoblinHideout : StairsUp;
+        let stairsDownType = isGoblinHideout ? StairsDownGoblinHideout : StairsDown;
+
         // place stairs
         if (randomUpStairs) {
-            randomPassableTile().replace(StairsUp);
+            randomPassableTile().replace(stairsUpType);
         } else if (player) {
-            let newTile = player.tile.replace(StairsUp);;
+            let newTile = player.tile.replace(stairsUpType);;
             newTile.monster = player;
             player.move(newTile);
         }
 
-        tryTo('place stairs down', () => {
-            let randomTile = randomPassableTile();
-            if (randomTile.constructor.name == "StairsUp") {
-                randomTile = randomPassableTile();
-                if (randomTile.constructor.name == "StairsUp") {
+        // Check if this is the goblin hideout boss level (no stairs down)
+        let isGoblinBossLevel = (levelPool[level-1] === BIOMES.goblinHideout) &&
+                               (level === levelPool.length || levelPool[level] !== BIOMES.goblinHideout);
+
+        if (isGoblinBossLevel) {
+            // Don't place stairs down on boss level
+            return;
+        }
+
+        // Check if this is the branching point (end of first biome)
+        let isBranchingPoint = (level === firstBiomeLength);
+
+        if (isBranchingPoint) {
+            // Place two stairs down for branching - use multiple attempts to ensure both spawn
+            let cavesStairsPlaced = false;
+            let goblinStairsPlaced = false;
+
+            // Try multiple times to place both stairs
+            for (let attempt = 0; attempt < 100; attempt++) {
+                if (!cavesStairsPlaced) {
+                    let randomTile = randomPassableTile();
+                    if (randomTile.constructor.name != "StairsUp" && randomTile.constructor.name != "StairsUpGoblinHideout" &&
+                        randomTile.constructor.name != "StairsDown" && randomTile.constructor.name != "StairsDownGoblinHideout") {
+                        let stairsTile = randomTile.replace(StairsDown);
+                        stairsTile.branch = "caves";
+                        cavesStairsPlaced = true;
+                    }
+                }
+
+                if (!goblinStairsPlaced) {
+                    let randomTile = randomPassableTile();
+                    if (randomTile.constructor.name != "StairsUp" && randomTile.constructor.name != "StairsUpGoblinHideout" &&
+                        randomTile.constructor.name != "StairsDown" && randomTile.constructor.name != "StairsDownGoblinHideout") {
+                        let stairsTile = randomTile.replace(StairsDownGoblinHideout);
+                        stairsTile.branch = "goblin";
+                        goblinStairsPlaced = true;
+                    }
+                }
+
+                if (cavesStairsPlaced && goblinStairsPlaced) {
+                    break;
+                }
+            }
+
+            // If one failed, try again with simpler logic
+            if (!cavesStairsPlaced || !goblinStairsPlaced) {
+                tryTo('place first stairs down (caves)', () => {
+                    let randomTile = randomPassableTile();
+                    if (randomTile.constructor.name == "StairsUp" || randomTile.constructor.name == "StairsUpGoblinHideout") {
+                        randomTile = randomPassableTile();
+                        if (randomTile.constructor.name == "StairsUp" || randomTile.constructor.name == "StairsUpGoblinHideout") {
+                            return false
+                        }
+                    }
+                    let stairsTile = randomTile.replace(StairsDown);
+                    stairsTile.branch = "caves";
+                    return true;
+                });
+
+                tryTo('place second stairs down (goblin)', () => {
+                    let randomTile = randomPassableTile();
+                    if (randomTile.constructor.name == "StairsUp" || randomTile.constructor.name == "StairsUpGoblinHideout") {
+                        randomTile = randomPassableTile();
+                        if (randomTile.constructor.name == "StairsUp" || randomTile.constructor.name == "StairsUpGoblinHideout") {
+                            return false
+                        }
+                    }
+                    if (randomTile.constructor.name == "StairsDown" || randomTile.constructor.name == "StairsDownGoblinHideout") {
+                        return false;
+                    }
+                    let stairsTile = randomTile.replace(StairsDownGoblinHideout);
+                    stairsTile.branch = "goblin";
+                    return true;
+                });
+            }
+        } else {
+            // Normal single stairs down
+            tryTo('place stairs down', () => {
+                let randomTile = randomPassableTile();
+                if (randomTile.constructor.name == "StairsUp" || randomTile.constructor.name == "StairsUpGoblinHideout") {
                     randomTile = randomPassableTile();
-                    if (randomTile.constructor.name == "StairsUp") {
-                        return false
-                    } else { randomTile.replace(StairsDown); return true; }
-                } else { randomTile.replace(StairsDown); return true;}
-            } else { randomTile.replace(StairsDown); return true; }
-        })
+                    if (randomTile.constructor.name == "StairsUp" || randomTile.constructor.name == "StairsUpGoblinHideout") {
+                        randomTile = randomPassableTile();
+                        if (randomTile.constructor.name == "StairsUp" || randomTile.constructor.name == "StairsUpGoblinHideout") {
+                            return false
+                        } else { randomTile.replace(stairsDownType); return true; }
+                    } else { randomTile.replace(stairsDownType); return true;}
+                } else { randomTile.replace(stairsDownType); return true; }
+            })
+        }
 
     }
 }
